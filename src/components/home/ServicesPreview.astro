@@ -1,0 +1,57 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import Button from '@components/ui/Button.astro';
+
+const services = [
+  {
+    title: 'Full-Stack Development',
+    description: 'End-to-end web and mobile application development for customer-facing products.',
+    icon: '⚡',
+    href: '/services/full-stack',
+  },
+  {
+    title: 'Operations & AI Integration',
+    description: 'Internal tools and AI-powered automation to streamline workflows and boost productivity.',
+    icon: '🔧',
+    href: '/services/operations-ai',
+  },
+  {
+    title: 'Consulting',
+    description: 'Technical architecture review, AI strategy roadmaps, and technology stack evaluation.',
+    icon: '🎯',
+    href: '/services/consulting',
+  },
+];
+---
+
+<section class="section bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading
+      title="How We Can Help"
+      subtitle="From full-stack development to strategic consulting, we've got you covered."
+    />
+
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      {services.map((service) => (
+        <a
+          href={service.href}
+          class="group p-6 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+        >
+          <span class="text-4xl mb-4 block">{service.icon}</span>
+          <h3 class="text-xl font-heading font-bold text-primary mb-2 group-hover:text-secondary transition-colors">
+            {service.title}
+          </h3>
+          <p class="text-gray-600 text-sm">
+            {service.description}
+          </p>
+        </a>
+      ))}
+    </div>
+
+    <div class="text-center">
+      <Button href="/services" variant="secondary">
+        View All Services
+      </Button>
+    </div>
+  </div>
+</section>

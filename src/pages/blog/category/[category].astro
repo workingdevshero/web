@@ -1,0 +1,145 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
+
+  return allCategories.map(category => ({
+    params: { category: category.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and') },
+    props: { categoryName: category },
+  }));
+}
+
+const { category } = Astro.params;
+const { categoryName } = Astro.props;
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const posts = allPosts.filter(post =>
+  post.data.categories.some(cat =>
+    cat.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and') === category
+  )
+);
+
+const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories))];
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function getCategorySlug(cat: string): string {
+  return cat.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
+}
+---
+
+<BaseLayout
+  title={`${categoryName} - Blog`}
+  description={`Blog posts about ${categoryName} from Working Dev's Hero.`}
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-primary-50 via-white to-secondary-50 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-6">
+        {categoryName}
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
+      </p>
+    </div>
+  </section>
+
+  <!-- Categories Filter -->
+  <section class="bg-white border-b border-gray-100 sticky top-16 md:top-20 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-wrap gap-2 justify-center">
+        <a
+          href="/blog"
+          class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-primary-50 hover:text-primary transition-colors"
+        >
+          All
+        </a>
+        {allCategories.map((cat) => (
+          <a
+            href={`/blog/category/${getCategorySlug(cat)}`}
+            class:list={[
+              "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+              getCategorySlug(cat) === category
+                ? "bg-primary text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-primary-50 hover:text-primary"
+            ]}
+          >
+            {cat}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Posts Grid -->
+  <section class="section bg-white pt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {posts.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map((post) => (
+            <a
+              href={`/blog/${post.slug}`}
+              class="group card p-0 flex flex-col"
+            >
+              {post.data.heroImage ? (
+                <div class="aspect-video bg-gradient-to-br from-primary-100 to-secondary-100 overflow-hidden">
+                  <img
+                    src={post.data.heroImage}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ) : (
+                <div class="aspect-video bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center">
+                  <span class="text-6xl opacity-50">📝</span>
+                </div>
+              )}
+              <div class="p-6 flex-grow flex flex-col">
+                <div class="flex flex-wrap gap-2 mb-3">
+                  {post.data.categories.slice(0, 2).map((cat) => (
+                    <span class="px-2 py-1 bg-primary-50 text-primary text-xs font-medium rounded">
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+                <h2 class="text-xl font-heading font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  {post.data.title}
+                </h2>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+                  {post.data.description}
+                </p>
+                <div class="flex items-center justify-between text-sm text-gray-400">
+                  <time datetime={post.data.pubDate.toISOString()}>
+                    {formatDate(post.data.pubDate)}
+                  </time>
+                  <span>By {post.data.author}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <span class="text-6xl mb-4 block">📝</span>
+          <h2 class="text-2xl font-heading font-bold text-gray-900 mb-2">
+            No posts in this category
+          </h2>
+          <p class="text-gray-600">
+            <a href="/blog" class="text-primary hover:underline">View all posts</a>
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

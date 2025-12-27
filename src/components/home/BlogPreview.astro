@@ -1,0 +1,80 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import Button from '@components/ui/Button.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+---
+
+<section class="section bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading
+      title="Latest from the Blog"
+      subtitle="Tips, tutorials, and insights on AI and software development."
+    />
+
+    {posts.length > 0 ? (
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
+        {posts.map((post) => (
+          <a
+            href={`/blog/${post.slug}`}
+            class="group card p-0 flex flex-col"
+          >
+            {post.data.heroImage && (
+              <div class="aspect-video bg-gradient-to-br from-primary-100 to-secondary-100 overflow-hidden">
+                <img
+                  src={post.data.heroImage}
+                  alt={post.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            )}
+            {!post.data.heroImage && (
+              <div class="aspect-video bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center">
+                <span class="text-6xl opacity-50">📝</span>
+              </div>
+            )}
+            <div class="p-6 flex-grow flex flex-col">
+              <div class="flex flex-wrap gap-2 mb-3">
+                {post.data.categories.slice(0, 2).map((category) => (
+                  <span class="px-2 py-1 bg-primary-50 text-primary text-xs font-medium rounded">
+                    {category}
+                  </span>
+                ))}
+              </div>
+              <h3 class="text-lg font-heading font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                {post.data.title}
+              </h3>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
+                {post.data.description}
+              </p>
+              <time class="text-gray-400 text-xs">
+                {formatDate(post.data.pubDate)}
+              </time>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12 text-gray-500 mb-12">
+        <p>Blog posts coming soon!</p>
+      </div>
+    )}
+
+    <div class="text-center">
+      <Button href="/blog" variant="secondary">
+        View All Posts
+      </Button>
+    </div>
+  </div>
+</section>

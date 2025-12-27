@@ -1,0 +1,98 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+
+const products = [
+  {
+    name: 'WDH Sidekick T-Shirt',
+    price: '$18',
+    description: 'Show your hero spirit with our comfortable, unisex basic softstyle t-shirt.',
+    image: '/images/shop/sidekick-tshirt.jpg',
+    href: 'https://www.etsy.com/listing/4431678908/wdh-sidekick-t-shirt',
+  },
+  {
+    name: 'WDH Hero T-Shirt',
+    price: '$20',
+    description: 'Premium heather midnight navy unisex staple t-shirt for the coding hero.',
+    image: '/images/shop/hero-tshirt.jpg',
+    href: 'https://www.etsy.com/listing/4431670847/wdh-hero-t-shirt',
+  },
+  {
+    name: 'WDH Hero Long Sleeve',
+    price: '$25',
+    description: 'Stay warm while coding with our heather mauve unisex long-sleeve tee.',
+    image: '/images/shop/hero-longsleeve.jpg',
+    href: 'https://www.etsy.com/listing/4431672597/wdh-hero-long-sleeve',
+  },
+];
+---
+
+<BaseLayout
+  title="Shop"
+  description="Get Working Dev's Hero merchandise. Show your developer pride with our premium t-shirts and apparel."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-6">
+        Hero Merch
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        Show your developer pride with Working Dev's Hero merchandise. Premium quality, comfortable wear.
+      </p>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="section bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8">
+        {products.map((product) => (
+          <div class="card p-0 flex flex-col">
+            <div class="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="p-6 flex-grow flex flex-col">
+              <h3 class="text-xl font-heading font-bold text-gray-900 mb-2">
+                {product.name}
+              </h3>
+              <p class="text-gray-600 text-sm mb-4 flex-grow">
+                {product.description}
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-lg font-bold text-primary">
+                  {product.price}
+                </span>
+                <a
+                  href={product.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn-accent text-sm"
+                >
+                  Buy Now
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-12">
+        <p class="text-gray-600 mb-4">
+          All products are fulfilled by Printful with worldwide shipping.
+        </p>
+        <Button
+          href="https://www.etsy.com/shop/workingdevshero"
+          variant="secondary"
+          external
+        >
+          Visit Etsy Store
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

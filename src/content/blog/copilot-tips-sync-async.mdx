@@ -1,0 +1,50 @@
+---
+title: "Copilot Tips: Sync/Async"
+description: "Use Copilot Chat to convert between synchronous and asynchronous functions in TypeScript. A quick refactoring tip."
+pubDate: 2023-08-10
+updatedDate: 2023-08-24
+author: "bobbyg603"
+heroImage: "/images/blog/copilot-sync-async.png"
+categories: ["AI", "Tips & Tricks"]
+tags: ["ai", "copilot", "typescript", "refactoring"]
+---
+
+## Overview
+
+This article provides guidance on using GitHub Copilot Chat to efficiently refactor TypeScript function signatures between synchronous and asynchronous patterns.
+
+## Requirements
+
+- Visual Studio Code 1.80.1 or newer
+- GitHub Copilot extension
+- Copilot Chat extension installed
+
+## The Technique
+
+The process involves three straightforward steps:
+
+1. Highlight the code block containing the function
+2. Press `cmd + i` to launch the inline chat interface
+3. Request that Copilot convert the function between async and sync formats
+
+## Bidirectional Capability
+
+The approach works in both directions—you can transform asynchronous functions into synchronous ones, or vice versa, making it adaptable to various refactoring scenarios.
+
+## Example
+
+**To make async:**
+```
+Hit cmd + i and ask: "Make this function async"
+```
+
+**To make sync:**
+```
+Hit cmd + i and ask: "Make this function synchronous"
+```
+
+## Target Audience
+
+This tip specifically addresses TypeScript developers seeking efficient ways to manage function signature updates within their development workflow.
+
+**What other refactoring patterns do you use Copilot for? Share below!**

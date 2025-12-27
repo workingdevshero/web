@@ -1,0 +1,38 @@
+---
+import ServicePage from '@layouts/ServicePage.astro';
+
+const features = [
+  'Technical architecture review and recommendations',
+  'AI strategy development and roadmap planning',
+  'Technology stack evaluation and selection',
+  'Performance optimization and scalability planning',
+  'Security assessment and best practices',
+  'Team structure and process optimization',
+  'Build vs. buy analysis for AI/ML solutions',
+  'Technical due diligence for investments',
+];
+
+const benefits = [
+  {
+    title: 'Strategic Guidance',
+    description: 'Get expert advice on technical decisions that align with your business goals and long-term vision.',
+  },
+  {
+    title: 'Risk Mitigation',
+    description: 'Identify potential issues early and make informed decisions to avoid costly mistakes down the road.',
+  },
+  {
+    title: 'Accelerated Growth',
+    description: 'Leverage our experience to fast-track your technical initiatives and get to market faster.',
+  },
+];
+---
+
+<ServicePage
+  title="Consulting"
+  description="Expert guidance on technical architecture, AI strategy, and technology decisions. We help you make informed choices that drive your business forward."
+  icon="🎯"
+  heroImage="/images/pages/consulting.png"
+  features={features}
+  benefits={benefits}
+/>

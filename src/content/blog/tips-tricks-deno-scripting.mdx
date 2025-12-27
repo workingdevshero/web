@@ -1,0 +1,32 @@
+---
+title: "Tips & Tricks: Deno Scripting"
+description: "Type-safe scripts with invisible dependencies. Learn why Deno is the perfect choice for cross-platform scripting with TypeScript support."
+pubDate: 2023-08-12
+updatedDate: 2023-08-24
+author: "bobbyg603"
+heroImage: "/images/blog/deno-scripting.png"
+categories: ["Tips & Tricks", "Software"]
+tags: ["software", "tips & tricks", "tools", "typescript"]
+---
+
+## Scripting ✍️
+
+I recently created a script to manipulate JSON and generate zip files from folder collections. Historically, platform-native scripting languages like bash (Linux/MacOS) or PowerShell (Windows) were used. However, these untyped languages present challenges: they lack cross-platform compatibility, are difficult to debug, and contain unfamiliar syntax patterns that reduce efficiency.
+
+## Node ❌
+
+Integrating Node.js scripts into non-Node projects requires substantial boilerplate setup. The approach demands a `package.json` file for dependency management, and installing dependencies creates a bloated `node_modules` folder in the project root. TypeScript configuration for Node.js requires additional effort. While global dependencies could theoretically bypass `package.json`, implicit dependency management creates issues for team collaboration and CI/CD environments. Node.js works well within Node-specific projects but isn't ideal for automating tasks across different project types.
+
+## Python ❌
+
+Python is commonly selected for project task automation due to its debuggability, dependency management, and cross-platform support. However, developers who prioritize type safety encounter limitations: "Python's type support isn't native to the language, and often isn't provided by package authors." For unfamiliar languages and packages, native type availability improves development speed by reducing documentation research time.
+
+## Deno ✅
+
+According to deno.land, Deno is "the easiest, most secure JavaScript runtime" and offers "the best developer experience without the learning curve."
+
+Dependencies are defined by importing modules directly from URLs in files requiring them. Missing dependencies auto-detect and install automatically when scripts run. Native TypeScript support eliminates `tsconfig.json` configuration and CommonJS/ESM concerns. The ecosystem features strongly typed packages without additional setup. VS Code supports Deno debugging through the Deno extension; initialization requires running `Deno: Initialize Workspace Configuration`.
+
+## Share Your Experience 🙋
+
+What are your experiences with Deno? Share them in the comments!

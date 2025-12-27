@@ -1,0 +1,108 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import Button from '@components/ui/Button.astro';
+
+const services = [
+  {
+    title: 'Full-Stack Development',
+    description: 'End-to-end web and mobile application development for customer-facing products with modern technologies.',
+    icon: '⚡',
+    href: '/services/full-stack',
+    features: [
+      'Web application development',
+      'API design and implementation',
+      'Database architecture',
+      'Cloud infrastructure (AWS, GCP, Azure)',
+    ],
+  },
+  {
+    title: 'Operations & AI Integration',
+    description: 'Internal tools and AI-powered automation to streamline workflows and boost business productivity.',
+    icon: '🔧',
+    href: '/services/operations-ai',
+    features: [
+      'AI-powered workflow automation',
+      'Custom internal tools and dashboards',
+      'Business process optimization',
+      'Data integration and synchronization',
+    ],
+  },
+  {
+    title: 'Consulting',
+    description: 'Expert guidance on technical architecture, AI strategy, and technology decisions for your business.',
+    icon: '🎯',
+    href: '/services/consulting',
+    features: [
+      'Technical architecture review',
+      'AI strategy and roadmap',
+      'Technology stack evaluation',
+      'Performance optimization',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Services"
+  description="Full-stack development and consulting services. We help you build better software."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-6">
+        Our Services
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        From full-stack development to strategic consulting, we provide comprehensive software development services to help your business thrive.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="section bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8">
+        {services.map((service) => (
+          <div class="card p-8 border border-gray-100">
+            <span class="text-5xl mb-6 block">{service.icon}</span>
+            <h2 class="text-2xl font-heading font-bold text-primary mb-4">
+              {service.title}
+            </h2>
+            <p class="text-gray-600 mb-6">
+              {service.description}
+            </p>
+            <ul class="space-y-2 mb-6">
+              {service.features.map((feature) => (
+                <li class="flex items-start gap-2 text-gray-700">
+                  <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <Button href={service.href} variant="secondary" size="sm">
+              Learn More
+            </Button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Ready to Build Something Amazing?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Let's discuss your project and find the perfect solution for your needs.
+      </p>
+      <Button href="/contact" variant="accent" size="lg">
+        Start Your Project
+      </Button>
+    </div>
+  </section>
+</BaseLayout>

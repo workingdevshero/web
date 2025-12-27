@@ -1,0 +1,38 @@
+---
+import ServicePage from '@layouts/ServicePage.astro';
+
+const features = [
+  'Modern web application development (React, Vue, Angular)',
+  'Mobile app development (React Native, Flutter)',
+  'Backend API design and implementation (Node.js, Python, Go)',
+  'Database architecture and optimization',
+  'Cloud infrastructure setup (AWS, GCP, Azure)',
+  'CI/CD pipeline configuration',
+  'Microservices architecture design',
+  'Real-time features and WebSocket implementations',
+];
+
+const benefits = [
+  {
+    title: 'End-to-End Expertise',
+    description: 'From frontend to backend to infrastructure, we handle the entire stack so you get a cohesive, well-architected solution.',
+  },
+  {
+    title: 'Modern Best Practices',
+    description: 'We follow industry best practices including test-driven development, code reviews, and comprehensive documentation.',
+  },
+  {
+    title: 'Scalable Architecture',
+    description: 'Our solutions are built to grow with your business, from MVP to enterprise-scale applications.',
+  },
+];
+---
+
+<ServicePage
+  title="Full-Stack Development"
+  description="End-to-end web and mobile application development with modern technologies. We build scalable, maintainable applications that deliver results."
+  icon="⚡"
+  heroImage="/images/pages/development.png"
+  features={features}
+  benefits={benefits}
+/>

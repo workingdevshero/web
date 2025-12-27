@@ -1,0 +1,52 @@
+---
+title: "Publish WordPress Posts to Discord"
+description: "Automatically share your WordPress blog posts to Discord using IFTTT. A step-by-step integration guide."
+pubDate: 2023-06-27
+updatedDate: 2023-08-24
+author: "bobbyg603"
+heroImage: "/images/blog/wordpress-discord.png"
+categories: ["Tips & Tricks", "Tutorials"]
+tags: ["automation", "discord", "ifttt"]
+---
+
+## Prerequisites ✅
+
+To configure IFTTT to publish recent WordPress posts to Discord, you'll need:
+
+- WordPress User with Two-Step Authentication
+- Discord Server
+- IFTTT Account
+
+This setup takes 15 minutes or less.
+
+## Steps 🥾
+
+### Step 1: Create Application Password
+
+Navigate to Users > Your Profile > New Application Password in WordPress. Name the password and copy the generated value for later use.
+
+### Step 2: Configure AIOSEO Settings
+
+Set the "Default Post Image Source" to "Featured Image" under AIOSEO > Social Networks > Facebook. This ensures Discord uses the post's featured image for preview.
+
+### Step 3: Create IFTTT Applet
+
+Log into IFTTT.com and create a new applet by clicking "Add" next to "If This."
+
+### Step 4: Connect WordPress Integration
+
+Search for WordPress in the integrations list and authorize the connection.
+
+### Step 5: Set Trigger
+
+Select "Any new post" as your trigger condition.
+
+### Step 6: Configure Discord Action
+
+Click "Add" next to "Then That" and connect your Discord channel. Select "Post a message to a channel" and remove "Post Content" from the message field to avoid truncation issues.
+
+### Step 7: Test Integration
+
+Create a new WordPress post or click "Check Now" in your IFTTT applet. A formatted message with the post title, featured image, and link should appear in your Discord channel.
+
+**What other automations do you use for your blog? Share below!**

@@ -1,0 +1,131 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<BaseLayout
+  title="Hey Bible - Case Study"
+  description="An intelligent Bible study companion with natural language search and personalized insights."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-blue-400 to-blue-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Mobile App</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">iOS</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Android</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Capacitor</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Hey Bible
+        </h1>
+        <p class="text-xl text-white/80">
+          A Bible verse lookup and favoriting tool with AI-powered generative art creation from your favorite scriptures.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="section bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">App Screenshots</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <img src="/images/portfolio/hey-bible/screenshot-1.png" alt="Hey Bible screenshot 1" class="rounded-2xl shadow-lg" />
+        <img src="/images/portfolio/hey-bible/screenshot-2.png" alt="Hey Bible screenshot 2" class="rounded-2xl shadow-lg" />
+        <img src="/images/portfolio/hey-bible/screenshot-3.png" alt="Hey Bible screenshot 3" class="rounded-2xl shadow-lg" />
+        <img src="/images/portfolio/hey-bible/screenshot-4.png" alt="Hey Bible screenshot 4" class="rounded-2xl shadow-lg" />
+      </div>
+      <div class="text-center mt-8">
+        <a href="https://apps.apple.com/us/app/hey-bible/id6474075530" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          View on App Store
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+      <div class="prose prose-lg max-w-none">
+        <p class="text-gray-600">
+          Hey Bible is a Bible verse lookup and favoriting tool. Bible verses can be used to create beautiful generative art based on specific quotes, allowing users to visualize and share their favorite scriptures in unique ways.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          There are a lot of things to consider when creating an app and releasing it to the app store. In order to learn those skills it's important to go through the entire process multiple times. The Hey Bible app is the first app released by Working Dev's Hero LLC and paved the way for many to come.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          A hybrid-mobile app built with Angular, Ionic, and Capacitor. The Hey Bible app leverages Supabase for its backend which is built to scale, and offers authentication via social providers.
+        </p>
+        <p>
+          The app leverages several AI Image Generator APIs which allows users to effortlessly generate beautiful representations of their favorite verses and share them directly to social media.
+        </p>
+        <p>
+          The app was created using the Cursor IDE and leveraged a variety of AI models including Claude Sonnet, Grok Code Fast, Gemini Pro, and Claude Opus.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Technology Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Angular / Ionic / Capacitor</li>
+            <li>Supabase</li>
+            <li>AI Image Generator APIs</li>
+            <li>Social Authentication</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Key Features</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Bible Verse Lookup</li>
+            <li>Favorites & Collections</li>
+            <li>AI Generative Art</li>
+            <li>Social Media Sharing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Have an AI-Powered App Idea?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Let's discuss how we can bring intelligence to your application.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="accent" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

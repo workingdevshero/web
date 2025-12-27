@@ -1,0 +1,48 @@
+# Cloudflare Pages redirects for old WordPress URLs
+
+# Old WordPress category pages
+/category/* /blog 301
+
+# Old WordPress tag pages
+/tag/* /blog 301
+
+# Old WordPress author pages
+/author/* /about 301
+
+# Old WordPress pagination
+/page/* /blog 301
+
+# Old WordPress blog post redirects (WordPress slug -> new slug)
+/hero-stack-chatgpt/* /blog/hero-stack-chatgpt 301
+/hero-stack-midjourney/* /blog/hero-stack-midjourney 301
+/hero-stack-github-copilot/* /blog/hero-stack-github-copilot 301
+/adventures-in-ai-metagpt/* /blog/adventures-in-ai-metagpt 301
+/adventures-in-ai-qr-codes/* /blog/adventures-in-ai-qr-codes 301
+/tips-tricks-deno-scripting/* /blog/tips-tricks-deno-scripting 301
+/productivity-power-ups-treadmill-desk/* /blog/productivity-power-ups-treadmill-desk 301
+/productivity-power-ups-co2-monitoring/* /blog/productivity-power-ups-co2-monitoring 301
+/productivity-power-ups-chatgpt-in-the-car/* /blog/productivity-power-ups-chatgpt-in-the-car 301
+/productivity-power-ups-zbiotics/* /blog/productivity-power-ups-zbiotics 301
+/productivity-power-ups-jocko-go/* /blog/productivity-power-ups-jocko-go 301
+/productivity-power-ups-ketone-iq/* /blog/productivity-power-ups-ketone-iq 301
+/productivity-power-ups-sidecar/* /blog/productivity-power-ups-sidecar 301
+/whats-in-the-mug-september/* /blog/whats-in-the-mug-september 301
+/whats-in-the-mug-may/* /blog/whats-in-the-mug-may 301
+/copilot-shorts-tsconfig/* /blog/copilot-shorts-tsconfig 301
+/copilot-shorts-ts-types/* /blog/copilot-shorts-ts-types 301
+/copilot-shorts-test-data/* /blog/copilot-shorts-test-data 301
+/copilot-shorts-imports/* /blog/copilot-shorts-imports 301
+/copilot-tips-sync-async/* /blog/copilot-tips-sync-async 301
+/publish-wordpress-posts-to-discord/* /blog/publish-wordpress-posts-to-discord 301
+/how-to-start-selling-online/* /blog/how-to-start-selling-online 301
+/working-devs-hero-origin/* /blog/working-devs-hero-origin 301
+/chatgpt-practice-makes-perfect/* /blog/chatgpt-practice-makes-perfect 301
+
+# Common WordPress paths
+/wp-admin /blog 301
+/wp-login.php /blog 301
+/feed /blog 301
+/rss /blog 301
+
+# Old services page if existed
+/services/* /services 301

@@ -1,0 +1,51 @@
+---
+title: "Copilot Shorts: Imports"
+description: "Use Copilot Chat to replace CommonJS require statements with ES6 imports. Modernize your codebase quickly."
+pubDate: 2023-07-01
+updatedDate: 2023-10-04
+author: "bobbyg603"
+heroImage: "/images/blog/copilot-tsconfig.png"
+categories: ["AI", "Tips & Tricks"]
+tags: ["ai", "chatgpt", "copilot", "github", "llm", "openai"]
+---
+
+## Overview
+
+This tutorial demonstrates how to leverage GitHub Copilot Chat to convert Node.js `require` statements into modern ES6 `import` syntax.
+
+## Requirements
+
+1. Visual Studio Code Insider's build
+2. Copilot Chat extension
+3. Copilot Nightly extension
+
+## The Process
+
+1. Select the code block containing require statements
+2. Press **Command+I** to open inline chat
+3. Request conversion: "Convert these requires to import statements"
+4. Copilot generates the updated code
+
+**Pro tip:** Press `Command+I` to bring up inline chat for quick code transformations.
+
+## Before
+
+```javascript
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+```
+
+## After
+
+```javascript
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+```
+
+## Conclusion
+
+The combination of VS Code Insider's build with Copilot Chat and Copilot Nightly enables TypeScript developers to efficiently modernize their codebase by replacing CommonJS require patterns with ES6 imports.
+
+**What legacy code patterns do you use Copilot to fix? Share below!**

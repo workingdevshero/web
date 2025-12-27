@@ -1,0 +1,118 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import heroImage from '@assets/images/hero-mascot.png';
+import { Image } from 'astro:assets';
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about Working Dev's Hero - an AI-enabled software development company helping businesses build intelligent software solutions."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-6">
+            About Working Dev's Hero
+          </h1>
+          <p class="text-lg text-gray-600 mb-6">
+            We're an AI-enabled software development company on a mission to help businesses harness the power of artificial intelligence and modern technologies.
+          </p>
+          <p class="text-lg text-gray-600">
+            From startups to enterprises, we partner with teams to build intelligent software solutions that drive real results.
+          </p>
+        </div>
+        <div class="flex justify-center">
+          <Image
+            src={heroImage}
+            alt="Working Dev's Hero mascot"
+            width={300}
+            height={300}
+            class="w-64 md:w-80"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6 text-center">
+        Our Mission
+      </h2>
+      <p class="text-xl text-gray-600 text-center max-w-2xl mx-auto">
+        To democratize AI and modern software development, making cutting-edge technology accessible to businesses of all sizes.
+      </p>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-12 text-center">
+        What We Stand For
+      </h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <span class="text-4xl mb-4 block">🎯</span>
+          <h3 class="text-xl font-heading font-bold text-primary mb-3">Quality First</h3>
+          <p class="text-gray-600">
+            We believe in doing things right the first time. Every line of code, every architecture decision is made with quality in mind.
+          </p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <span class="text-4xl mb-4 block">🤝</span>
+          <h3 class="text-xl font-heading font-bold text-primary mb-3">Partnership</h3>
+          <p class="text-gray-600">
+            We're not just vendors—we're partners invested in your success. Your wins are our wins.
+          </p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <span class="text-4xl mb-4 block">🚀</span>
+          <h3 class="text-xl font-heading font-bold text-primary mb-3">Innovation</h3>
+          <p class="text-gray-600">
+            We stay at the forefront of technology, constantly learning and adopting new tools and techniques to deliver the best solutions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">
+        Our Story
+      </h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Working Dev's Hero started with a simple observation: too many businesses were struggling to adopt AI and modern software practices, not because the technology wasn't ready, but because they lacked the right expertise.
+        </p>
+        <p>
+          We founded this company to bridge that gap—to be the technical partner that helps businesses navigate the rapidly evolving landscape of AI and software development.
+        </p>
+        <p>
+          Today, we work with clients across industries, from fitness apps to educational technology, helping them build intelligent software that makes a real difference.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Ready to Work Together?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Let's discuss how we can help bring your ideas to life.
+      </p>
+      <Button href="/contact" variant="accent" size="lg">
+        Get in Touch
+      </Button>
+    </div>
+  </section>
+</BaseLayout>

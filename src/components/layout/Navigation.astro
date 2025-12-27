@@ -1,0 +1,33 @@
+---
+const navItems = [
+  { label: 'Services', href: '/services' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Shop', href: '/shop' },
+  { label: 'About', href: '/about' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="hidden md:flex items-center space-x-1">
+  {navItems.map((item) => (
+    <a
+      href={item.href}
+      class:list={[
+        'px-4 py-2 rounded-lg font-medium transition-colors',
+        currentPath.startsWith(item.href)
+          ? 'text-primary bg-primary-50'
+          : 'text-gray-700 hover:text-primary hover:bg-primary-50',
+      ]}
+    >
+      {item.label}
+    </a>
+  ))}
+  <a
+    href="/contact"
+    class="ml-4 btn-primary text-sm"
+  >
+    Start Your Project
+  </a>
+</nav>
