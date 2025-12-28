@@ -7,18 +7,16 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 # Cache static assets aggressively
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
 # Cache images
-*.jpg
+/images/*
   Cache-Control: public, max-age=86400
-*.png
+
+# Cache favicon and logo
+/favicon.png
   Cache-Control: public, max-age=86400
-*.webp
-  Cache-Control: public, max-age=86400
-*.svg
+
+/logo.png
   Cache-Control: public, max-age=86400
