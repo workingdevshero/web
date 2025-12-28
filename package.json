@@ -1,5 +1,5 @@
 {
-  "name": "workingdevshero-web",
+  "name": "workingdevshero/web",
   "version": "1.0.0",
   "description": "Working Dev's Hero - AI-enabled software development company",
   "type": "module",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bobbyg603/workingdevshero-web.git"
+    "url": "git+https://github.com/workingdevshero/web.git"
   },
   "keywords": ["astro", "tailwind", "blog", "portfolio"],
   "author": "bobbyg603",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bobbyg603/workingdevshero-web/issues"
+    "url": "https://github.com/workingdevshero/web/issues"
   },
-  "homepage": "https://github.com/bobbyg603/workingdevshero-web#readme",
+  "homepage": "https://github.com/workingdevshero/web#readme",
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.0",
