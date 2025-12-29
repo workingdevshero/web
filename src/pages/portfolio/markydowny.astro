@@ -1,0 +1,140 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
+---
+
+<BaseLayout
+  title="Markydowny - Case Study"
+  description="A simple, beautiful browser-based markdown renderer with folder support and embedded images."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-purple-500 to-purple-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Web App</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Static Site</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Open Source</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Markydowny
+        </h1>
+        <p class="text-xl text-white/80">
+          A simple, beautiful browser-based markdown renderer that supports folders and embedded images.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="section bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">Screenshots</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <img src="/images/portfolio/markydowny/markydowny-no-file.png" alt="Markydowny drop zone" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-preview.png" alt="Markydowny markdown preview" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-preview-expanded.png" alt="Markydowny expanded view" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="https://markydowny.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Visit Website
+        </a>
+        <a href="https://github.com/workingdevshero/markydowny" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+      <div class="prose prose-lg max-w-none">
+        <p class="text-gray-600">
+          Markydowny is a static web application that enables users to view markdown files through an intuitive drag-and-drop interface. It's designed for developers and writers who want to preview their markdown files instantly, without complex setup or installation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Markdown rendering options for cloned GitHub repos are limited. When you clone a repository locally, viewing README files and documentation with proper formatting typically requires installing tools, setting up local servers, or copying content into online editors.
+        </p>
+        <p>
+          Most existing solutions either require installation, lack support for embedded images with relative paths, or can't handle entire folders of markdown files. Developers needed a simpler way to quickly preview markdown content without any setup friction.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Markydowny is a zero-installation markdown viewer that works entirely in the browser. Simply drag and drop a markdown file or an entire folder onto the page to instantly see beautifully rendered content with syntax highlighting.
+        </p>
+        <p>
+          What sets Markydowny apart is its intelligent handling of folders and images. When you drop a folder containing markdown files, the app automatically finds all markdown files and lets you select which one to view. Relative image paths are automatically resolved from the folder structure, so embedded images display correctly.
+        </p>
+        <p>
+          The entire application is pure HTML, CSS, and JavaScript with no build process or server required. It works offline after the initial load and can be hosted on any static hosting platform.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Technology Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>HTML / CSS / JavaScript</li>
+            <li>marked.js for parsing</li>
+            <li>File API for drag-and-drop</li>
+            <li>Static hosting (no server)</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Key Features</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Drag-and-drop files & folders</li>
+            <li>Relative image path resolution</li>
+            <li>Syntax highlighting</li>
+            <li>Fullscreen reading mode</li>
+            <li>Works offline</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Need a Web-Based Tool Built?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Let's discuss how we can create simple, effective solutions for your workflow.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="accent" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>

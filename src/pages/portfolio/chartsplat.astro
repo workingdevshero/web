@@ -1,0 +1,153 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
+---
+
+<BaseLayout
+  title="Chart Splat - Case Study"
+  description="A serverless Chart.js API that converts JSON data into beautiful PNG charts in milliseconds."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-purple-600 to-pink-500 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">API Service</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Serverless</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">SaaS</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Chart Splat
+        </h1>
+        <p class="text-xl text-white/80">
+          A serverless Chart.js API that converts JSON data into beautiful PNG charts in milliseconds.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="section bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">Screenshots</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <img src="/images/portfolio/chart-splat/chart-splat-home.png" alt="Chart Splat homepage" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/chart-splat/chart-splat-demo.png" alt="Chart Splat demo" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/chart-splat/chart-splat-pricing.png" alt="Chart Splat pricing" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="https://chartsplat.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Visit Website
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+      <div class="prose prose-lg max-w-none">
+        <p class="text-gray-600">
+          Chart Splat is a chart generation API powered by Chart.js v4 that converts JSON data requests into PNG images. Simply submit an API call with your chart configuration and receive a base64-encoded PNG image ready to use anywhere. The service supports Line, Bar, Pie, Doughnut, Radar, and Polar Area charts with full Chart.js customization options.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Options for server-side chart rendering in PHP are limited. While Node.js has excellent charting libraries like Chart.js, integrating them into PHP applications or other backend systems requires running a separate Node.js service or using complex headless browser solutions.
+        </p>
+        <p>
+          Developers needed a simple way to generate charts from any backend language without managing Node.js infrastructure or dealing with browser automation complexity.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Chart Splat provides a simple REST API that accepts a JSON blob containing Chart.js configuration and returns a beautiful PNG chart. Charts are generated in milliseconds using serverless infrastructure that scales automatically from 100 to over 1 million charts per month.
+        </p>
+        <p>
+          The service offers 99.9% uptime with built-in rate limiting and API key security. Developers can use all Chart.js customization options including colors, fonts, legends, and tooltips. The pay-per-use pricing model includes 100 free charts per month with no credit card required.
+        </p>
+        <p>
+          The full-stack TypeScript architecture uses Next.js 14 with React 18 on the frontend and AWS SAM-deployed serverless Lambdas on the backend. Authentication is handled by Amazon Cognito, usage tracking via DynamoDB, and billing through Stripe integration.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Frontend Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Next.js 14 / React 18</li>
+            <li>TypeScript / Tailwind CSS</li>
+            <li>AWS Amplify for auth/UI</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Backend Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>AWS SAM / Lambda (Node.js 20)</li>
+            <li>API Gateway / Cognito</li>
+            <li>DynamoDB / Stripe</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Chart Types</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Line & Bar Charts</li>
+            <li>Pie & Doughnut Charts</li>
+            <li>Radar & Polar Area Charts</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Key Features</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Millisecond generation time</li>
+            <li>Full Chart.js v4 options</li>
+            <li>99.9% uptime SLA</li>
+            <li>100 free charts/month</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Need a Serverless API Built?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Let's discuss how we can create scalable, pay-per-use services for your business.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="accent" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>

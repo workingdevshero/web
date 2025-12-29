@@ -1,0 +1,53 @@
+---
+// Lightbox component for expandable images
+// Add class="lightbox-img" to any image you want to be expandable
+---
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4 cursor-pointer">
+  <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors" aria-label="Close">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg" />
+</div>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxClose = document.getElementById('lightbox-close');
+  const images = document.querySelectorAll('.lightbox-img');
+
+  images.forEach(img => {
+    img.addEventListener('click', () => {
+      if (lightboxImg && lightbox) {
+        lightboxImg.src = (img as HTMLImageElement).src;
+        lightboxImg.alt = (img as HTMLImageElement).alt;
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  function closeLightbox() {
+    if (lightbox) {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+  }
+
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target === lightboxClose || lightboxClose?.contains(e.target as Node)) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox && !lightbox.classList.contains('hidden')) {
+      closeLightbox();
+    }
+  });
+</script>

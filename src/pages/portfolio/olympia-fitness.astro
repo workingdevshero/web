@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
 ---
 
 <BaseLayout
@@ -32,10 +33,10 @@ import Button from '@components/ui/Button.astro';
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">App Screenshots</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        <img src="/images/portfolio/olympia-fitness/screenshot-1.png" alt="Olympia Fitness screenshot 1" class="rounded-2xl shadow-lg" />
-        <img src="/images/portfolio/olympia-fitness/screenshot-2.png" alt="Olympia Fitness screenshot 2" class="rounded-2xl shadow-lg" />
-        <img src="/images/portfolio/olympia-fitness/screenshot-3.png" alt="Olympia Fitness screenshot 3" class="rounded-2xl shadow-lg" />
-        <img src="/images/portfolio/olympia-fitness/screenshot-4.png" alt="Olympia Fitness screenshot 4" class="rounded-2xl shadow-lg" />
+        <img src="/images/portfolio/olympia-fitness/screenshot-1.png" alt="Olympia Fitness screenshot 1" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/olympia-fitness/screenshot-2.png" alt="Olympia Fitness screenshot 2" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/olympia-fitness/screenshot-3.png" alt="Olympia Fitness screenshot 3" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/olympia-fitness/screenshot-4.png" alt="Olympia Fitness screenshot 4" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
       </div>
       <div class="text-center mt-8">
         <a href="https://apps.apple.com/us/app/olympia-fitness/id6473857575" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors font-semibold">
@@ -127,4 +128,6 @@ import Button from '@components/ui/Button.astro';
       </div>
     </div>
   </section>
+
+  <Lightbox />
 </BaseLayout>
