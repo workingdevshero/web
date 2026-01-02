@@ -44,5 +44,3 @@
 /feed /blog 301
 /rss /blog 301
 
-# Old services page if existed
-/services/* /services 301
