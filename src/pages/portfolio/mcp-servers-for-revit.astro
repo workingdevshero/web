@@ -1,0 +1,161 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<BaseLayout
+  title="MCP Servers for Revit - Case Study"
+  description="How we helped Sparx Fire consolidate and enhance the mcp-servers-for-revit open-source project, enabling AI-powered BIM workflows for smarter fire suppression systems."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-orange-600 to-red-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Open Source</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">MCP</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Revit</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">BIM</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          MCP Servers for Revit
+        </h1>
+        <p class="text-xl text-white/80">
+          Enabling AI assistants to build and modify Revit models through natural language—helping Sparx Fire prototype smart fire suppression systems in minutes instead of hours.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+      <div class="prose prose-lg max-w-none">
+        <p class="text-gray-600">
+          Sparx Fire is developing patent-pending smart fire sprinkler technology that uses spatial awareness to coordinate suppression efforts. To rapidly prototype different building layouts and sprinkler configurations, they needed a way to generate BIM models quickly—enter mcp-servers-for-revit.
+        </p>
+        <p class="text-gray-600">
+          Working Dev's Hero partnered with Sparx to consolidate three separate repositories into a unified monorepo, dramatically simplified the installation process with automated releases, and expanded the command set to support their prototyping workflow.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          The original mcp-servers-for-revit project was split across three repositories: revit-mcp, revit-mcp-plugin, and revit-mcp-commandset. This fragmented architecture made installation complex and error-prone, requiring users to manually coordinate versions and dependencies across multiple codebases.
+        </p>
+        <p>
+          Sparx needed to add Revit 2026 support and extend the command set for their specific use case—automatic room tagging, level creation, and other tools to accelerate building prototyping. The existing structure made these enhancements difficult to develop and maintain.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          We consolidated the three repositories into a single monorepo at <a href="https://github.com/Sparx-Fire/mcp-servers-for-revit" target="_blank" rel="noopener">github.com/Sparx-Fire/mcp-servers-for-revit</a>, creating a unified codebase that's easier to maintain, test, and extend.
+        </p>
+        <p>
+          A GitHub Actions release workflow now builds versioned ZIP files for each Revit version (2020-2026), so users simply download, extract, and copy to their addins folder—no build tools or manual compilation required.
+        </p>
+        <p>
+          We expanded the command set with new tools for room tagging and level creation, fixed issues in existing commands, and added Revit 2026 compatibility. The improved documentation and setup video walk users through the entire process in under 10 minutes.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Technology Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>TypeScript (MCP Server)</li>
+            <li>C# (Revit Plugin & Command Set)</li>
+            <li>GitHub Actions (CI/CD)</li>
+            <li>WebSocket Communication</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Key Contributions</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Monorepo Consolidation</li>
+            <li>Automated Release Pipeline</li>
+            <li>Revit 2026 Support</li>
+            <li>Expanded Command Set</li>
+            <li>Setup Video Walkthrough</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Impact</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Sparx can now generate complete building models with sprinkler layouts in minutes using natural language prompts. A data center with hot/cold aisle containment, server racks, and compliant sprinkler placement—all created through conversation with an AI assistant.
+        </p>
+        <p>
+          Every sprinkler placed in the Revit model carries real spatial coordinates, which feed directly into Sparx's releasing panel for coordinated activation logic. The MCP-powered workflow bridges the gap between design intent and spatial data, enabling rapid iteration on fire suppression concepts.
+        </p>
+        <blockquote class="border-l-4 border-primary-500 pl-4 italic text-gray-700">
+          "Using mcp-servers-for-revit lets us focus on what we want to build rather than the mechanics of building it in the software."
+          <cite class="block mt-2 text-sm text-gray-500">— Sparx Fire</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Links Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Learn More</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <a href="https://github.com/Sparx-Fire/mcp-servers-for-revit" target="_blank" rel="noopener" class="p-6 border border-gray-200 rounded-xl hover:border-primary-300 hover:bg-primary-50/50 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <span class="font-semibold text-gray-900 group-hover:text-primary-600">GitHub Repository</span>
+          </div>
+          <p class="text-gray-600 text-sm">Star the repo, explore the code, and get started with the installation guide.</p>
+        </a>
+        <a href="https://sparx-fire.com/blog/ai-powered-bim-data-center/" target="_blank" rel="noopener" class="p-6 border border-gray-200 rounded-xl hover:border-primary-300 hover:bg-primary-50/50 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <span class="font-semibold text-gray-900 group-hover:text-primary-600">Sparx Fire Blog</span>
+          </div>
+          <p class="text-gray-600 text-sm">Read how Sparx used AI-powered BIM to design a data center in minutes.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Need AI-Powered Development?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Whether it's open source contributions, BIM integrations, or full-stack applications—we can help.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="accent" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

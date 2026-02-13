@@ -1,0 +1,93 @@
+---
+title: "Enhancing MCP Servers for Revit: AI-Powered BIM Development"
+description: "How we helped Sparx Fire consolidate and improve the mcp-servers-for-revit open-source project, enabling AI assistants to build Revit models through natural language."
+pubDate: 2026-02-13
+author: "bobbyg603"
+heroImage: "/images/blog/mcp-servers-revit.webp"
+categories: ["AI", "Open Source", "BIM"]
+tags: ["ai", "mcp", "revit", "bim", "open source", "sparx-fire"]
+---
+
+## Building with AI, Literally 🏗️
+
+What if you could describe a building to an AI and watch it take shape in Revit? Not through a complex API or custom scripting, but through natural conversation?
+
+That's exactly what mcp-servers-for-revit enables. Connect Claude, Cline, or any MCP-compatible AI assistant to Revit, and start creating walls, placing sprinklers, and querying spatial data—all through prompts.
+
+Working Dev's Hero recently partnered with [Sparx Fire](https://sparx-fire.com) to enhance this open-source project, and the results are pretty remarkable.
+
+## See It In Action 🎬
+
+Sparx used the enhanced MCP server to design a complete data center from scratch—including rooms, walls, equipment, and sprinkler layouts—primarily through natural language prompts:
+
+<iframe width="100%" height="450" src="https://www.youtube.com/embed/weJ9I06rNxY" title="Sparx Data Center Build using mcp-servers-for-revit" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## The Problem: Fragmentation 💥
+
+The original [mcp-servers-for-revit](https://github.com/mcp-servers-for-revit/revit-mcp) project was ambitious but fragmented across three repositories:
+
+- **revit-mcp** — The TypeScript MCP server
+- **revit-mcp-plugin** — The C# Revit add-in
+- **revit-mcp-commandset** — The actual Revit API commands
+
+Users had to clone, build, and coordinate versions across all three just to get started. Add in version-specific compilation for different Revit releases, and the barrier to entry was significant.
+
+## The Solution: Monorepo + Releases 📦
+
+We consolidated everything into a single monorepo at [github.com/Sparx-Fire/mcp-servers-for-revit](https://github.com/Sparx-Fire/mcp-servers-for-revit) and built a GitHub Actions workflow that does the heavy lifting:
+
+1. **Automated builds** for Revit 2020–2026
+2. **Versioned ZIP releases** ready to download
+3. **Single-folder installation** — extract, copy to addins, done
+
+The result? Setup time dropped from "follow a 20-step build guide" to "download, extract, run."
+
+## What Sparx Built With It 🔥
+
+Sparx is developing smart fire sprinkler technology that uses spatial awareness to coordinate suppression. To prototype different building layouts and sprinkler configurations, they needed to iterate fast.
+
+Using the enhanced mcp-servers-for-revit, they:
+
+- Generated complete data center models through natural language prompts
+- Placed sprinklers according to NFPA 13 requirements
+- Extracted precise spatial coordinates for their releasing panel
+- Iterated on layouts in minutes instead of hours
+
+Every sprinkler placed carries real 3D coordinates relative to walls, ceilings, and other devices—exactly the data their system needs for coordinated activation logic.
+
+[Read the full Sparx Fire case study →](https://sparx-fire.com/blog/ai-powered-bim-data-center/)
+
+## What We Added 🛠️
+
+Beyond consolidation, we contributed:
+
+- **Revit 2026 support** — Extended compatibility to the latest version
+- **New commands** — Room tagging, level creation, and more
+- **Bug fixes** — Addressed issues in existing commands
+- **Setup video** — A walkthrough of the entire installation process
+- **Improved documentation** — Clearer guides for getting started
+
+## Get Started 🚀
+
+Want to try it yourself? We put together a step-by-step walkthrough showing the full setup process—downloading a release, installing the Revit add-in, and connecting your AI client:
+
+<iframe width="100%" height="450" src="https://www.youtube.com/embed/VhXvL72IkQo" title="Getting Started with mcp-servers-for-revit - Video Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+**Quick steps:**
+
+1. Download the release for your Revit version from [GitHub Releases](https://github.com/Sparx-Fire/mcp-servers-for-revit/releases)
+2. Extract to `%AppData%\Autodesk\Revit\Addins\<version>\`
+3. Configure Claude or your preferred AI client with the MCP server
+4. Start describing what you want to build
+
+## The Bigger Picture 🔮
+
+This project exemplifies what Working Dev's Hero is about: leveraging AI to multiply what's possible. The MCP protocol bridges the gap between natural language and complex APIs, and we helped make that bridge accessible to anyone working with Revit.
+
+Whether you're prototyping buildings, exploring design options, or querying spatial data, the ability to converse with your BIM software changes the workflow entirely. Focus on what you want to build—not how to build it in the software.
+
+## Open Source, Open Possibilities 🌐
+
+This project remains open source under its original license. Sparx's fork adds enhancements and will continue to evolve alongside the upstream project. We're proud to contribute to an ecosystem that makes AI-powered development accessible to more people.
+
+**Building something with AI?** We'd love to hear about it. Reach out at [hello@workingdevshero.com](mailto:hello@workingdevshero.com) or [start your project](/contact).
