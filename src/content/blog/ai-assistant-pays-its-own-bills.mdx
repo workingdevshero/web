@@ -144,9 +144,17 @@ Pick Quickstart Setup and answer the prompts roughly as follows:
 | Enable Hooks | **Skip for now** |
 | How to hatch? | **Hatch in Terminal** |
 
-The TUI (terminal UI) is an interactive chat you can use to talk to OpenClaw directly. When onboarding completes, a `"Wake up, my friend!"` message is sent and the agent responds. Pop over to Discord and `@YourBot hello` — same agent, different surface.
+The TUI (terminal UI) is an interactive chat you can use to talk to OpenClaw directly. When onboarding completes, a `"Wake up, my friend!"` message is sent and the agent responds.
 
 ![OpenClaw sends its first response in Discord](/images/blog/ai-assistant-pays-its-own-bills-discord-response.gif)
+
+Pop over to Discord and `@YourBot hello` — same agent, different surface.
+
+You'll see an error with a requestId. Copy that requestId and approve it:
+
+```
+openclaw devices approve <requestId>
+```
 
 On first connection, OpenClaw will ask you to give it a **name**, **nature**, **vibe**, and **emoji**. Set these once and the agent stops asking. 
 
@@ -228,14 +236,6 @@ If something goes wrong:
 
 ## Putting It All Together
 
-// TODO BG i thought approval was part of the Discord process?
-We are going to set up a cron job to receive the desired information. Before going further, pre-approve this device's scopes so OpenClaw doesn't pause for permission later. Run:
-
-`openclaw cron list`
-
-You'll see an error with a requestId. Copy that requestId and approve it:
-
-`openclaw devices approve <requestId>`
 
 Now we tell the agent what we want the daily workflow to look like. No shell scripts, no config edits, no rigid prompt templates — just describe the pipeline in plain English. In Discord:
 
@@ -333,12 +333,6 @@ A few things worth understanding once the cron is running:
 **`pairing required` when adding the cron.** Use the explicit requestId approval form, not `--latest`:
 ```bash
 openclaw devices approve <requestId>
-```
-
-**Onboarding wizard crashes.** Confirm you're on the pinned version:
-```bash
-npm uninstall -g openclaw
-npm install -g openclaw@2026.4.23
 ```
 
 **Bot hangs on "conjuring".** You're rate-limited by your LLM provider. Generate a dedicated API key for this VM, switch models, or upgrade your tier.
