@@ -261,6 +261,8 @@ Verify the cron was registered:
 openclaw cron list
 ```
 
+If you hit a `pairing required` error with a requestId here, OpenClaw is asking you to approve this device's local channel — the same flow as the Discord approval earlier. Run `openclaw devices approve <requestId>` with the requestId from the error, then re-run `openclaw cron list`.
+
 You should see a job with the schedule and next run time.
 
 ## Go!
