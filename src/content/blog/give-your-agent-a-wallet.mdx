@@ -1,9 +1,9 @@
 ---
-title: "How To Build an AI Assistant That Pays Its Own Bills"
-description: "Teach OpenClaw to spend USDC on x402 APIs and deliver a daily Bitcoin report to Discord — set up almost entirely by chatting with the agent, no scripts required."
+title: "Give Your Agent a Wallet Instead of Another API Key"
+description: "Fund an AI agent with $1 of USDC on Base and let it pay for x402 APIs on demand. No signups, no per-service keys. Demo: a daily Bitcoin report to Discord."
 pubDate: 2026-05-25
 author: "Dimitrios Nossis"
-heroImage: "/images/blog/ai-assistant-pays-its-own-bills-hero.png"
+heroImage: "/images/blog/give-your-agent-a-wallet-hero.png"
 categories: ["AI", "Tutorials"]
 tags: ["ai", "openclaw", "x402", "usdc", "base", "discord", "agents", "crypto"]
 ---
@@ -111,7 +111,7 @@ In **OAuth2 → URL Generator**, check `bot` under Scopes and `Send Messages`, `
 
 In Discord, enable Developer Mode (User Settings → Advanced → Developer Mode), right-click the channel where you want the bot to post, and **Copy Channel ID**. Save it — we'll need it later.
 
-![Bot added to Discord](/images/blog/ai-assistant-pays-its-own-bills-bot-added.png)
+![Bot added to Discord](/images/blog/give-your-agent-a-wallet-bot-added.png)
 
 
 ## Install OpenClaw
@@ -146,7 +146,7 @@ Pick Quickstart Setup and answer the prompts roughly as follows:
 
 The TUI (terminal UI) is an interactive chat you can use to talk to OpenClaw directly. When onboarding completes, a `"Wake up, my friend!"` message is sent and the agent responds.
 
-![OpenClaw sends its first response in Discord](/images/blog/ai-assistant-pays-its-own-bills-discord-response.gif)
+![OpenClaw sends its first response in Discord](/images/blog/give-your-agent-a-wallet-discord-response.gif)
 
 Pop over to Discord and `@YourBot hello` — same agent, different surface.
 
@@ -171,7 +171,7 @@ In Discord (or the TUI), send this to your bot:
 
 The agent will fetch the skill metadata, summarize what gets installed, and walk you through any requirements it finds. 
 
-![OpenClaw verifies the Chartsplat skill](/images/blog/ai-assistant-pays-its-own-bills-verify-skill.png)
+![OpenClaw verifies the Chartsplat skill](/images/blog/give-your-agent-a-wallet-verify-skill.png)
 
 When it's done, ask:
 
@@ -187,7 +187,7 @@ Back in your VM terminal, set the private key as the skill's environment variabl
 openclaw config set skills.entries.chartsplat-x402.env.X402_PRIVATE_KEY '"0xYOUR_PRIVATE_KEY_HERE"'
 ```
 
-![Private key inserted successfully](/images/blog/ai-assistant-pays-its-own-bills-private-key.png)
+![Private key inserted successfully](/images/blog/give-your-agent-a-wallet-private-key.png)
 
 The single quotes are for the shell, the double quotes inside are for OpenClaw's config parser. Without that pattern you'll hit a validation error.
 
@@ -232,7 +232,7 @@ If something goes wrong:
 - The agent says X402_PRIVATE_KEY is not set in the environment — tell it to read the key from `openclaw.json`.
 - The agent saves the chart locally but doesn't post it to Discord — tell it to post the generated chart to Discord as well.
 
-![ChartSplat x402 chart from OpenClaw](/images/blog/ai-assistant-pays-its-own-bills-test-chart.png)
+![ChartSplat x402 chart from OpenClaw](/images/blog/give-your-agent-a-wallet-test-chart.png)
 
 ## Putting It All Together
 
@@ -280,7 +280,7 @@ openclaw cron run <JOB_ID>   # trigger immediately
 
 After a minute or so, the report should land in your Discord channel: a brief AI summary of the week's price action, attached to a candlestick chart paid for with USDC.
 
-![BTC daily report in Discord](/images/blog/ai-assistant-pays-its-own-bills-daily-report.png)
+![BTC daily report in Discord](/images/blog/give-your-agent-a-wallet-daily-report.png)
 
 If the report includes content you didn't ask for — settlement links, status messages, repeated summaries — just tell the agent what to drop. Something like "stop including the BaseScan settlement link in the daily report" updates the cron's behavior going forward, no need to recreate it.
 
@@ -347,7 +347,7 @@ openclaw devices approve <requestId>
 
 Here's what you built:
 
-![The workflow of the project](/images/blog/ai-assistant-pays-its-own-bills-workflow.png)
+![The workflow of the project](/images/blog/give-your-agent-a-wallet-workflow.png)
 
 ## Congrats!
 
