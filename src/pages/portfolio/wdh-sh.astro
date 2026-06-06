@@ -1,0 +1,243 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
+---
+
+<BaseLayout
+  title="WDH.sh — Case Study"
+  description="An x402 shell toolkit: five pay-per-call CLI tools that an AI agent can discover and use with a single funded wallet — no accounts, no API keys."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-violet-900 via-purple-900 to-fuchsia-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">x402</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">AI Agents</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Cloudflare Workers</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">USDC / Base</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          WDH.sh
+        </h1>
+        <p class="text-xl text-white/80">
+          A family of pay-per-call CLI tools that an AI agent can discover and use
+          with a single funded wallet — no accounts, no API keys, no manual
+          provisioning. Authentication <em>is</em> the payment.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">Screenshots</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <img src="/images/portfolio/wdh-sh/wdh-sh-home.png" alt="WDH.sh homepage — the x402 shell toolkit" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/wdh-sh/wdh-sh-docs.png" alt="WDH.sh docs — install and CLI quickstart" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/wdh-sh/wdh-sh-how-it-works.png" alt="WDH.sh how it works — pay per call, no accounts" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="https://wdh.sh" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Visit WDH.sh
+        </a>
+        <a href="https://wdh.sh/docs/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-semibold">
+          Read the Docs
+        </a>
+      </div>
+
+      <div class="mt-12">
+        <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+        <div class="prose prose-lg max-w-none">
+          <p class="text-gray-600">
+            WDH.sh ("Working Dev's Hero") is a toolkit of small, single-purpose
+            CLI tools — file transfer, URL shortening, chart rendering, markdown
+            publishing, and QR codes — each exposed as a paid HTTP endpoint.
+            Instead of signups and API keys, every call is settled in USDC on
+            Base using <a href="https://x402.org" target="_blank" rel="noopener">x402</a>,
+            the HTTP-native "402 Payment Required" payment protocol. The first
+            request returns a <code>402</code> with a price; the caller signs a
+            USDC authorization and resends, and the result comes back. The whole
+            toolkit runs on Cloudflare Workers, so it's globally distributed and
+            scales to zero.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Spinning up a new AI agent usually means a tedious provisioning ritual:
+          create accounts on every service it might need, generate and store API
+          keys, wire up OAuth flows, set rotation schedules, and manage billing
+          dashboards. Multiply that across charts, file hosting, link shortening,
+          and media generation and the setup cost dwarfs the agent itself.
+        </p>
+        <p>
+          We wanted to answer a sharper question: <strong>what if an agent needed
+          nothing but a wallet?</strong> Give it a single funded address and let
+          it find, price, and pay for whatever resources it needs at runtime — no
+          human in the loop creating accounts for capabilities the agent might
+          never use.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          WDH.sh turns each utility into a paid HTTP endpoint behind an x402
+          paywall. There are no accounts and no keys — the wallet signature on
+          each request <em>is</em> the authentication. Fund one wallet with a few
+          dollars of USDC and an agent can call any tool, paying cents to
+          fractions of a cent per request. Revoke the wallet and access is gone.
+        </p>
+        <p>
+          Crucially, the tools are <strong>discoverable</strong>. Every endpoint,
+          its price, and its request/response schema are published to a
+          machine-readable manifest at <code>/.well-known/x402</code> and an
+          OpenAPI spec per service — plus the x402 Bazaar discovery extension that
+          facilitators read to auto-catalog a service. An agent can crawl what's
+          available, learn how to call it, and pay — all without a developer
+          pre-wiring a single integration. That self-service discovery loop is the
+          whole point: one wallet in, capabilities out.
+        </p>
+        <p>
+          The toolkit ships as one CLI (<code>@wdhsh/cli</code>) and runs entirely
+          on Cloudflare Workers, settled through the Coinbase x402 facilitator on
+          Base mainnet. We built it, deployed it, and ran 600+ live paid calls
+          end-to-end for a total of <strong>$6.22 in USDC</strong> — proof the
+          micropayment model works at real-world prices.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Platform</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Cloudflare Workers (one per service)</li>
+            <li>Workers KV &amp; R2 storage</li>
+            <li>Astro marketing + docs site</li>
+            <li>TypeScript monorepo (Turborepo + Bun)</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Payments &amp; Protocol</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>x402 v2 (HTTP 402 + EIP-3009)</li>
+            <li>USDC on Base mainnet</li>
+            <li>Coinbase x402 facilitator</li>
+            <li>Shared x402 middleware package</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">The Tools</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li><code>files</code> — up to 5GB transfers · $0.001–$0.10</li>
+            <li><code>short</code> — URL shortener · $0.001</li>
+            <li><code>charts</code> — chart rendering · $0.005</li>
+            <li><code>md</code> — markdown publishing · $0.002</li>
+            <li><code>qr</code> — QR generation · $0.001</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Discovery &amp; Ops</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li><code>/.well-known/x402</code> manifest</li>
+            <li>Per-service OpenAPI 3.1 specs</li>
+            <li>x402 Bazaar discovery extension</li>
+            <li>Paid feedback &amp; support → Linear</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What we learned Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">What We Learned About x402</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Building WDH.sh end-to-end gave us hard-won, production-level experience
+          with a protocol that's still taking shape. A few of the takeaways:
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-2">One wallet beats N accounts</h3>
+          <p class="text-gray-600">
+            The single biggest unlock: an agent with one funded wallet can use
+            every tool immediately. No per-service signup, no key rotation, no
+            dashboard sprawl — provisioning collapses to "send USDC."
+          </p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-2">Discovery is fragmented</h3>
+          <p class="text-gray-600">
+            There's no single x402 registry yet — it's a mix of crawlers, a DNS
+            convention, and the Bazaar extension. We made WDH.sh discoverable
+            across all of them from one source-of-truth registry.
+          </p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-2">Mainnet ≠ testnet wiring</h3>
+          <p class="text-gray-600">
+            The default public facilitator is testnet-only; Base mainnet needs
+            Coinbase's facilitator with CDP-signed JWTs. Several footguns
+            (atomic-unit amounts, v2 header names, <code>nodejs_compat</code>) only
+            surface with real money.
+          </p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-2">Idempotency must live outside the paywall</h3>
+          <p class="text-gray-600">
+            Verify is free; settle is the on-chain write. We settle only on a 2xx,
+            and keep idempotency caching <em>outside</em> the paywall so a retry
+            never charges a caller twice — the kind of detail that protects real
+            funds.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Building for AI Agents?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        We've shipped real x402 services on mainnet — from payments and discovery
+        to Cloudflare Workers infrastructure. Let's talk about agent-native tools
+        your customers can pay for per call.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="accent" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>
