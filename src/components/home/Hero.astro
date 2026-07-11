@@ -24,9 +24,9 @@ import { Image } from 'astro:assets';
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-32 md:pb-40 lg:pb-48">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <!-- Text Content -->
-      <div class="text-center lg:text-left">
+    <div class="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center">
+      <!-- Text Content (on phones it overlaps the banner's faded bottom) -->
+      <div class="relative z-10 text-center lg:text-left -mt-20 md:mt-0">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-6">
           We Build
           <span class="bg-gradient-to-r from-secondary-400 to-brand-pink bg-clip-text text-transparent"> AI&#8209;Powered</span>
