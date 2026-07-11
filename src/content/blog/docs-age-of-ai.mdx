@@ -1,0 +1,50 @@
+---
+title: "The Best Way to Write Docs in the Age of AI"
+description: "One session with Claude Code, a running dev environment, and Mintlify rebuilt the entire Automate It docs site — source-verified content, scripted screenshots, and a pipeline that keeps docs honest."
+pubDate: 2026-07-11T19:00:00-04:00
+author: "bobbyg603"
+heroImage: "/images/blog/docs-age-of-ai.jpg"
+categories: ["AI", "Software"]
+tags: ["ai", "claude", "docs", "mintlify", "playwright", "automate-it"]
+---
+
+We rewrote the entire [Automate It](https://automate.it.com) docs site in one working session. Not "drafted an outline." The whole thing: twenty-six pages, a full REST and MCP reference, screenshots of every screen, five thousand lines of stale duplicate docs deleted, deployed to [docs.automate.it.com](https://docs.automate.it.com).
+
+Here's the uncomfortable part: the old docs weren't bad because we were lazy. They were bad because docs written by hand start dying the moment you publish them. Ours claimed an API key format that didn't exist, file-size limits that were wrong in both directions, and "38 MCP tools" on one page while another page documented 26. Two copies of the truth, rotting at different speeds.
+
+The fix wasn't writing more carefully. It was changing what "writing docs" means.
+
+## Docs shouldn't be written. They should be derived.
+
+The old way: a human opens a blank page and types what they remember being true. The new way: an AI agent with access to your actual codebase derives the docs from the source, and a human reviews them — the same review-gate philosophy Automate It applies to content applies to documentation.
+
+Because we had the full development environment running locally, Claude (running in Claude Code) could do things a docs tool never could:
+
+**It read the source instead of trusting the old copy.** Every endpoint, scope, status enum, and file-size limit in the new docs was verified against the route handlers before it shipped. That fact-check found the discrepancies above — and a genuine bug: our API rate limiter was wired in a way that meant it never actually fired. Writing docs found a bug the tests missed. Twice the value for the same work.
+
+**It took its own screenshots.** The agent wrote a small Playwright script that signs into the local app, walks every documented screen, and captures them at a fixed viewport. It even curated the local database first — seeded the task board with realistic content, added skills, swapped in the proper workspace logo — so the screenshots look like a real workspace instead of an empty demo. The script is checked into the repo. Next redesign? Re-run one command and every screenshot is current again.
+
+**It cleaned up after itself.** The duplicated docs pages on our marketing site — the ones quietly contradicting the real docs — became redirects. One source of truth left standing.
+
+**It shipped like code, because docs are code.** Everything landed as a single pull request. Mintlify's GitHub App built a preview of the site right on the PR, its check caught one MDX syntax error before deploy (an agent is not magic; a CI gate is), the agent fixed it, and merging to main deployed the site. No CMS. No copy-paste. No "who has the Figma with the screenshots."
+
+## The stack, if you want to copy it
+
+The docs half of this runs on [Mintlify](https://mintlify.com), and the free plan covers a shocking amount of it:
+
+- **Docs as MDX in your repo** — components, Mermaid diagrams, dark mode, and search out of the box
+- **A custom domain** — docs.yourproduct.com, on the $0 plan
+- **GitHub auto-deploy** — merge to main, docs are live
+- **A web editor** — for teammates who don't want to touch git
+- **Your docs as an MCP server** — AI agents can query your documentation directly, which matters more every month
+- **An API playground** for your endpoints
+
+Add an AI agent with access to your repo and a running dev environment, and the loop closes: facts derived from source, screenshots derived from the app, review derived from a pull request.
+
+## Docs that can be regenerated are docs that stay true
+
+That's the actual lesson. A hand-written doc is a snapshot; it's wrong the week after you ship. A derived doc — checked against source, illustrated by a script, gated by CI — can be regenerated any time the product moves. In the age of AI, that regeneration costs one prompt.
+
+Go click around [docs.automate.it.com](https://docs.automate.it.com) — everything you see, including the screenshots, came out of the session described above.
+
+And if you're staring at your own product thinking "our docs claim things our API stopped doing a year ago" — we'll do this for you. Codebase-verified docs, real screenshots, a pipeline that keeps them honest. [Get in touch](/contact) and point us at your repo.
