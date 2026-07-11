@@ -1,0 +1,69 @@
+---
+title: "AI Drafts, Human Approves: How Three AIs and One Human Rebranded This Site"
+description: "Claude Fable 5 orchestrated, Grok Imagine illustrated, Google's Nano Banana Pro handled the fine edits via Venice, and a human approved every pixel. Inside the Working Dev's Hero brand-family refresh."
+pubDate: 2026-07-11T12:00:00-04:00
+author: "bobbyg603"
+heroImage: "/images/blog/brand-family-refresh.png"
+categories: ["AI", "Software"]
+tags: ["ai", "claude", "grok", "venice", "design", "branding", "astro"]
+---
+
+## The Setup 🎨
+
+A few days ago we shipped a full rebrand of [Automate It](https://automate.it.com), our content automation platform: a violet-to-pink gradient, Bricolage Grotesque headlines, and a "Social media on autopilot. No slop allowed." pitch. It came out great, which created a new problem: the company site you're reading right now suddenly looked like it belonged to a different company.
+
+So we pointed the same workflow at workingdevshero.com. The rule we set going in: **siblings, not clones**. This site keeps its plum palette, its light theme, and its superhero mascot. It adopts the family's gradient accents, the display font, and finally tells the Automate It story it had somehow never mentioned.
+
+One afternoon later: a [team page](/team) for our human-and-AI squad, a [Custom Automations](/services/custom-automations) service, an [Automate It case study](/portfolio/automate-it), a full-bleed animated-feeling hero, new social cards, and a pile of small fixes. Here's how the work actually got done, because the *how* is the interesting part.
+
+## The Orchestra 🎼
+
+Three different AI systems touched this refresh, each doing what it's best at:
+
+- **Claude Fable 5** (via Claude Code) was the orchestrator. It explored the codebase, planned the work, ported the brand kit from the Automate It repo, wrote every component, drove the image generation, ran the builds, took the screenshots, and opened the PR.
+- **Grok Imagine** (Grok Build's image model) was the illustrator. Claude called it headlessly from the command line — one CLI talking to another:
+
+```bash
+grok --always-approve -p "/imagine Flat vector sticker-style character portrait: ..."
+```
+
+- **Google's Nano Banana Pro image edit model** (via [Venice](https://venice.ai)) handled the surgical edits no prompt was going to nail. More on that below.
+
+And one human sat in the review seat, approving or rejecting every single image before it shipped. If that loop sounds familiar, it's because it's exactly the [review gate Automate It](https://automate.it.com) puts between AI and your audience. We didn't just build the brand refresh; we ran our own philosophy on it.
+
+## The Floundering 🦞
+
+Let's be honest about the middle part: we floundered.
+
+The first team portraits were charming and completely wrong. Claudius and Claudia, our OpenClaw agents, came back as a cozy guy in a cardigan and a mechanic with a ponytail. Cute! Except anyone who's visited [claudius.blog](https://claudius.blog) or [claudia.cool](https://claudia.cool) knows they're **robotic lobsters** with lightbulb antennas. The fix wasn't a cleverer prompt — it was Claude actually *reading their websites*, pulling the canonical art, and describing it precisely: red-orange segmented shell, purple cartoon eyes, silver mech joints, glowing bulb on a metal stalk. Claudia's only differences: two pink polka-dot bows on her antennae, and eyelashes.
+
+Then the detail rounds: Claudius had a nose (lobsters don't). Then his claws weren't folded. Then his grin was too smug. Moses needed to be *biblically* accurate with WDH flare: plum robes, glowing staff, a stone tablet carved with `</>`. Neo needed to look like, well, Neo, and lose the purple skin and the green code-rain backdrop. All in, the character set took about **two dozen generations** to get right.
+
+Was that wasteful? Each render took under a minute and cost pennies. The expensive part of illustration was never the drawing — it was the *deciding*. And the deciding is exactly what stayed human.
+
+Two prompt lessons worth stealing: always append "absolutely no text, no letters, no numbers anywhere" (diffusion models love decorating with gibberish glyphs), and describe the *composition*, not just the subject. Our full-bleed hero was generated with "the left half is quiet open night sky that fades to solid deep plum at the edge" specifically so CSS could take over from there.
+
+## The Human Touch 🖌️
+
+The rooftop hero scene came out of Grok strong: moonlit, caped, gloriously uncluttered. But it wasn't *ours* yet. So the human took it into Venice and used **Google's Nano Banana Pro** image edit model to add the beard (obviously) and the `</>` emblem on the chest, the same mark our mascot has worn since day one. Then it was upscaled to 21:9, with a square companion cropped for mobile.
+
+That's the division of labor in one sentence: AI got us 90% of the way in minutes, and the last 10% — the identity, the details that make it recognizably us — was human judgment applied with a precision tool.
+
+## The Engineering Bits 🔧
+
+A few techniques from this refresh that we'll reuse forever:
+
+- **Full-bleed hero without tiling.** Instead of tiling AI art (seams, collage vibes), generate the scene *composed for overlay* (subject right, quiet sky fading to a solid brand color on the left), then let a CSS gradient scrim extend it infinitely. On ultrawide monitors the whole composition caps at 1920px and centers between seamless plum pillars.
+- **Social cards as code.** Both og images are checked-in HTML files screenshotted at 1200×630 with Playwright. Rebrand the site, tweak two HTML files, re-screenshot. No designer round-trip.
+- **Let the framework do the compression.** The committed hero art is ~750KB of PNG; Astro's image pipeline serves it as a **27KB webp**. The five team portraits ship at 7–10KB each. The entire hero costs less bandwidth than a favicon.
+- **QA is where it becomes real.** The last hour was unglamorous and essential: a headline breaking mid-word on "AI-Powered" (non-breaking hyphen), a button wrapping awkwardly, the mobile hero moving above the headline, a stale homepage portfolio section that had been showing two-year-old projects, and the ultrawide layout that looked fantastic on a 14" MacBook and terrible on a 34" monitor. Every one caught by looking at actual screenshots at 390, 1440, and 3440 pixels wide.
+
+## The Meta-Lesson 🦸
+
+The thing we keep coming back to: none of the AI systems involved shipped anything on their own. Claude proposed, Grok drew, Venice edited — and a human approved every image, every layout, every line of copy before it went live. That's not a limitation of the workflow. That *is* the workflow. It's how you get AI speed without AI slop.
+
+It's the same loop we sell: [Automate It](https://automate.it.com) puts a swipe-to-approve review gate between AI agents and your social channels, and our [Custom Automations](/services/custom-automations) service builds these pipelines for your business. This site is the demo.
+
+And if you want to meet the AI teammates who work this way every day (lobsters, prophet, and The One included), they're on the [team page](/team) now.
+
+**Rebranded anything with an AI crew lately? Tell us how it went on [X @workingdevshero](https://x.com/workingdevshero)!**

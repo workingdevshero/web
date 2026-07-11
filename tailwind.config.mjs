@@ -74,10 +74,22 @@ export default {
           800: '#732E00',
           900: '#431B00',
         },
+        // Shared brand-family palette (matches automate.it.com)
+        brand: {
+          violet: '#7C3AED',
+          purple: '#6D28D9',
+          fuchsia: '#A21CAF',
+          pink: '#EC4899',
+          deep: '#4A1D6A',
+        },
+      },
+      backgroundImage: {
+        'brand-gradient': 'linear-gradient(135deg, #6D28D9 0%, #A21CAF 60%, #EC4899 130%)',
+        'brand-gradient-text': 'linear-gradient(90deg, #7C3AED, #EC4899)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        heading: ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       typography: (theme) => ({

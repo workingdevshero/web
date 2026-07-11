@@ -1,0 +1,59 @@
+---
+import ServicePage from '@layouts/ServicePage.astro';
+
+const features = [
+  'Automation discovery and scoping workshop',
+  'Automate It platform setup and onboarding',
+  'Custom AI agent skills and workflows',
+  'Content pipelines with your brand guardrails',
+  'Human-in-the-loop review and approval flows',
+  'Integrations with your socials, CMS, and CRM',
+  'Analytics and iteration on what performs',
+  'Training and handoff for your team',
+];
+
+const benefits = [
+  {
+    title: 'Done For You',
+    description: 'We design, build, and tune the automations — you show up to a review queue of on-brand drafts, not a blank page.',
+  },
+  {
+    title: 'You Stay in Control',
+    description: 'Every automation runs through a human approval gate. AI does the work; nothing publishes without your sign-off.',
+  },
+  {
+    title: 'Built on Our Own Product',
+    description: 'We run these automations on Automate It, the platform we build and use ourselves — not a pile of duct-taped scripts.',
+  },
+];
+---
+
+<ServicePage
+  title="Custom Automations"
+  description="Done-for-you AI automations built on the Automate It platform — content pipelines, review workflows, and integrations tailored to your business."
+  icon="🤖"
+  heroImage="/images/pages/custom-automations.png"
+  features={features}
+  benefits={benefits}
+>
+  <!-- Powered by Automate It -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="chip-brand mb-6">⚡ Powered by Automate It</span>
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">
+        Social Media on Autopilot. No Slop Allowed.
+      </h2>
+      <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        Automate It is our content automation platform: describe what you want in plain English, AI agents draft it, and you approve with a swipe. We'll set it up, wire in your channels, and build the custom skills your business needs.
+      </p>
+      <a
+        href="https://automate.it.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-secondary font-semibold hover:underline underline-offset-4"
+      >
+        Explore Automate It →
+      </a>
+    </div>
+  </section>
+</ServicePage>

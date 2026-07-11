@@ -16,6 +16,12 @@ const services = [
     href: '/services/operations-ai',
   },
   {
+    title: 'Custom Automations',
+    description: 'Done-for-you AI automations on the Automate It platform — agents do the work, you approve.',
+    icon: '🤖',
+    href: '/services/custom-automations',
+  },
+  {
     title: 'Consulting',
     description: 'Technical architecture review, AI strategy roadmaps, and technology stack evaluation.',
     icon: '🎯',
@@ -31,7 +37,7 @@ const services = [
       subtitle="From full-stack development to strategic consulting, we've got you covered."
     />
 
-    <div class="grid md:grid-cols-3 gap-6 mb-12">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       {services.map((service) => (
         <a
           href={service.href}

@@ -4,6 +4,13 @@ import Button from '@components/ui/Button.astro';
 
 const projects = [
   {
+    title: 'Automate It',
+    description: 'Social media on autopilot. AI agents draft on-brand content from plain-English automations — you approve with a swipe. No slop allowed.',
+    tags: ['Our Product', 'AI Agents', 'Social Media'],
+    href: '/portfolio/automate-it',
+    gradient: 'from-brand-purple via-brand-fuchsia to-brand-pink',
+  },
+  {
     title: 'WDH.sh',
     description: 'An x402 shell toolkit — five pay-per-call CLI tools an AI agent can discover and use with a single funded wallet. No accounts, no API keys.',
     tags: ['x402', 'AI Agents', 'Cloudflare Workers', 'USDC'],
@@ -111,7 +118,7 @@ const projects = [
       <p class="text-lg text-gray-300 mb-8">
         Let's discuss how we can help bring your ideas to life.
       </p>
-      <Button href="/contact" variant="accent" size="lg">
+      <Button href="/contact" variant="primary" size="lg">
         Start Your Project
       </Button>
     </div>

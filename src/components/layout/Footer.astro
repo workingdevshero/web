@@ -5,10 +5,12 @@ const footerLinks = {
   services: [
     { label: 'Full-Stack Development', href: '/services/full-stack' },
     { label: 'Operations & AI Integration', href: '/services/operations-ai' },
+    { label: 'Custom Automations', href: '/services/custom-automations' },
     { label: 'Consulting', href: '/services/consulting' },
   ],
   company: [
     { label: 'About', href: '/about' },
+    { label: 'Team', href: '/team' },
     { label: 'Portfolio', href: '/portfolio' },
     { label: 'Blog', href: '/blog' },
     { label: 'Shop', href: '/shop' },
@@ -73,7 +75,7 @@ const footerLinks = {
 
       <!-- Services -->
       <div>
-        <h3 class="font-heading font-semibold text-lg mb-4">Services</h3>
+        <h3 class="font-sans font-semibold text-lg mb-4">Services</h3>
         <ul class="space-y-2">
           {footerLinks.services.map((link) => (
             <li>
@@ -87,7 +89,7 @@ const footerLinks = {
 
       <!-- Company -->
       <div>
-        <h3 class="font-heading font-semibold text-lg mb-4">Company</h3>
+        <h3 class="font-sans font-semibold text-lg mb-4">Company</h3>
         <ul class="space-y-2">
           {footerLinks.company.map((link) => (
             <li>
@@ -101,13 +103,13 @@ const footerLinks = {
 
       <!-- Newsletter -->
       <div>
-        <h3 class="font-heading font-semibold text-lg mb-4">Join the Hero Squad</h3>
+        <h3 class="font-sans font-semibold text-lg mb-4">Join the Hero Squad</h3>
         <p class="text-gray-400 text-sm mb-4">
           Get AI insights, dev tips, and updates delivered to your inbox.
         </p>
         <a
           href="/newsletter"
-          class="inline-block btn-accent text-sm"
+          class="inline-block btn-primary text-sm"
         >
           Subscribe
         </a>

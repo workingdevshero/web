@@ -1,24 +1,42 @@
 ---
 import Button from '@components/ui/Button.astro';
-import heroImage from '@assets/images/hero-mascot.png';
+import heroImage from '@assets/images/hero-scene.png';
+import heroScene from '@assets/images/hero-scene-wide.png';
 import { Image } from 'astro:assets';
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-primary via-primary-600 to-secondary">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-32 md:pb-40 lg:pb-48">
+<section class="relative overflow-hidden bg-[#2d1941]">
+  <!-- Composition wrapper: caps the scene+text at 1920px and centers both on ultrawide displays;
+       #2d1941 is the scene's night-sky color, so pillars and fades stay seamless beyond it -->
+  <div class="relative max-w-[120rem] mx-auto bg-gradient-to-br from-primary via-primary-600 to-secondary">
+    <!-- Full-bleed rooftop scene (desktop); the opaque sky canvas replaces the mobile gradient at lg+
+         and both image edges fade into it -->
+    <div class="absolute inset-0 hidden lg:block bg-[#2d1941]" aria-hidden="true">
+      <Image
+        src={heroScene}
+        alt=""
+        width={2000}
+        height={848}
+        class="absolute inset-y-0 -right-36 h-full w-auto max-w-none"
+      />
+      <div class="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-[#2d1941] from-45% to-transparent"></div>
+      <div class="absolute inset-y-0 -right-44 w-64 bg-gradient-to-l from-[#2d1941] via-[#2d1941]/80 to-transparent"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-32 md:pb-40 lg:pb-48">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <!-- Text Content -->
       <div class="text-center lg:text-left">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-6">
           We Build
-          <span class="text-accent"> AI-Powered</span>
+          <span class="bg-gradient-to-r from-secondary-400 to-brand-pink bg-clip-text text-transparent"> AI&#8209;Powered</span>
           <br />Software That Ships
         </h1>
         <p class="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto lg:mx-0">
           From concept to production — your AI-enabled development partner. We help startups and enterprises build intelligent software solutions.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <Button href="/contact" variant="accent" size="lg">
+          <Button href="/contact" variant="primary" size="lg">
             Start Your Project
           </Button>
           <Button href="/portfolio" variant="secondary" size="lg">
@@ -27,15 +45,15 @@ import { Image } from 'astro:assets';
         </div>
       </div>
 
-      <!-- Hero Image -->
-      <div class="relative flex justify-center lg:justify-end">
+      <!-- Hero Image (mobile/tablet card, shown above the text; the desktop scene is the section background) -->
+      <div class="relative flex justify-center order-first lg:hidden">
         <div class="relative animate-float">
           <Image
             src={heroImage}
-            alt="Working Dev's Hero mascot"
-            width={400}
-            height={400}
-            class="w-64 md:w-80 lg:w-96 drop-shadow-2xl rounded-2xl"
+            alt="The Working Dev's Hero coding on a city rooftop at night"
+            width={768}
+            height={768}
+            class="w-72 md:w-96 drop-shadow-2xl rounded-2xl"
           />
           <!-- Decorative elements -->
           <div class="absolute -top-4 -right-4 w-20 h-20 bg-accent/30 rounded-full blur-xl"></div>
@@ -43,11 +61,12 @@ import { Image } from 'astro:assets';
         </div>
       </div>
     </div>
+    </div>
   </div>
 
-  <!-- Bottom wave decoration -->
-  <div class="absolute bottom-0 left-0 right-0">
-    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+  <!-- Bottom wave decoration (fixed height so it never rides up over the CTAs on wide screens) -->
+  <div class="absolute -bottom-px left-0 right-0">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" class="block w-full h-8 sm:h-12 md:h-16 lg:h-24 xl:h-[120px]">
       <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
     </svg>
   </div>

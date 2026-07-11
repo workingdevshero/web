@@ -4,6 +4,7 @@ interface Props {
   class?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
   hover?: boolean;
+  external?: boolean;
 }
 
 const {
@@ -11,6 +12,7 @@ const {
   class: className = '',
   padding = 'md',
   hover = true,
+  external = false,
 } = Astro.props;
 
 const paddingClasses = {
@@ -26,7 +28,12 @@ const classes = `${baseClasses} ${hoverClasses}`;
 ---
 
 {href ? (
-  <a href={href} class={`block ${classes}`}>
+  <a
+    href={href}
+    class={`block ${classes}`}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+  >
     <slot />
   </a>
 ) : (
