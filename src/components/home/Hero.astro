@@ -1,6 +1,6 @@
 ---
 import Button from '@components/ui/Button.astro';
-import heroImage from '@assets/images/hero-mascot.png';
+import heroImage from '@assets/images/hero-scene.png';
 import { Image } from 'astro:assets';
 ---
 
@@ -11,7 +11,7 @@ import { Image } from 'astro:assets';
       <div class="text-center lg:text-left">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-6">
           We Build
-          <span class="bg-gradient-to-r from-secondary-400 to-brand-pink bg-clip-text text-transparent"> AI-Powered</span>
+          <span class="bg-gradient-to-r from-secondary-400 to-brand-pink bg-clip-text text-transparent"> AI&#8209;Powered</span>
           <br />Software That Ships
         </h1>
         <p class="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto lg:mx-0">
@@ -32,10 +32,10 @@ import { Image } from 'astro:assets';
         <div class="relative animate-float">
           <Image
             src={heroImage}
-            alt="Working Dev's Hero mascot"
-            width={400}
-            height={400}
-            class="w-64 md:w-80 lg:w-96 drop-shadow-2xl rounded-2xl"
+            alt="The Working Dev's Hero coding on a city rooftop at night"
+            width={480}
+            height={480}
+            class="w-72 md:w-96 lg:w-[28rem] drop-shadow-2xl rounded-2xl"
           />
           <!-- Decorative elements -->
           <div class="absolute -top-4 -right-4 w-20 h-20 bg-accent/30 rounded-full blur-xl"></div>
