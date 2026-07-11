@@ -5,20 +5,24 @@ import heroScene from '@assets/images/hero-scene-wide.png';
 import { Image } from 'astro:assets';
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-primary via-primary-600 to-secondary">
-  <!-- Full-bleed rooftop scene (desktop); the left edge blends into the section gradient -->
-  <div class="absolute inset-0 hidden lg:block" aria-hidden="true">
-    <Image
-      src={heroScene}
-      alt=""
-      width={2000}
-      height={848}
-      class="absolute inset-y-0 -right-36 h-full w-auto max-w-none"
-    />
-    <div class="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-primary via-primary/70 to-transparent"></div>
-  </div>
+<section class="relative overflow-hidden bg-primary">
+  <!-- Composition wrapper: caps the scene+text at 1920px and centers both on ultrawide displays;
+       carries the gradient so the section's plum pillars stay seamless beyond it -->
+  <div class="relative max-w-[120rem] mx-auto bg-gradient-to-br from-primary via-primary-600 to-secondary">
+    <!-- Full-bleed rooftop scene (desktop); both edges blend into the section gradient -->
+    <div class="absolute inset-0 hidden lg:block" aria-hidden="true">
+      <Image
+        src={heroScene}
+        alt=""
+        width={2000}
+        height={848}
+        class="absolute inset-y-0 -right-36 h-full w-auto max-w-none"
+      />
+      <div class="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-primary via-primary/70 to-transparent"></div>
+      <div class="absolute inset-y-0 -right-44 w-64 bg-gradient-to-l from-primary via-primary/80 to-transparent"></div>
+    </div>
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-32 md:pb-40 lg:pb-48">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-32 md:pb-40 lg:pb-48">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <!-- Text Content -->
       <div class="text-center lg:text-left">
@@ -40,8 +44,8 @@ import { Image } from 'astro:assets';
         </div>
       </div>
 
-      <!-- Hero Image (mobile/tablet card; the desktop scene is the section background) -->
-      <div class="relative flex justify-center lg:hidden">
+      <!-- Hero Image (mobile/tablet card, shown above the text; the desktop scene is the section background) -->
+      <div class="relative flex justify-center order-first lg:hidden">
         <div class="relative animate-float">
           <Image
             src={heroImage}
@@ -55,6 +59,7 @@ import { Image } from 'astro:assets';
           <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
