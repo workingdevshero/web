@@ -1,6 +1,6 @@
 ---
 import Button from '@components/ui/Button.astro';
-import heroImage from '@assets/images/hero-scene.png';
+import heroMobile from '@assets/images/hero-scene-mobile.png';
 import heroScene from '@assets/images/hero-scene-wide.png';
 import { Image } from 'astro:assets';
 ---
@@ -8,7 +8,7 @@ import { Image } from 'astro:assets';
 <section class="relative overflow-hidden bg-[#2d1941]">
   <!-- Composition wrapper: caps the scene+text at 1920px and centers both on ultrawide displays;
        #2d1941 is the scene's night-sky color, so pillars and fades stay seamless beyond it -->
-  <div class="relative max-w-[120rem] mx-auto bg-gradient-to-br from-primary via-primary-600 to-secondary">
+  <div class="relative max-w-[120rem] mx-auto">
     <!-- Full-bleed rooftop scene (desktop); the opaque sky canvas replaces the mobile gradient at lg+
          and both image edges fade into it -->
     <div class="absolute inset-0 hidden lg:block bg-[#2d1941]" aria-hidden="true">
@@ -45,20 +45,16 @@ import { Image } from 'astro:assets';
         </div>
       </div>
 
-      <!-- Hero Image (mobile/tablet card, shown above the text; the desktop scene is the section background) -->
-      <div class="relative flex justify-center order-first lg:hidden">
-        <div class="relative animate-float">
-          <Image
-            src={heroImage}
-            alt="The Working Dev's Hero coding on a city rooftop at night"
-            width={768}
-            height={768}
-            class="w-72 md:w-96 drop-shadow-2xl rounded-2xl"
-          />
-          <!-- Decorative elements -->
-          <div class="absolute -top-4 -right-4 w-20 h-20 bg-accent/30 rounded-full blur-xl"></div>
-          <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
-        </div>
+      <!-- Hero Image (mobile/tablet full-bleed banner whose bottom fades into the section canvas;
+           the desktop scene is the section background) -->
+      <div class="relative -mx-4 sm:-mx-6 -mt-16 md:-mt-24 order-first lg:hidden">
+        <Image
+          src={heroMobile}
+          alt="The Working Dev's Hero coding on a city rooftop at night"
+          width={720}
+          height={1280}
+          class="w-full aspect-[4/5] md:aspect-[16/10] object-cover object-[center_62%] md:object-[center_30%]"
+        />
       </div>
     </div>
     </div>
