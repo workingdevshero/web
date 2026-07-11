@@ -23,10 +23,10 @@ import { Image } from 'astro:assets';
       <div class="absolute inset-y-0 -right-44 w-64 bg-gradient-to-l from-[#2d1941] via-[#2d1941]/80 to-transparent"></div>
     </div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-20 md:pb-40 lg:pb-48">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 lg:pt-32 pb-16 md:pb-40 lg:pb-48">
     <div class="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center">
       <!-- Text Content (on phones it overlaps the banner's faded bottom) -->
-      <div class="relative z-10 text-center lg:text-left -mt-20 md:mt-0">
+      <div class="relative z-10 text-center lg:text-left -mt-24 md:mt-0">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-6">
           We Build
           <span class="bg-gradient-to-r from-secondary-400 to-brand-pink bg-clip-text text-transparent"> AI&#8209;Powered</span>
@@ -53,7 +53,7 @@ import { Image } from 'astro:assets';
           alt="The Working Dev's Hero coding on a city rooftop at night"
           width={720}
           height={1280}
-          class="w-full aspect-square md:aspect-[16/10] object-cover object-[center_62%] md:object-[center_30%]"
+          class="w-full aspect-[9/10] md:aspect-[16/10] object-cover object-[center_55%] md:object-[center_30%]"
         />
       </div>
     </div>
@@ -66,4 +66,6 @@ import { Image } from 'astro:assets';
       <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
     </svg>
   </div>
+  <!-- Solid white bottom edge: prevents the svg's anti-aliased edge from leaving a hairline at fractional DPRs -->
+  <div class="absolute bottom-0 left-0 right-0 h-1 bg-white" aria-hidden="true"></div>
 </section>
