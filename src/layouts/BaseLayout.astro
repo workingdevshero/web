@@ -27,6 +27,7 @@ const socialImageURL = new URL(image, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Primary Meta Tags -->
@@ -40,6 +41,9 @@ const socialImageURL = new URL(image, Astro.site);
     <meta property="og:title" content={`${title} | Working Dev's Hero`} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Working Dev's Hero — We build AI-powered software that ships" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -51,6 +55,9 @@ const socialImageURL = new URL(image, Astro.site);
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Self-hosted display font -->
+    <link rel="preload" href="/fonts/BricolageGrotesque-ExtraBold.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body class="min-h-screen flex flex-col bg-white">
     <Header />

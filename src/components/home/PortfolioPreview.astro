@@ -4,18 +4,32 @@ import Button from '@components/ui/Button.astro';
 
 const projects = [
   {
+    title: 'Automate It',
+    description: 'Social media on autopilot. AI agents draft on-brand content from plain-English automations — you approve with a swipe. No slop allowed.',
+    tags: ['Our Product', 'AI Agents', 'Social Media'],
+    href: '/portfolio/automate-it',
+    gradient: 'from-brand-purple via-brand-fuchsia to-brand-pink',
+  },
+  {
+    title: 'WDH.sh',
+    description: 'An x402 shell toolkit — five pay-per-call CLI tools an AI agent can discover and use with a single funded wallet. No accounts, no API keys.',
+    tags: ['x402', 'AI Agents', 'Cloudflare Workers', 'USDC'],
+    href: '/portfolio/wdh-sh',
+    gradient: 'from-violet-900 to-fuchsia-800',
+  },
+  {
+    title: 'MCP Servers for Revit',
+    description: 'Enhanced an open-source project connecting AI assistants to Revit, enabling natural language building design for smart fire suppression prototyping.',
+    tags: ['Open Source', 'MCP', 'Revit', 'BIM'],
+    href: '/portfolio/mcp-servers-for-revit',
+    gradient: 'from-orange-600 to-red-700',
+  },
+  {
     title: 'Olympia Fitness',
     description: 'A performance tracking application for CSCS trainers to administer tests, track athlete progress, and share results with parents.',
     tags: ['Mobile App', 'iOS', 'Android', 'Capacitor'],
     href: '/portfolio/olympia-fitness',
     gradient: 'from-blue-700 to-blue-900',
-  },
-  {
-    title: 'Hey Bible',
-    description: 'A Bible verse lookup and favoriting tool with AI-powered generative art creation from your favorite scriptures.',
-    tags: ['Mobile App', 'iOS', 'Android', 'Capacitor'],
-    href: '/portfolio/hey-bible',
-    gradient: 'from-blue-400 to-blue-600',
   },
 ];
 ---
@@ -32,9 +46,7 @@ const projects = [
       {projects.map((project) => (
         <a
           href={project.href}
-          class="group relative overflow-hidden rounded-2xl bg-gradient-to-br p-8 md:p-10 transition-transform duration-300 hover:scale-[1.02]"
-          style={`background: linear-gradient(135deg, var(--tw-gradient-stops))`}
-          class:list={[`bg-gradient-to-br ${project.gradient}`]}
+          class={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${project.gradient} p-8 md:p-10 transition-transform duration-300 hover:scale-[1.02]`}
         >
           <div class="relative z-10">
             <div class="flex flex-wrap gap-2 mb-4">

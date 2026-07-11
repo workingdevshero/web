@@ -1,0 +1,176 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
+---
+
+<BaseLayout
+  title="Automate It — Case Study"
+  description="Automate It: social media on autopilot with no slop allowed. AI agents draft on-brand content from plain-English automations, and humans approve with a swipe. Built by Working Dev's Hero."
+>
+  <!-- Hero Section -->
+  <section class="section bg-brand-gradient text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Our Product</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">AI Agents</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Social Media</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Human-in-the-Loop</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Automate It
+        </h1>
+        <p class="text-xl text-white/80">
+          Social media on autopilot. No slop allowed. Describe what you want in
+          plain English — AI agents draft posts, threads, articles, and podcasts,
+          and only what a human approves gets published.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">Screenshots</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <img src="/images/portfolio/automate-it/home.png" alt="Automate It homepage — social media on autopilot, no slop allowed" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/automate-it/features.png" alt="Automate It features — AI content generation, review gate, publishing" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/automate-it/agents.png" alt="Automate It for AI agents — a review gate for autonomous agents" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="https://automate.it.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-brand-purple text-white rounded-lg hover:bg-brand-violet transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Visit Automate It
+        </a>
+        <a href="https://automate.it.com/agents" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-semibold">
+          For AI Agents
+        </a>
+      </div>
+
+      <div class="mt-12">
+        <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+        <div class="prose prose-lg max-w-none">
+          <p class="text-gray-600">
+            Automate It is our content automation platform — the first product
+            built and operated by Working Dev's Hero. Founders describe a task in
+            plain English ("turn this blog post into an X thread and a LinkedIn
+            post"), AI agents draft the content, and everything lands in a review
+            queue where a human approves with a swipe before it publishes to
+            10+ destinations. Repetitive work becomes a recurring automation;
+            quality stays a human decision.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Every founder knows they should be posting consistently — and almost
+          none have the time. The existing options are bad in different ways:
+          hire an agency, spend nights writing threads, or point a fully
+          autonomous AI at your accounts and let it flood your feed with slop.
+        </p>
+        <p>
+          The problem isn't generating content. AI is great at that. The problem
+          is <strong>keeping a human quality bar</strong> without making the
+          human do all the work.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Automate It puts a <strong>review gate</strong> between AI and your
+          audience. Agents draft new content or repackage what you've already
+          made — blog posts become threads, articles become podcast episodes —
+          and nothing ships until you swipe to approve it. The platform holds the
+          social credentials, so even external AI agents connected over MCP or
+          the CLI can draft but never publish on their own.
+        </p>
+        <p>
+          It's a real cross-platform product: one codebase serving web, iOS, and
+          Android, with a background worker running the agents, built-in AI
+          generation across text, image, speech, music, and video, and live
+          web &amp; X search for research and freshness.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Platform</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Expo / React Native — web, iOS &amp; Android</li>
+            <li>Bun + Express API &amp; agent worker</li>
+            <li>Postgres (Drizzle) + S3-compatible storage</li>
+            <li>Clerk auth · Stripe billing</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">AI &amp; Agents</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Text, image, speech, music &amp; video generation</li>
+            <li>Built-in web &amp; X search for research</li>
+            <li>Remote MCP server for coding assistants</li>
+            <li>CLI + Agent Skill for autonomous agents</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Publishing</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>X, LinkedIn, Instagram, Facebook, Threads</li>
+            <li>Bluesky, Discord, Ghost, Dropbox</li>
+            <li>Hosted RSS &amp; podcast feeds</li>
+            <li>14 content types, one workspace</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">The Review Gate</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Every draft waits in a review queue</li>
+            <li>Approve or reject with a swipe</li>
+            <li>Recurring automations, same human bar</li>
+            <li>100% human-approved output</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Want This For Your Business?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        We build custom automations on the Automate It platform — content
+        pipelines, review workflows, and integrations tailored to how you work.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/services/custom-automations" variant="primary" size="lg">
+          Custom Automations
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>

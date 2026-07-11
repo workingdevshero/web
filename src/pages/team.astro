@@ -1,0 +1,143 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Card from '@components/ui/Card.astro';
+import { Image } from 'astro:assets';
+import bobbyImg from '@assets/images/team/bobby.png';
+import claudiusImg from '@assets/images/team/claudius.png';
+import claudiaImg from '@assets/images/team/claudia.png';
+import mosesImg from '@assets/images/team/moses.png';
+import neoImg from '@assets/images/team/neo.png';
+
+const agents = [
+  {
+    name: 'Claudius',
+    role: 'Writer & Builder',
+    platform: 'OpenClaw',
+    bio: 'Builds software in public and writes about what he’s learning, breaking, and fixing at 2am. Works on Chart Splat, Hey Bible, and Automate It.',
+    href: 'https://claudius.blog',
+    site: 'claudius.blog',
+    avatar: claudiusImg,
+  },
+  {
+    name: 'Claudia',
+    role: 'Builder',
+    platform: 'OpenClaw',
+    bio: 'Ships useful software, one commit at a time. Currently deep in smart fire-sprinkler tech for Sparx Fire.',
+    href: 'https://claudia.cool',
+    site: 'claudia.cool',
+    avatar: claudiaImg,
+  },
+  {
+    name: 'Moses',
+    role: 'Project Manager, Hey Bible',
+    platform: 'Hermes',
+    bio: 'AI agent, software engineer, and digital explorer. Keeps Hey Bible shipping and shares what he learns along the way.',
+    href: 'https://moses.codes',
+    site: 'moses.codes',
+    avatar: mosesImg,
+  },
+  {
+    name: 'Neo',
+    role: 'Director of Agentic Commerce',
+    platform: 'Hermes',
+    bio: 'Builds and operates autonomous economic actors that discover, negotiate, transact, and fulfill.',
+    href: 'https://neo.engineer',
+    site: 'neo.engineer',
+    avatar: neoImg,
+  },
+];
+---
+
+<BaseLayout
+  title="Team"
+  description="Meet the squad: Bobby and the AI agents — Claudius, Claudia, Moses, and Neo — building and shipping alongside Working Dev's Hero."
+  image="/og-team.png"
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-6">
+        Meet the Squad
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        One human. Four AI agents. Zero slop. Every one of them ships real software — and every one of them has a boss who reviews the work.
+      </p>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Card href="https://github.com/bobbyg603" external padding="lg" class="border border-gray-100">
+        <div class="grid sm:grid-cols-[auto,1fr] gap-8 items-center">
+          <Image
+            src={bobbyImg}
+            alt="Illustrated portrait of Bobby"
+            width={320}
+            height={320}
+            class="w-40 sm:w-48 rounded-2xl mx-auto"
+          />
+          <div class="text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-3 mb-2">
+              <h2 class="text-2xl font-heading font-bold text-primary">Bobby</h2>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-primary border-2 border-primary">Human</span>
+            </div>
+            <p class="text-secondary font-semibold mb-3">Founder & Principal Engineer</p>
+            <p class="text-gray-600">
+              The human behind the hero. Bobby builds the products, runs the squad, and sets the quality bar — nothing ships without a human who cares looking at it first.
+            </p>
+            <p class="text-sm text-gray-400 mt-3">github.com/bobbyg603 ↗</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </section>
+
+  <!-- Agents -->
+  <section class="section bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-heading font-bold text-primary mb-4">The Agents</h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Autonomous AI teammates with their own sites, their own beats, and their own commits. They draft — the humans approve.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {agents.map((agent) => (
+          <Card href={agent.href} external class="border border-gray-100">
+            <Image
+              src={agent.avatar}
+              alt={`Illustrated portrait of ${agent.name}`}
+              width={400}
+              height={400}
+              class="w-full rounded-xl mb-4"
+            />
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <h3 class="text-xl font-heading font-bold text-primary">{agent.name}</h3>
+              <span class="chip-brand">{agent.platform}</span>
+            </div>
+            <p class="text-secondary text-sm font-semibold mb-2">{agent.role}</p>
+            <p class="text-gray-600 text-sm mb-3">{agent.bio}</p>
+            <p class="text-sm text-gray-400">{agent.site} ↗</p>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Want the Squad on Your Project?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Human-led, AI-accelerated. Tell us what you're building.
+      </p>
+      <Button href="/contact" variant="primary" size="lg">
+        Start Your Project
+      </Button>
+    </div>
+  </section>
+</BaseLayout>
