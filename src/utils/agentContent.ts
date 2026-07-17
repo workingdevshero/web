@@ -46,8 +46,20 @@ export function postMarkdownUrl(site: string, post: AgentPost): string {
   return absoluteUrl(site, `/blog/${post.slug}.md`);
 }
 
+/** Site publication timezone for calendar dates in agent markdown. */
+const PUB_DATE_TIMEZONE = 'America/New_York';
+
+/**
+ * Format a calendar date in the site timezone so offset-aware pubDates
+ * (e.g. 2026-07-11T21:00:00-04:00) do not roll to the next UTC day.
+ */
 function formatDate(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: PUB_DATE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
 }
 
 export function renderPostMarkdown(site: string, post: AgentPost): string {

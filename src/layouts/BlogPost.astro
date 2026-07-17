@@ -30,6 +30,10 @@ const jsonLd = {
   ...(tags.length > 0 && { keywords: tags.join(', ') }),
 };
 
+// Escape < so JSON-LD cannot break out of the surrounding <script> tag
+// if frontmatter ever contains sequences like </script>.
+const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
+
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -50,7 +54,7 @@ function getTagSlug(tag: string): string {
 <BaseLayout title={title} description={description} image={heroImage} type="article">
   <Fragment slot="head">
     <link rel="alternate" type="text/markdown" href={markdownURL} title="Markdown version of this article" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline type="application/ld+json" set:html={jsonLdHtml} />
   </Fragment>
   <article>
     <!-- Hero Section -->

@@ -82,6 +82,16 @@ describe('renderPostMarkdown', () => {
     ).toContain('- Updated: 2026-07-15');
   });
 
+  it('keeps the local calendar day for late-evening offset timestamps', () => {
+    // 2026-07-11 21:00 EDT is already 2026-07-12 01:00 UTC — must not print 2026-07-12.
+    const md = renderPostMarkdown(
+      SITE,
+      makePost({ pubDate: new Date('2026-07-11T21:00:00-04:00') })
+    );
+    expect(md).toContain('- Published: 2026-07-11');
+    expect(md).not.toContain('- Published: 2026-07-12');
+  });
+
   it('omits empty categories and tags lines', () => {
     const md = renderPostMarkdown(SITE, makePost({ categories: [], tags: [] }));
     expect(md).not.toContain('- Categories:');
