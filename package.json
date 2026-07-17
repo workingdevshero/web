@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -22,11 +23,15 @@
   "homepage": "https://github.com/workingdevshero/web#readme",
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^5.16.6",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
   }
 }
