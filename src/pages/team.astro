@@ -4,6 +4,7 @@ import Button from '@components/ui/Button.astro';
 import Card from '@components/ui/Card.astro';
 import { Image } from 'astro:assets';
 import bobbyImg from '@assets/images/team/bobby.png';
+import dimitrisImg from '@assets/images/team/dimitris.png';
 import claudiusImg from '@assets/images/team/claudius.png';
 import claudiaImg from '@assets/images/team/claudia.png';
 import mosesImg from '@assets/images/team/moses.png';
@@ -51,7 +52,7 @@ const agents = [
 
 <BaseLayout
   title="Team"
-  description="Meet the squad: Bobby and the AI agents — Claudius, Claudia, Moses, and Neo — building and shipping alongside Working Dev's Hero."
+  description="Meet the squad: Bobby, Dimitris, and the AI agents — Claudius, Claudia, Moses, and Neo — building and shipping alongside Working Dev's Hero."
   image="/og-team.png"
 >
   <!-- Hero Section -->
@@ -61,14 +62,14 @@ const agents = [
         Meet the Squad
       </h1>
       <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-        One human. Four AI agents. Zero slop. Every one of them ships real software — and every one of them has a boss who reviews the work.
+        Two humans. Four AI agents. Zero slop. Every one of them ships real software — and every one of them has a boss who reviews the work.
       </p>
     </div>
   </section>
 
-  <!-- Founder -->
+  <!-- Humans -->
   <section class="section bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       <Card href="https://github.com/bobbyg603" external padding="lg" class="border border-gray-100">
         <div class="grid sm:grid-cols-[auto,1fr] gap-8 items-center">
           <Image
@@ -88,6 +89,28 @@ const agents = [
               The human behind the hero. Bobby builds the products, runs the squad, and sets the quality bar — nothing ships without a human who cares looking at it first.
             </p>
             <p class="text-sm text-gray-400 mt-3">github.com/bobbyg603 ↗</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card padding="lg" class="border border-gray-100">
+        <div class="grid sm:grid-cols-[auto,1fr] gap-8 items-center">
+          <Image
+            src={dimitrisImg}
+            alt="Illustrated portrait of Dimitris"
+            width={320}
+            height={320}
+            class="w-40 sm:w-48 rounded-2xl mx-auto"
+          />
+          <div class="text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-3 mb-2">
+              <h2 class="text-2xl font-heading font-bold text-primary">Dimitris Nossis</h2>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-primary border-2 border-primary">Human</span>
+            </div>
+            <p class="text-secondary font-semibold mb-3">Hero in Training</p>
+            <p class="text-gray-600">
+              The squad's newest human. Dimitris is learning the craft the hero way — shipping real features, squashing real bugs, and reviewing agent work with the same rule as everyone else: no slop allowed.
+            </p>
           </div>
         </div>
       </Card>
