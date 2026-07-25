@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+  Source for the Working Dev's Hero YouTube channel banner (2048x1152).
+
+  Regenerate:
+    python3 -m http.server 8765            # from the repo root
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+      --window-size=2048,1152 --screenshot=brand/youtube-banner.png \
+      http://localhost:8765/scripts/youtube-banner.html
+
+  Output lives at brand/youtube-banner.png.
+
+  Append ?guides to the URL to overlay YouTube's crop regions while tuning.
+  YouTube only ever shows the whole 2048x1152 on TV; every other surface crops
+  to a centre strip, so the headline and the character both have to live inside
+  the safe boxes below:
+    - text/logo safe (all devices): 1235 x 338  -> x 406.5-1641.5, y 407-745
+    - mobile/desktop visible strip: 1546 x 423  -> x 251-1797,     y 364.5-787.5
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Working Dev's Hero — YouTube banner</title>
+<style>
+  @font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../public/fonts/BricolageGrotesque-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  /* Composition knobs — the scene is placed so the character's head, laptop and
+     torso land inside the 423px-tall strip that phones and desktop actually show. */
+  :root {
+    --scene-w: 2200px;   /* natural art is 2000x848 */
+    --scene-x: 0px;
+    --scene-y: 262px;
+    --sky: #28153b;      /* sampled from the artwork's top edge */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 2048px; height: 1152px; overflow: hidden; }
+
+  body {
+    position: relative;
+    font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Extends the artwork's night sky above it: the vertical ramp continues the
+       sky gradient, the ellipse continues the magenta glow on the left edge. */
+    background:
+      radial-gradient(ellipse 780px 900px at -4% 52%, rgba(150, 45, 110, 0.55), transparent 62%),
+      linear-gradient(to bottom, #1b0d29 0%, #241236 14%, var(--sky) 26%, var(--sky) 100%);
+  }
+
+  .scene {
+    position: absolute;
+    left: var(--scene-x);
+    top: var(--scene-y);
+    width: var(--scene-w);
+    height: auto;
+    /* Feathers the art's top edge into the painted sky so there is no seam. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 90px);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 90px);
+  }
+
+  /* Settles the left third down for headline contrast without flattening the art. */
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(23, 10, 36, 0.82) 0%, rgba(23, 10, 36, 0.55) 32%, rgba(23, 10, 36, 0) 58%),
+      radial-gradient(ellipse 900px 420px at 34% 50%, rgba(20, 8, 32, 0.55), transparent 70%);
+  }
+
+  .headline {
+    position: absolute;
+    left: 407px;   /* text-safe box starts at 406.5px — round inward */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 900px;
+    font-size: 78px;
+    font-weight: 800;
+    line-height: 1.14;
+    letter-spacing: -2px;
+    color: #ffffff;
+    text-shadow: 0 4px 40px rgba(12, 4, 22, 0.75);
+  }
+
+  .headline .grad {
+    background: linear-gradient(90deg, #A78BFA, #EC4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Crop guides — off unless the page is loaded with ?guides */
+  .guide-layer { display: none; }
+  body.show-guides .guide-layer { display: block; }
+  .guide {
+    position: absolute;
+    border: 2px dashed rgba(0, 255, 200, 0.9);
+  }
+  .guide.strip { left: 251px;   top: 364.5px; width: 1546px; height: 423px; }
+  .guide.text  { left: 406.5px; top: 407px;   width: 1235px; height: 338px; border-color: rgba(255, 210, 0, 0.9); }
+</style>
+</head>
+<body>
+  <img class="scene" src="../src/assets/images/hero-scene-wide.png" alt="" />
+  <div class="scrim"></div>
+
+  <h1 class="headline">
+    We Build <span class="grad">AI&#8209;Powered</span><br />Software That Ships
+  </h1>
+
+  <div class="guide-layer">
+    <div class="guide strip"></div>
+    <div class="guide text"></div>
+  </div>
+
+  <script>
+    if (location.search.includes('guides')) document.body.classList.add('show-guides');
+  </script>
+</body>
+</html>
