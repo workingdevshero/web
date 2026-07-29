@@ -8,5 +8,5 @@ Our philosophy in one line: AI drafts, humans approve. We recently rebranded our
 
 🦸 Join the Hero Squad on Discord — share what you're building, get help with your projects, and swap strategies with builders who ship.
 
-Discord: {DISCORD_INVITE}
+Discord: discord.gg/UxNXrBukjZ
 → workingdevshero.com

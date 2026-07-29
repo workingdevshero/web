@@ -8,4 +8,4 @@ We build AI-powered software that ships. From concept to production, we help sta
 
 🦸 Join the Hero Squad on Discord — share what you're building, get help with your projects, and swap AI dev strategies with builders who ship.
 
-👉 {DISCORD_INVITE}
+👉 discord.gg/UxNXrBukjZ
