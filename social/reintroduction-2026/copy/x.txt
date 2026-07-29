@@ -1,0 +1,7 @@
+👋 Reintroducing Working Dev's Hero: we build AI-powered software that ships.
+
+🛠️ Full-stack dev, AI integrations, custom automations
+⚡ Automate It — social on autopilot, no slop
+🤖 AI drafts. Humans approve.
+
+🦸 Come build with us on Discord: {DISCORD_INVITE}
