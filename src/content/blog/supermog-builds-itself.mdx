@@ -57,7 +57,9 @@ It's also an experiment in how far you can go with little to no human review. Th
 
 ## The Fun Part 🔨
 
-Each Pironman 5 has a tiny SSD1306 OLED. Ours run a pixel mog who hammers away whenever the box is actively mogging — locked 30-to-90-degree mallet swing, frame-wide BOOM dashes on impact, and a nap when the queue is idle. A tap of the power button flips to host stats. It is completely unnecessary and it is everyone's favorite feature.
+Each Pironman 5 has a tiny SSD1306 OLED. Ours run a pixel mog who hammers away whenever the box is actively mogging — locked 30-to-90-degree mallet swing, frame-wide BOOM dashes on impact, and a nap when the queue is idle. We didn't drop a PNG on it. We drew him at 128×64, one bit per pixel, in a browser preview that *is* the panel buffer, locked the frame numbers in tests so the TypeScript and the Python on the Pi cannot drift, and let the Pi paint that same buffer onto the glass. A tap of the power button flips to host stats.
+
+Taking the screen meant not starting Pironman's own software — it would have stolen I2C `0x3C` — and then the tower coolers went quiet. On Raspberry Pi OS that fan isn't Pironman's to drive: the kernel `pwm-fan` sits off below 50 °C, and Pironman only reads the tach. Their own FAQ is one line in `config.txt`. We dropped the first trip to 30 °C; the guy kept slamming and the SoC stopped cooking. Completely unnecessary, and everyone's favorite feature.
 
 {/* TODO: build timelapse video goes here — assembling one of the Pironman 5 cases at the Sparx lab (https://sparx-fire.com) */}
 
