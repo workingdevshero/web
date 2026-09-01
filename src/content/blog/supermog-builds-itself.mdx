@@ -16,7 +16,7 @@ And the tireless little factory running it all? Two Raspberry Pi 5s we found in 
 
 ## First, There Was Mog 🐣
 
-Supermog is a v2. The original [Mog](https://github.com/workingdevshero/mog) was built [before Claude Code's auto-mode permission classifier existed](/blog/mog), so we wrapped the agent in a Docker sandbox to keep it contained — and it did exactly one thing: turn an issue into a PR. No review, no verification, no orchestration. We triggered runs by hand, we had almost no record of what it had done historically, and Docker sandboxes were new enough that we spent real hours on compatibility quirks instead of features.
+Supermog is a v2. The original [Mog](https://github.com/bobbyg603/mog) was built [before Claude Code's auto-mode permission classifier existed](/blog/mog), so we wrapped the agent in a Docker sandbox to keep it contained — and it did exactly one thing: turn an issue into a PR. No review, no verification, no orchestration. We triggered runs by hand, we had almost no record of what it had done historically, and Docker sandboxes were new enough that we spent real hours on compatibility quirks instead of features.
 
 It proved the core idea, and everything it lacked became Supermog's spec: a real orchestration system, workers that scale horizontally, a proper GitHub App so a label on an issue or an `@supermogger` mention gets picked up instantly over webhooks, and a durable history of every run — logs, evidence, verdicts — you can actually go look at.
 
