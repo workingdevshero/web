@@ -47,9 +47,23 @@ Supermog wasn't designed; it was *iterated*, and the repo's history reads like a
 - **Week 2 — the SD card era ends.** pi-1's SD card died mid-review — `mmc0: Card stuck being busy!` — while the agent kept heartbeating from page cache. We moved both boxes into Pironman 5 cases: the NVMe SSD moved from a USB-C enclosure to real PCIe and became the OS disk. Faster clones, no more card roulette, and the three fans took the SoC down from ~55 °C (131 °F) to comfortable.
 - **Week 2 — the staleness war.** With one bot writing many PRs, branches rot fast. Fixes landed in layers: rebase-on-command, then automatic branch updates whenever anything merges (GitHub's server-side update when clean, an agent job when conflicted), then a dedicated maintenance queue so rebases never wait behind feature work, then `Depends-on: #N` for stacked PRs — and finally for issues, a piece Grok implemented through Supermog's own pipeline.
 - **Week 2 — it files its own bugs.** Runtime failures become crash reports in [BugSplat](https://www.bugsplat.com), tagged with Supermog's own trigger tag — which means the bot finds its own bug reports and fixes them. The loop closed.
+- **Week 2 — CI moved home.** GitHub Actions billing broke our pipeline **three times** — every check across every repo went red until we raised the spending limit, again. Then the obvious hit us: these boxes are on 24/7 anyway. The Pis became our self-hosted Actions runners — zero billed minutes, faster native arm64 builds, and the Actions queue got its own lane on the status page.
 - **This week — auto-merge.** Supermog publishes a `supermog/verified` commit status summarizing its review-verify-address round, arms GitHub auto-merge on its own PRs, and un-arms if a later round reopens findings. Branch protection does the rest.
+- **This week — auto-deploy.** The last human step fell: a push to main now rolls the fleet — the control plane drains a box, swaps its image, waits for the new build to report over the socket, then moves to the next. Its very first outing stopped itself on a bad image reference and left the box safely drained on the old build — exactly the failure behavior you'd want from a system that ships itself.
 
-Along the way the dashboard grew everything an operator actually needs: per-runner detail pages, queue reordering by drag, metrics and token tracking, a lessons store (per-repo things the bot learned the hard way, injected into future prompts), a usage guard that pauses claiming work near API rate limits, human-needed notifications, one-click pause/update, and — because why not — brandable theming. The Pis also became our self-hosted GitHub Actions runners, which took our CI bill for those jobs to zero and our build times down on native arm64.
+Along the way the dashboard grew everything an operator actually needs: per-runner detail pages, queue reordering by drag, metrics and token tracking, a lessons store (per-repo things the bot learned the hard way, injected into future prompts), a usage guard that pauses claiming work near API rate limits, human-needed notifications, one-click pause/update, and — because why not — brandable theming.
+
+![The Activity view: two runs mid-pipeline on two boxes, fifteen jobs waiting, both agents online.](/images/blog/supermog-dash/activity.webp)
+
+*Two runs mid-pipeline on two boxes, fifteen jobs waiting. Every stage dot is live.*
+
+![A box's hardware page: power draw with per-run annotations, memory, load, and temperature.](/images/blog/supermog-dash/box-hardware.webp)
+
+*Each box's hardware page. Yes, that says **7.7 watts** — the whole factory draws less than a lightbulb, and the Pironman fans keep it under 40 °C flat out.*
+
+![The Lessons page: per-repo lessons the bot learned from review feedback, injected into future runs.](/images/blog/supermog-dash/lessons.webp)
+
+*The lessons store: things reviewers caught once, injected into every future run so they never get caught twice.*
 
 **The numbers so far:** 2 Raspberry Pi 5s · 440+ issues and PRs in ~2 weeks · 16 pipeline stages from issue to merge · 1 WebSocket per box and zero inbound ports · $0 in CI minutes on the self-hosted runners.
 
