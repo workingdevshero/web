@@ -77,15 +77,7 @@ It's also an experiment in how far you can go with little to no human review. Th
 
 Each Pironman 5 has a tiny SSD1306 OLED. Ours run a pixel mog who hammers away whenever the box is actively mogging: locked 30-to-90-degree mallet swing, frame-wide BOOM dashes on impact, and a nap when the queue is idle. We didn't drop a PNG on it. We drew him at 128×64, one bit per pixel, in a browser preview that *is* the panel buffer, locked the frame numbers in tests so the TypeScript and the Python on the Pi cannot drift, and let the Pi paint that same buffer onto the glass. A tap of the power button flips to host stats.
 
-Taking the screen meant not starting Pironman's own software (it would have stolen I2C `0x3C`), and then the tower coolers went quiet. On Raspberry Pi OS that fan isn't Pironman's to drive: the kernel `pwm-fan` sits off below 50 °C, and Pironman only reads the tach. Their own FAQ is one line in `config.txt`. We dropped the first trip to 30 °C; the guy kept slamming and the SoC stopped cooking. Completely unnecessary, and everyone's favorite feature.
-
-{/* TODO: build timelapse video goes here — assembling one of the Pironman 5 cases at the Sparx lab (https://sparx-fire.com) */}
-
-### How We Made the Video 🎬
-
-In the spirit of the whole project, no video editor was opened. The build was shot in one static take on the bench at the [Sparx](https://sparx-fire.com) lab: 95 minutes across two clips (there's a mid-build run for a flathead screwdriver hiding in there). The edit is a single ffmpeg filter graph, written in conversation with Claude: both clips concatenated and run at 115×, titles drawn in the site's own Bricolage Grotesque, then a snap back to real time for the moment the finished case gets held up to the camera.
-
-The music came out of [Venice's](https://venice.ai) music API: a 66-second instrumental prompt to the ElevenLabs Music model, third take kept. Then the fun part: a little Python onset analysis found the track's drop at 16 seconds and its strongest kicks, and the glitch bursts (hard RGB split plus analog noise) are placed on those beats, with a final burst landing exactly on the timelapse-to-real-time cut. The audio visualizer riding the bottom edge is ffmpeg's `showfreqs` in the brand palette, and the end card's background is color-sampled from the mascot PNG so the two are seamless. Total tooling: a phone, ffmpeg, one API, and a chat window.
+Taking the screen meant not starting Pironman's own software (it would have stolen I2C `0x3C`), and then the tower coolers went quiet. On Raspberry Pi OS that fan isn't Pironman's to drive: the kernel `pwm-fan` sits off below 50 °C, and Pironman only reads the tach. Their own FAQ is one line in `config.txt`. We dropped the first trip to 30 °C; the guy kept slamming and the SoC stopped cooking. Completely unnecessary, and everyone's favorite feature. We also filmed the case build — the timelapse, and the story of editing it entirely inside Claude Code, got [a short post of its own](/blog/pironman-build-timelapse).
 
 ## What's Next 🚀
 
