@@ -63,6 +63,12 @@ Taking the screen meant not starting Pironman's own software — it would have s
 
 {/* TODO: build timelapse video goes here — assembling one of the Pironman 5 cases at the Sparx lab (https://sparx-fire.com) */}
 
+### How We Made the Video 🎬
+
+In the spirit of the whole project, no video editor was opened. The build was shot in one static take on the bench at the [Sparx](https://sparx-fire.com) lab — 95 minutes across two clips (there's a mid-build run for a flathead screwdriver hiding in there). The edit is a single ffmpeg filter graph, written in conversation with Claude: both clips concatenated and run at 115×, titles drawn in the site's own Bricolage Grotesque, then a snap back to real time for the moment the finished case gets held up to the camera.
+
+The music came out of [Venice's](https://venice.ai) music API — a 66-second instrumental prompt to the ElevenLabs Music model, third take kept. Then the fun part: a little Python onset analysis found the track's drop at 16 seconds and its strongest kicks, and the glitch bursts — hard RGB split plus analog noise — are placed on those beats, with a final burst landing exactly on the timelapse-to-real-time cut. The audio visualizer riding the bottom edge is ffmpeg's `showfreqs` in the brand palette, and the end card's background is color-sampled from the mascot PNG so the two are seamless. Total tooling: a phone, ffmpeg, one API, and a chat window.
+
 ## What's Next 🚀
 
 Runners on our macOS and Windows machines — boxes with enough muscle to run Android emulators, so they won't need a phone plugged in. The fleet updating itself: control plane drains a box, swaps its image, waits for the new build to report, moves to the next. Full-desktop verification. Real merge-order scheduling. And more dogfooding through [Automate It](https://automate.it.com), because the point was never the Pis — it's what a small team ships when the pipeline works this hard.
