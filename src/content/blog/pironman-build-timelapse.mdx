@@ -1,7 +1,7 @@
 ---
 title: "90 Minutes of Pironman Assembly in 60 Seconds (No Video Editor Allowed)"
 description: "The Supermog fleet got its Pironman 5 cases, and the build timelapse got made the same way the system itself did: entirely in conversation with Claude Code. One ffmpeg filter graph, AI-generated music, and beat-synced glitches. No editing software was opened."
-pubDate: 2026-09-02
+pubDate: 2026-08-31
 author: "bobbyg603"
 heroImage: "/images/blog/pironman-build.jpg"
 categories: ["AI", "Software"]
@@ -27,7 +27,6 @@ What made this fun wasn't any single trick, it was the loop. Every round was a s
 - *"We ended too fast — slow to normal speed when I show the finished case and smile."* Claude scrubbed the footage, found the exact second the case comes up (and the thumbs-up two seconds later), and re-cut with a speed ramp.
 - *"Make the visualizer about 3× bigger, and put the glitches on interesting points in the audio — before the beat drop, or on drum kicks."* That's where the onset analysis came from: the effects stopped being decoration and started following the song.
 - *"Can we say 90 minutes instead of 95? It's cleaner."* One word in a filter graph, one re-render.
-- *"That's not the animation we actually use."* The first draft's OLED mascot was hand-invented; the fix was porting the real animation code from the repo, pixel for pixel.
 
 There were honest stumbles, too. An ffmpeg quirk where `fontfile=` silently swallowed every option after it. A music API whose innocently named `complete` endpoint turned out to *delete* the finished track — we paid for two songs nobody will ever hear. Each one cost a minute, not an afternoon.
 
