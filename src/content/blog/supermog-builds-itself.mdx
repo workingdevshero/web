@@ -18,13 +18,9 @@ And the tireless little factory running it all? Two Raspberry Pi 5s we found in 
 
 *The fleet at work: two Pironman 5 towers, two old Android phones on verification duty, and, if you look closely, the pixel mog hammering away on each OLED.*
 
-## First, There Was Mog 🐣
-
-Supermog is a v2. The original [Mog](https://github.com/bobbyg603/mog) was built [before Claude Code's auto-mode permission classifier existed](/blog/mog), so we wrapped the agent in a Docker sandbox to keep it contained. It did exactly one thing: turn an issue into a PR. No review, no verification, no orchestration. We triggered runs by hand, we had almost no record of what it had done historically, and Docker sandboxes were new enough that we spent real hours on compatibility quirks instead of features.
-
-It proved the core idea, and everything it lacked became Supermog's spec: a real orchestration system, workers that scale horizontally, a proper GitHub App so a label on an issue or an `@supermogger` mention gets picked up instantly over webhooks, and a durable history of every run (logs, evidence, verdicts) you can actually go look at.
-
 ## What Supermog Actually Is 🤖
+
+Supermog is a v2. [The original Mog](/blog/mog) turned an issue into a PR inside a Docker sandbox and did nothing else, and everything it lacked became this system's spec.
 
 Three pieces:
 
@@ -69,17 +65,17 @@ Along the way the dashboard grew everything an operator actually needs: per-runn
 
 **The numbers so far:** 2 Raspberry Pi 5s · 440+ issues and PRs in ~2 weeks · 16 pipeline stages from issue to merge · 1 WebSocket per box and zero inbound ports · $0 in CI minutes on the self-hosted runners.
 
-## Autocatalytic, Not Recursive 🔁
-
-[Martin Casado](https://a16z.com/author/martin-casado/) (a16z) draws a distinction we've adopted: *recursive* self-improvement is a system copying and upgrading itself wholesale; *autocatalytic* is using the thing as a tool to make the thing faster — the way engineers have used software to build software since the first compiler. He prefers the second term for what's actually happening in AI right now, and it describes Supermog exactly. Supermog doesn't rewrite its own weights. It writes, reviews, verifies, and merges the code of the system that runs it, while doing the same for our other projects. Somewhere north of half of Supermog's recent features shipped through Supermog.
-
-It's also an experiment in how far you can go with little to no human review. The honest answer so far: further than we expected, with guardrails. Independent review by a second model catches real bugs; verification-with-evidence catches the "compiles but doesn't work" class; the bounded verify→fix→re-verify loop keeps the bot from thrashing; and when a round genuinely can't vouch for a branch, it says so, posts why, and pages a human instead of merging.
-
 ## The Fun Part 🔨
 
 Each Pironman 5 has a tiny SSD1306 OLED. Ours run a pixel mog who hammers away whenever the box is actively mogging: locked 30-to-90-degree mallet swing, frame-wide BOOM dashes on impact, and a nap when the queue is idle. We didn't drop a PNG on it. We drew him at 128×64, one bit per pixel, in a browser preview that *is* the panel buffer, locked the frame numbers in tests so the TypeScript and the Python on the Pi cannot drift, and let the Pi paint that same buffer onto the glass. A tap of the power button flips to host stats.
 
 Taking the screen meant not starting Pironman's own software (it would have stolen I2C `0x3C`), and then the tower coolers went quiet. On Raspberry Pi OS that fan isn't Pironman's to drive: the kernel `pwm-fan` sits off below 50 °C, and Pironman only reads the tach. Their own FAQ is one line in `config.txt`. We dropped the first trip to 30 °C; the guy kept slamming and the SoC stopped cooking. Completely unnecessary, and everyone's favorite feature. We also filmed the case build — the timelapse, and the story of editing it entirely inside Claude Code, got [a short post of its own](/blog/pironman-build-timelapse).
+
+## Autocatalytic, Not Recursive 🔁
+
+[Martin Casado](https://a16z.com/author/martin-casado/) (a16z) draws a distinction we've adopted: *recursive* self-improvement is a system copying and upgrading itself wholesale; *autocatalytic* is using the thing as a tool to make the thing faster — the way engineers have used software to build software since the first compiler. He prefers the second term for what's actually happening in AI right now, and it describes Supermog exactly. Supermog doesn't rewrite its own weights. It writes, reviews, verifies, and merges the code of the system that runs it, while doing the same for our other projects. Somewhere north of half of Supermog's recent features shipped through Supermog.
+
+It's also an experiment in how far you can go with little to no human review. The honest answer so far: further than we expected, with guardrails. Independent review by a second model catches real bugs; verification-with-evidence catches the "compiles but doesn't work" class; the bounded verify→fix→re-verify loop keeps the bot from thrashing; and when a round genuinely can't vouch for a branch, it says so, posts why, and pages a human instead of merging.
 
 ## What's Next 🚀
 
