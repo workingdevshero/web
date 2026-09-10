@@ -87,6 +87,7 @@ describe('link-in-bio', () => {
     expect(page).toContain("getCollection('blog'");
     expect(page).toContain('BlogCard');
     expect(page).toContain('heroImage');
+    expect(page).toContain('Highlights');
     expect(page).not.toContain('productLinks');
     expect(page).not.toContain('siteLinks');
   });
