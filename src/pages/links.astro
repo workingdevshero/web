@@ -69,6 +69,11 @@ const squad = [
             Working Dev's <span class="gradient-text">Hero</span>
           </h1>
           <p class="text-white/85 text-sm drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">AI-powered software that ships.</p>
+          <SocialIcons
+            class="flex flex-wrap justify-center gap-2.5 mt-4"
+            linkClass="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+            iconClass="w-3.5 h-3.5"
+          />
         </div>
       </header>
 
@@ -92,25 +97,19 @@ const squad = [
       </div>
 
       <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">The squad</p>
-      <div class="flex flex-wrap justify-center gap-2.5 mt-1">
+      <div class="grid grid-cols-6 gap-2 sm:gap-3 lg:gap-5">
         {squad.map((member) => (
-          <a href="/team" title={member.name}>
+          <a href="/team" title={member.name} class="block min-w-0">
             <Image
               src={member.avatar}
               alt={member.name}
-              width={88}
-              height={88}
-              class="w-11 h-11 rounded-full object-cover border-2 border-white/20 bg-[#1a0f24]"
+              width={240}
+              height={240}
+              class="w-full aspect-square rounded-full object-cover border-2 border-white/20 bg-[#1a0f24]"
             />
           </a>
         ))}
       </div>
-
-      <SocialIcons
-        class="flex flex-wrap justify-center gap-3.5 mt-7"
-        linkClass="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
-        iconClass="w-4 h-4"
-      />
 
       <p class="text-center text-xs text-white/45 mt-6">
         <a href="/" class="hover:text-white/70">workingdevshero.com</a>
