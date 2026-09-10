@@ -1,0 +1,121 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import BioLink from '@components/links/BioLink.astro';
+import SocialIcons from '@components/ui/SocialIcons.astro';
+import { Image } from 'astro:assets';
+import { featuredLinks, watchLinks, productLinks } from '@/data/links';
+import heroMobile from '@assets/images/hero-scene-mobile.png';
+import heroScene from '@assets/images/hero-scene-wide.png';
+import bobbyImg from '@assets/images/team/bobby.png';
+import dimitrisImg from '@assets/images/team/dimitris.png';
+import claudiusImg from '@assets/images/team/claudius.png';
+import claudiaImg from '@assets/images/team/claudia.png';
+import mosesImg from '@assets/images/team/moses.png';
+import neoImg from '@assets/images/team/neo.png';
+
+const squad = [
+  { name: 'Bobby', avatar: bobbyImg },
+  { name: 'Dimitris', avatar: dimitrisImg },
+  { name: 'Claudius', avatar: claudiusImg },
+  { name: 'Claudia', avatar: claudiaImg },
+  { name: 'Moses', avatar: mosesImg },
+  { name: 'Neo', avatar: neoImg },
+];
+---
+
+<BaseLayout
+  title="Links"
+  description="Working Dev's Hero — Discord, Automate It, newsletter, YouTube, Instagram, TikTok, and the rest of the squad."
+  chrome="none"
+  bodyClass="bg-[#2d1941]"
+>
+  <div class="relative min-h-screen overflow-x-hidden">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <Image
+        src={heroMobile}
+        alt=""
+        width={720}
+        height={1280}
+        class="lg:hidden w-full h-full object-cover object-[center_18%]"
+      />
+      <Image
+        src={heroScene}
+        alt=""
+        width={2000}
+        height={848}
+        class="hidden lg:block absolute inset-y-0 right-0 h-full w-auto max-w-none"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#180b26]/50 via-[#2d1941]/75 to-[#1a0f24]"></div>
+    </div>
+
+    <div class="relative max-w-md mx-auto px-5 pt-9 pb-10 min-w-0">
+      <header class="text-center mb-7">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-[#2D0F2A] border-2 border-secondary-400/70 shadow-[0_0_32px_rgba(139,92,246,0.4)] overflow-hidden flex items-center justify-center">
+          <img src="/logo.png" alt="Working Dev's Hero mascot" class="w-[86%] h-[86%] object-contain" />
+        </div>
+        <h1 class="font-heading text-2xl text-white tracking-tight mb-1">
+          Working Dev's <span class="gradient-text">Hero</span>
+        </h1>
+        <p class="text-white/80 text-sm">AI-powered software that ships.</p>
+      </header>
+
+      <div class="flex flex-col gap-3">
+        {featuredLinks.map((link, index) => (
+          <BioLink link={link} featured={index === 0} />
+        ))}
+      </div>
+
+      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">Watch &amp; read</p>
+      <div class="flex flex-col gap-3">
+        {watchLinks.map((link) => (
+          <BioLink link={link} />
+        ))}
+      </div>
+
+      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">Products</p>
+      <div class="grid grid-cols-2 gap-3">
+        {productLinks.map((link) => (
+          <a
+            href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+            class="flex items-center justify-center text-center w-full min-w-0 px-2.5 py-3 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md"
+          >
+            <strong class="w-full px-1 text-[0.8rem] font-semibold leading-tight whitespace-normal">
+              {link.title === 'Agent Shell Toolkit' ? (
+                <>Agent Shell<br />Toolkit</>
+              ) : (
+                link.title
+              )}
+            </strong>
+          </a>
+        ))}
+      </div>
+
+      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">The squad</p>
+      <div class="flex flex-wrap justify-center gap-2.5 mt-1">
+        {squad.map((member) => (
+          <a href="/team" title={member.name}>
+            <Image
+              src={member.avatar}
+              alt={member.name}
+              width={88}
+              height={88}
+              class="w-11 h-11 rounded-full object-cover border-2 border-white/20 bg-[#1a0f24]"
+            />
+          </a>
+        ))}
+      </div>
+
+      <SocialIcons
+        class="flex flex-wrap justify-center gap-3.5 mt-7"
+        linkClass="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+        iconClass="w-4 h-4"
+      />
+
+      <p class="text-center text-xs text-white/45 mt-6">
+        <a href="/" class="hover:text-white/70">workingdevshero.com</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
