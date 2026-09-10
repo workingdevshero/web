@@ -45,18 +45,24 @@ const squad = [
         height={848}
         class="hidden lg:block absolute inset-y-0 right-0 h-full w-auto max-w-none"
       />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#180b26]/50 via-[#2d1941]/75 to-[#1a0f24]"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#180b26]/80 via-[#2d1941]/72 to-[#1a0f24]"></div>
     </div>
 
     <div class="relative max-w-md mx-auto px-5 pt-9 pb-10 min-w-0">
-      <header class="text-center mb-7">
-        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-[#2D0F2A] border-2 border-secondary-400/70 shadow-[0_0_32px_rgba(139,92,246,0.4)] overflow-hidden flex items-center justify-center">
-          <img src="/logo.png" alt="Working Dev's Hero mascot" class="w-[86%] h-[86%] object-contain" />
+      <header class="relative text-center mb-7">
+        <div
+          class="pointer-events-none absolute -inset-x-10 -top-8 -bottom-6 bg-[radial-gradient(ellipse_at_center,rgba(16,8,28,0.92)_0%,rgba(16,8,28,0.55)_42%,transparent_72%)]"
+          aria-hidden="true"
+        ></div>
+        <div class="relative">
+          <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-[#2D0F2A] border-2 border-secondary-400/70 shadow-[0_0_28px_18px_rgba(16,8,28,0.85)] overflow-hidden flex items-center justify-center">
+            <img src="/logo.png" alt="Working Dev's Hero mascot" class="w-[86%] h-[86%] object-contain" />
+          </div>
+          <h1 class="font-heading text-2xl text-white tracking-tight mb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            Working Dev's <span class="gradient-text">Hero</span>
+          </h1>
+          <p class="text-white/85 text-sm drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">AI-powered software that ships.</p>
         </div>
-        <h1 class="font-heading text-2xl text-white tracking-tight mb-1">
-          Working Dev's <span class="gradient-text">Hero</span>
-        </h1>
-        <p class="text-white/80 text-sm">AI-powered software that ships.</p>
       </header>
 
       <div class="flex flex-col gap-3">
