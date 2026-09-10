@@ -85,6 +85,8 @@ describe('link-in-bio', () => {
     const page = readFileSync(repoFile('src/pages/links.astro'), 'utf8');
     expect(page).toContain('latestPublishedPosts');
     expect(page).toContain("getCollection('blog'");
+    expect(page).toContain('BlogCard');
+    expect(page).toContain('heroImage');
     expect(page).not.toContain('productLinks');
     expect(page).not.toContain('siteLinks');
   });

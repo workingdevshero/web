@@ -1,0 +1,38 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  date: Date;
+  heroImage?: string;
+}
+
+const { href, title, date, heroImage } = Astro.props;
+const dateLabel = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<a
+  href={href}
+  class="group block w-full min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md transition-colors"
+>
+  <div class="aspect-video overflow-hidden bg-gradient-to-br from-primary/40 to-secondary/40">
+    {heroImage ? (
+      <img
+        src={heroImage}
+        alt=""
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center text-white/40 text-3xl" aria-hidden="true">
+        📝
+      </div>
+    )}
+  </div>
+  <div class="px-4 py-3">
+    <h3 class="font-heading text-base font-bold leading-snug break-words line-clamp-2">{title}</h3>
+    <time class="block text-xs text-white/65 mt-1.5" datetime={date.toISOString()}>{dateLabel}</time>
+  </div>
+</a>
