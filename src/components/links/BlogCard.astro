@@ -16,7 +16,7 @@ const dateLabel = date.toLocaleDateString('en-US', {
 
 <a
   href={href}
-  class="group block w-full min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md transition-colors"
+  class="group flex flex-col h-full w-full min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md transition-colors"
 >
   <div class="aspect-video overflow-hidden bg-gradient-to-br from-primary/40 to-secondary/40">
     {heroImage ? (
@@ -31,7 +31,7 @@ const dateLabel = date.toLocaleDateString('en-US', {
       </div>
     )}
   </div>
-  <div class="px-4 py-3">
+  <div class="px-4 py-3 flex-grow">
     <h3 class="font-heading text-base font-bold leading-snug break-words line-clamp-2">{title}</h3>
     <time class="block text-xs text-white/65 mt-1.5" datetime={date.toISOString()}>{dateLabel}</time>
   </div>

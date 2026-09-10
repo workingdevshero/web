@@ -55,7 +55,7 @@ const squad = [
       <div class="absolute inset-0 bg-gradient-to-b from-[#180b26]/80 via-[#2d1941]/72 to-[#1a0f24]"></div>
     </div>
 
-    <div class="relative max-w-md mx-auto px-5 pt-9 pb-10 min-w-0">
+    <div class="relative w-full max-w-md md:max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto px-5 pt-9 pb-10 min-w-0">
       <header class="relative text-center mb-7">
         <div
           class="pointer-events-none absolute -inset-x-10 -top-8 -bottom-6 bg-[radial-gradient(ellipse_at_center,rgba(16,8,28,0.92)_0%,rgba(16,8,28,0.55)_42%,transparent_72%)]"
@@ -73,7 +73,7 @@ const squad = [
       </header>
 
       <p class="mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">Highlights</p>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3 lg:grid lg:grid-cols-3">
         {featuredLinks.map((link, index) => (
           <BioLink link={link} featured={index === 0} />
         ))}
@@ -83,7 +83,7 @@ const squad = [
         <p class="text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">From the blog</p>
         <a href="/blog" class="text-[0.68rem] font-semibold text-white/55 hover:text-white/85">All posts</a>
       </div>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 lg:grid lg:grid-cols-3">
         {recentPosts.map((post) => (
           <BlogCard
             href={`/blog/${post.slug}`}
