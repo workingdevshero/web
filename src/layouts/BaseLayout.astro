@@ -8,6 +8,8 @@ interface Props {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
+  chrome?: 'full' | 'none';
+  bodyClass?: string;
 }
 
 const {
@@ -15,6 +17,8 @@ const {
   description = "Working Dev's Hero - AI-enabled software development company. We build AI-powered software that ships.",
   image = '/og-image.png',
   type = 'website',
+  chrome = 'full',
+  bodyClass = 'bg-white',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -59,11 +63,11 @@ const socialImageURL = new URL(image, Astro.site);
     <!-- Self-hosted display font -->
     <link rel="preload" href="/fonts/BricolageGrotesque-ExtraBold.woff2" as="font" type="font/woff2" crossorigin />
   </head>
-  <body class="min-h-screen flex flex-col bg-white">
-    <Header />
+  <body class:list={['min-h-screen flex flex-col', bodyClass]}>
+    {chrome === 'full' && <Header />}
     <main class="flex-grow">
       <slot />
     </main>
-    <Footer />
+    {chrome === 'full' && <Footer />}
   </body>
 </html>

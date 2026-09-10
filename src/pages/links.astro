@@ -1,0 +1,123 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import BioLink from '@components/links/BioLink.astro';
+import BlogCard from '@components/links/BlogCard.astro';
+import SocialIcons from '@components/ui/SocialIcons.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { featuredLinks, latestPublishedPosts } from '@/data/links';
+import heroMobile from '@assets/images/hero-scene-mobile.png';
+import heroScene from '@assets/images/hero-scene-wide.png';
+import bobbyImg from '@assets/images/team/bobby.png';
+import dimitrisImg from '@assets/images/team/dimitris.png';
+import claudiusImg from '@assets/images/team/claudius.png';
+import claudiaImg from '@assets/images/team/claudia.png';
+import mosesImg from '@assets/images/team/moses.png';
+import neoImg from '@assets/images/team/neo.png';
+
+const recentPosts = latestPublishedPosts(
+  await getCollection('blog', ({ data }) => !data.draft),
+  3,
+);
+
+const squad = [
+  { name: 'Bobby', avatar: bobbyImg },
+  { name: 'Dimitris', avatar: dimitrisImg },
+  { name: 'Claudius', avatar: claudiusImg },
+  { name: 'Claudia', avatar: claudiaImg },
+  { name: 'Moses', avatar: mosesImg },
+  { name: 'Neo', avatar: neoImg },
+];
+---
+
+<BaseLayout
+  title="Links"
+  description="Working Dev's Hero — Discord, Automate It, the newsletter, latest posts, and the rest of the squad."
+  chrome="none"
+  bodyClass="bg-[#2d1941]"
+>
+  <div class="relative min-h-screen overflow-x-hidden">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <Image
+        src={heroMobile}
+        alt=""
+        width={720}
+        height={1280}
+        class="lg:hidden w-full h-full object-cover object-[center_18%]"
+      />
+      <Image
+        src={heroScene}
+        alt=""
+        width={2000}
+        height={848}
+        class="hidden lg:block absolute inset-y-0 right-0 h-full w-auto max-w-none"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#180b26]/80 via-[#2d1941]/72 to-[#1a0f24]"></div>
+    </div>
+
+    <div class="relative w-full max-w-md md:max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto px-5 pt-9 pb-10 min-w-0">
+      <header class="relative text-center mb-7">
+        <div
+          class="pointer-events-none absolute -inset-x-10 -top-8 -bottom-6 bg-[radial-gradient(ellipse_at_center,rgba(16,8,28,0.92)_0%,rgba(16,8,28,0.55)_42%,transparent_72%)]"
+          aria-hidden="true"
+        ></div>
+        <div class="relative">
+          <a
+            href="/"
+            class="w-24 h-24 mx-auto mb-4 rounded-full bg-[#2D0F2A] border-2 border-white shadow-[0_0_28px_18px_rgba(16,8,28,0.85)] overflow-hidden flex items-center justify-center"
+            aria-label="Working Dev's Hero home"
+          >
+            <img src="/logo.png" alt="" class="w-[70%] h-[70%] object-contain" />
+          </a>
+          <h1 class="font-heading text-2xl text-white tracking-tight mb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            Working Dev's <span class="gradient-text">Hero</span>
+          </h1>
+          <p class="text-white/85 text-sm drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">AI-powered software that ships.</p>
+          <SocialIcons
+            class="flex flex-wrap justify-center gap-2.5 mt-4"
+            linkClass="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+            iconClass="w-3.5 h-3.5"
+          />
+        </div>
+      </header>
+
+      <p class="mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">Highlights</p>
+      <div class="flex flex-col gap-3 lg:grid lg:grid-cols-3">
+        {featuredLinks.map((link, index) => (
+          <BioLink link={link} featured={index === 0} />
+        ))}
+      </div>
+
+      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">From the blog</p>
+      <div class="flex flex-col gap-4 lg:grid lg:grid-cols-3">
+        {recentPosts.map((post) => (
+          <BlogCard
+            href={`/blog/${post.slug}`}
+            title={post.data.title}
+            date={post.data.pubDate}
+            heroImage={post.data.heroImage}
+          />
+        ))}
+      </div>
+
+      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">The squad</p>
+      <div class="grid grid-cols-6 gap-2 sm:gap-3 lg:gap-5">
+        {squad.map((member) => (
+          <a href="/team" title={member.name} class="block min-w-0">
+            <Image
+              src={member.avatar}
+              alt={member.name}
+              width={240}
+              height={240}
+              class="w-full aspect-square rounded-2xl object-cover border border-white/15 bg-[#1a0f24]"
+            />
+          </a>
+        ))}
+      </div>
+
+      <p class="text-center text-xs text-white/45 mt-6">
+        <a href="/" class="hover:text-white/70">workingdevshero.com</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>

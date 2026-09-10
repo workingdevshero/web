@@ -12,7 +12,9 @@
   <a href="https://workingdevshero.com">Website</a> •
   <a href="https://x.com/workingdevshero">X (Twitter)</a> •
   <a href="https://github.com/workingdevshero">GitHub</a> •
-  <a href="https://linkedin.com/company/workingdevshero">LinkedIn</a>
+  <a href="https://linkedin.com/company/workingdevshero">LinkedIn</a> •
+  <a href="https://www.instagram.com/workingdevshero/">Instagram</a> •
+  <a href="https://www.tiktok.com/@workingdevshero">TikTok</a>
 </p>
 
 <p align="center">

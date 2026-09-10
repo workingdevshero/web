@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
+import { DISCORD_INVITE_URL } from '@/data/discord';
 import Card from '@components/ui/Card.astro';
 import { Image } from 'astro:assets';
 import bobbyImg from '@assets/images/team/bobby.png';
@@ -159,9 +160,14 @@ const agents = [
       <p class="text-lg text-gray-300 mb-8">
         Human-led, AI-accelerated. Tell us what you're building.
       </p>
-      <Button href="/contact" variant="primary" size="lg">
-        Start Your Project
-      </Button>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="primary" size="lg">
+          Start Your Project
+        </Button>
+        <Button href={DISCORD_INVITE_URL} variant="secondary" size="lg" external>
+          Join Discord
+        </Button>
+      </div>
     </div>
   </section>
 </BaseLayout>

@@ -1,5 +1,9 @@
 # Cloudflare Pages redirects for old WordPress URLs
 
+/linktree /links 301
+/link /links 301
+/discord https://discord.gg/UxNXrBukjZ 302
+
 # Old WordPress category pages
 /category/* /blog 301
 
