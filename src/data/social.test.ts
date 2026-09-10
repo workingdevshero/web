@@ -89,6 +89,7 @@ describe('link-in-bio', () => {
     expect(page).toContain('heroImage');
     expect(page).toContain('Highlights');
     expect(page).toContain('lg:grid-cols-3');
+    expect(page).toContain('aria-label="Working Dev\'s Hero home"');
     expect(page).not.toContain('productLinks');
     expect(page).not.toContain('siteLinks');
   });
