@@ -1,16 +1,19 @@
+import { DISCORD_INVITE_URL } from './discord';
+
 export type BioLink = {
   title: string;
   href: string;
   description?: string;
   external?: boolean;
-  icon: 'discord' | 'bolt' | 'mail' | 'youtube' | 'instagram' | 'tiktok' | 'blog';
+  icon: 'discord' | 'bolt' | 'mail' | 'globe' | 'work' | 'blog';
 };
 
 export const featuredLinks: readonly BioLink[] = [
   {
     title: 'Join Discord',
-    href: '/discord',
+    href: DISCORD_INVITE_URL,
     description: 'The squad hangs out here',
+    external: true,
     icon: 'discord',
   },
   {
@@ -28,27 +31,18 @@ export const featuredLinks: readonly BioLink[] = [
   },
 ];
 
-export const watchLinks: readonly BioLink[] = [
+export const siteLinks: readonly BioLink[] = [
   {
-    title: 'YouTube',
-    href: 'https://youtube.com/@workingdevshero',
-    description: 'Builds, walkthroughs, and the rooftop',
-    external: true,
-    icon: 'youtube',
+    title: 'Website',
+    href: '/',
+    description: 'AI-powered software that ships',
+    icon: 'globe',
   },
   {
-    title: 'Instagram',
-    href: 'https://www.instagram.com/workingdevshero/',
-    description: 'Photos and reels from the rooftop',
-    external: true,
-    icon: 'instagram',
-  },
-  {
-    title: 'TikTok',
-    href: 'https://www.tiktok.com/@workingdevshero',
-    description: 'Shorts from the squad',
-    external: true,
-    icon: 'tiktok',
+    title: 'Portfolio',
+    href: '/portfolio',
+    description: 'What the squad has shipped',
+    icon: 'work',
   },
   {
     title: 'Blog',

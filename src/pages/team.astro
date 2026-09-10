@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
+import { DISCORD_INVITE_URL } from '@/data/discord';
 import Card from '@components/ui/Card.astro';
 import { Image } from 'astro:assets';
 import bobbyImg from '@assets/images/team/bobby.png';
@@ -163,7 +164,7 @@ const agents = [
         <Button href="/contact" variant="primary" size="lg">
           Start Your Project
         </Button>
-        <Button href="/discord" variant="secondary" size="lg">
+        <Button href={DISCORD_INVITE_URL} variant="secondary" size="lg" external>
           Join Discord
         </Button>
       </div>

@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { DISCORD_INVITE_URL } from './discord';
-import { featuredLinks, productLinks, watchLinks } from './links';
+import { featuredLinks, productLinks, siteLinks } from './links';
 import { socialLinks } from './social';
 import { squadAgents, squadHumans } from './squad';
 
@@ -48,11 +48,12 @@ describe('Discord invite', () => {
     expect(DISCORD_INVITE_URL).toBe('https://discord.gg/UxNXrBukjZ');
   });
 
-  it('is wired into the Discord landing page', () => {
-    const page = readFileSync(repoFile('src/pages/discord.astro'), 'utf8');
-    expect(page).toContain('DISCORD_INVITE_URL');
-    expect(page).toContain('Hero in Training');
-    expect(page).toContain('Two humans + 4 agents');
+  it('is the Join Discord destination, not a landing page', () => {
+    expect(featuredLinks[0]?.href).toBe(DISCORD_INVITE_URL);
+    expect(featuredLinks[0]?.external).toBe(true);
+    expect(existsSync(repoFile('src/pages/discord.astro'))).toBe(false);
+    const redirects = readFileSync(repoFile('public/_redirects'), 'utf8');
+    expect(redirects).toContain('/discord https://discord.gg/UxNXrBukjZ');
   });
 });
 
@@ -63,15 +64,14 @@ describe('link-in-bio', () => {
       'Automate It',
       'Newsletter',
     ]);
-    expect(featuredLinks[0]?.href).toBe('/discord');
   });
 
-  it('includes Instagram and TikTok under watch & read', () => {
-    const hrefs = watchLinks.map((link) => link.href);
-    expect(hrefs).toEqual(expect.arrayContaining([
-      'https://www.instagram.com/workingdevshero/',
-      'https://www.tiktok.com/@workingdevshero',
-    ]));
+  it('points site links at home, portfolio, and the blog instead of duplicating socials', () => {
+    expect(siteLinks.map((link) => [link.title, link.href])).toEqual([
+      ['Website', '/'],
+      ['Portfolio', '/portfolio'],
+      ['Blog', '/blog'],
+    ]);
   });
 
   it('labels WDH.sh as Agent Shell Toolkit', () => {
@@ -81,7 +81,7 @@ describe('link-in-bio', () => {
     }));
   });
 
-  it('includes Dimitris on the links and Discord pages', () => {
+  it('includes Dimitris on the links page', () => {
     expect(squadHumans.map((h) => h.name)).toEqual(['Bobby', 'Dimitris']);
     expect(squadHumans[1]?.role).toBe('Hero in Training');
     expect(squadAgents).toHaveLength(4);
