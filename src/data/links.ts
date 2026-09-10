@@ -5,7 +5,7 @@ export type BioLink = {
   href: string;
   description?: string;
   external?: boolean;
-  icon: 'discord' | 'bolt' | 'mail' | 'globe' | 'work' | 'blog';
+  icon: 'discord' | 'bolt' | 'mail' | 'blog';
 };
 
 export const featuredLinks: readonly BioLink[] = [
@@ -31,30 +31,12 @@ export const featuredLinks: readonly BioLink[] = [
   },
 ];
 
-export const siteLinks: readonly BioLink[] = [
-  {
-    title: 'Website',
-    href: '/',
-    description: 'AI-powered software that ships',
-    icon: 'globe',
-  },
-  {
-    title: 'Portfolio',
-    href: '/portfolio',
-    description: 'What the squad has shipped',
-    icon: 'work',
-  },
-  {
-    title: 'Blog',
-    href: '/blog',
-    description: 'Notes from the squad',
-    icon: 'blog',
-  },
-];
-
-export const productLinks: readonly BioLink[] = [
-  { title: 'Chart Splat', href: 'https://chartsplat.com', external: true, icon: 'blog' },
-  { title: 'Agent Shell Toolkit', href: 'https://wdh.sh', external: true, icon: 'blog' },
-  { title: 'Hey Bible', href: '/portfolio/hey-bible', icon: 'blog' },
-  { title: 'Shop', href: '/shop', icon: 'blog' },
-];
+export function latestPublishedPosts<T extends { data: { pubDate: Date; draft?: boolean } }>(
+  posts: readonly T[],
+  count = 3,
+): T[] {
+  return [...posts]
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, count);
+}

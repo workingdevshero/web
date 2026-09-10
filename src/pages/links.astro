@@ -3,7 +3,8 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import BioLink from '@components/links/BioLink.astro';
 import SocialIcons from '@components/ui/SocialIcons.astro';
 import { Image } from 'astro:assets';
-import { featuredLinks, siteLinks, productLinks } from '@/data/links';
+import { getCollection } from 'astro:content';
+import { featuredLinks, latestPublishedPosts } from '@/data/links';
 import heroMobile from '@assets/images/hero-scene-mobile.png';
 import heroScene from '@assets/images/hero-scene-wide.png';
 import bobbyImg from '@assets/images/team/bobby.png';
@@ -12,6 +13,20 @@ import claudiusImg from '@assets/images/team/claudius.png';
 import claudiaImg from '@assets/images/team/claudia.png';
 import mosesImg from '@assets/images/team/moses.png';
 import neoImg from '@assets/images/team/neo.png';
+
+const recentPosts = latestPublishedPosts(
+  await getCollection('blog', ({ data }) => !data.draft),
+  3,
+).map((post) => ({
+  title: post.data.title,
+  href: `/blog/${post.slug}`,
+  description: post.data.pubDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }),
+  icon: 'blog' as const,
+}));
 
 const squad = [
   { name: 'Bobby', avatar: bobbyImg },
@@ -25,7 +40,7 @@ const squad = [
 
 <BaseLayout
   title="Links"
-  description="Working Dev's Hero — Discord, Automate It, the newsletter, portfolio, and the rest of the squad."
+  description="Working Dev's Hero — Discord, Automate It, the newsletter, latest posts, and the rest of the squad."
   chrome="none"
   bodyClass="bg-[#2d1941]"
 >
@@ -71,26 +86,13 @@ const squad = [
         ))}
       </div>
 
-      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">The site</p>
-      <div class="flex flex-col gap-3">
-        {siteLinks.map((link) => (
-          <BioLink link={link} />
-        ))}
+      <div class="mt-6 mb-2 flex items-baseline gap-3">
+        <p class="text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">From the blog</p>
+        <a href="/blog" class="text-[0.68rem] font-semibold text-white/55 hover:text-white/85">All posts</a>
       </div>
-
-      <p class="mt-6 mb-2 text-[0.68rem] font-bold tracking-[0.14em] uppercase text-secondary-300">Products</p>
-      <div class="grid grid-cols-2 gap-3 w-full">
-        {productLinks.map((link) => (
-          <a
-            href={link.href}
-            target={link.external ? '_blank' : undefined}
-            rel={link.external ? 'noopener noreferrer' : undefined}
-            class="flex items-center justify-center text-center min-w-0 h-12 px-1 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md"
-          >
-            <strong class="text-[8px] sm:text-xs font-semibold leading-none whitespace-nowrap tracking-tighter">
-              {link.title}
-            </strong>
-          </a>
+      <div class="flex flex-col gap-3">
+        {recentPosts.map((link) => (
+          <BioLink link={link} />
         ))}
       </div>
 

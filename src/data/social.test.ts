@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { DISCORD_INVITE_URL } from './discord';
-import { featuredLinks, productLinks, siteLinks } from './links';
+import { featuredLinks, latestPublishedPosts } from './links';
 import { socialLinks } from './social';
 import { squadAgents, squadHumans } from './squad';
 
@@ -66,19 +66,27 @@ describe('link-in-bio', () => {
     ]);
   });
 
-  it('points site links at home, portfolio, and the blog instead of duplicating socials', () => {
-    expect(siteLinks.map((link) => [link.title, link.href])).toEqual([
-      ['Website', '/'],
-      ['Portfolio', '/portfolio'],
-      ['Blog', '/blog'],
+  it('picks the three newest published posts', () => {
+    const posts = [
+      { id: 'old', data: { pubDate: new Date('2024-01-01'), draft: false } },
+      { id: 'draft', data: { pubDate: new Date('2026-09-01'), draft: true } },
+      { id: 'new', data: { pubDate: new Date('2026-08-01'), draft: false } },
+      { id: 'mid', data: { pubDate: new Date('2025-06-01'), draft: false } },
+      { id: 'newer', data: { pubDate: new Date('2026-09-01'), draft: false } },
+    ];
+    expect(latestPublishedPosts(posts, 3).map((post) => post.id)).toEqual([
+      'newer',
+      'new',
+      'mid',
     ]);
   });
 
-  it('labels WDH.sh as Agent Shell Toolkit', () => {
-    expect(productLinks).toContainEqual(expect.objectContaining({
-      title: 'Agent Shell Toolkit',
-      href: 'https://wdh.sh',
-    }));
+  it('renders recent posts from the blog collection', () => {
+    const page = readFileSync(repoFile('src/pages/links.astro'), 'utf8');
+    expect(page).toContain('latestPublishedPosts');
+    expect(page).toContain("getCollection('blog'");
+    expect(page).not.toContain('productLinks');
+    expect(page).not.toContain('siteLinks');
   });
 
   it('includes Dimitris on the links page', () => {
