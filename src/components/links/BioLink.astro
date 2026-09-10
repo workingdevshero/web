@@ -15,7 +15,7 @@ const { link, featured = false } = Astro.props;
   target={link.external ? '_blank' : undefined}
   rel={link.external ? 'noopener noreferrer' : undefined}
   class:list={[
-    'flex items-center gap-3 w-full h-full min-w-0 overflow-hidden px-4 py-3.5 rounded-xl border backdrop-blur-md transition-colors lg:flex-col lg:items-start lg:justify-center lg:gap-3 lg:p-5',
+    'flex items-center gap-3 w-full h-full min-w-0 overflow-hidden px-4 py-3.5 rounded-xl border backdrop-blur-md transition-colors lg:px-5',
     featured
       ? 'bg-brand-gradient border-transparent text-white shadow-lg shadow-purple-900/40'
       : 'bg-white/10 border-white/15 text-white hover:bg-white/15',
