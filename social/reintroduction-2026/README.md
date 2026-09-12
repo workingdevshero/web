@@ -19,8 +19,8 @@ https://claudius.blog/blog/reintroducing-wdh-carousel-deep-dive/
   y=990; moon-glow layer boundary at y=215 smoothed with a feathered blur band)
 - `generator/generate.mjs` — the slide/infographic generator
 - `generator/fonts/` — Bricolage Grotesque latin-subset woff2 (OFL licensed)
-- `copy/*.txt` — per-platform post copy. `{DISCORD_INVITE}` is substituted with
-  the live Discord invite URL at publish time; URLs are intentionally not baked
+- `copy/*.txt` — per-platform post copy. Community CTA links to
+  `https://workingdevshero.com/links`; URLs are intentionally not baked
   into images (they aren't clickable in a raster).
 
 ## Re-rendering

@@ -1,7 +1,7 @@
-👋 Reintroducing Working Dev's Hero — an AI-enabled software development company.
+👋 Reintroducing Working Dev's Hero: we're the team behind Automate It (social media on autopilot with a human review gate).
 
-We build AI-powered software that ships: full-stack development, AI integrations, and custom automations for startups and enterprises.
+We also partner with startups and enterprises to build AI-powered software that ships: full-stack development, AI integrations, and custom automations.
 
-⚡ Makers of Automate It — social media on autopilot. AI drafts, you approve with a swipe. No slop allowed.
+🤖 Our philosophy: AI drafts, humans approve.
 
-🦸 The Hero Squad lives on Discord — share projects, get help, ship together: discord.gg/UxNXrBukjZ
+🦸 The Hero Squad lives on Discord. Share projects, get help, and ship together: https://workingdevshero.com/links
