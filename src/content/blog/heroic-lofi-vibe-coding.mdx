@@ -1,0 +1,193 @@
+---
+title: "Heroic LoFi for Vibe Coding: How to Make an AI Album With Grok Imagine and Venice"
+description: "Empty rooftops first, characters second, then instrumental tracks and a loop that actually cycles. A working recipe for an illustrated lo-fi album — and the mistakes that ate the most time."
+pubDate: 2026-09-16
+author: "bobbyg603"
+heroImage: "/images/blog/heroic-lofi-hero.jpg"
+categories: ["AI", "Tutorials"]
+tags: ["ai", "grok", "venice", "imagine", "lo-fi", "ffmpeg", "music", "video-loops", "agents"]
+---
+
+One night of vibe coding. Twenty instrumental tracks. Same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run — and illustrated stills (plus a looping scene) that actually look like *us*, not a generic Ghibli still.
+
+This is the recipe. Two Grok sessions, a pile of stills, Venice's ElevenLabs music model, and a lot of "no, the head is still too big." You can steal the whole pipeline.
+
+<video autoplay loop muted playsinline preload="metadata" src="/videos/heroic-lofi-scene-1-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+*Scene 1, looping: Hero on the ledge, Dimitris watching the screen. Cape, typing, a little breathing. No camera zoom.*
+
+## The Stack 🧰
+
+Nothing here needs a DAW or a video editor.
+
+- **Grok Imagine** (`image_edit` / `image_to_video`) for stills and idle loops
+- **Venice** `elevenlabs-music` for instrumental tracks
+- **ffmpeg** + a few dozen lines of Python for queue/retrieve, duration checks, and loop trimming
+- A local `index.html` so you can actually *listen* while you look
+
+The visual bible is the existing mascot: flat 2D vector, plum / gold / moonlight, adult superhero proportions. Not painterly. Not chibi stickers. If a generation looks like a die-cut emoji, throw it out.
+
+## 1. Freeze the empty rooms 🏙️
+
+The single most useful rule: **paint the room before you paint the people.**
+
+We generated empty rooftops, fire escapes, and interiors first and then **never overwrote them**. Characters get composited onto those plates. Collaging stickers onto the same rooftop over and over is how you get two art styles in one frame.
+
+![Empty dusk rooftop plate](/images/blog/heroic-lofi-empty.jpg)
+
+*Frozen empty plate for track 1. The dressed scene is this plus two people — not a new rooftop.*
+
+Folder layout we ended up with:
+
+```
+heroic-lofi/
+  characters/          # boards + fullbody refs
+  scenes/empty/        # locked plates — do not overwrite
+  scenes/dressed/      # stills with/without cast
+  audio/               # MP3 masters
+  videos/loops/        # short Imagine idles
+  videos/masters/      # muxed loop + audio
+  scripts/             # Venice queue/poll
+  index.html           # local preview
+```
+
+If you only remember one thing: identity lives in `characters/`, setting lives in `scenes/empty/`, and a dressed still is *those two things combined*.
+
+## 2. Boards first, scenes second 🦸
+
+![Hero character board](/images/blog/heroic-lofi-hero-board.jpg)
+
+![Dimitris character board](/images/blog/heroic-lofi-dimitris.jpg)
+
+Don't invent a teammate inside the scene. Lock a **character board** on a flat plum background, get the human to say yes, *then* drop them into the plate.
+
+What burned us:
+
+- **Sticker boards vs scene art.** The original busts were cute die-cut stickers. The rooftop stills were adult 2D vector. Putting sticker-Dimitris next to scene-Hero looked like two shows. Style-lock from a *scene* you already like, not from the kawaii sheet.
+- **Edit chains drift.** Five `image_edit`s on the same file will give you bug eyes, then a Ghibli cousin, then a different person. When a board is close, **cut it out of the still you already approved** (or recolor pixels) instead of asking the model to "fix the eyes."
+- **Named extras need their own silhouette.** Dimitris started as a green-suited Hero clone: same mask, same white lenses, same magenta boots, same beard. The version that worked is a *younger sidekick* — no mask, short beard, brown eyes, green suit, green boots, slimmer than the lead. Distinguish costume **and** age **and** proportions.
+- **Head size is a scene problem.** A board can look fine and still balloon in the wide shot. Prompt the dressed still with a concrete comparison: *"his head is the same size as the sitting hero's head."* Then look. Then do it again.
+
+For Hero we eventually stopped generating a new bust at all. We cropped the original Working Dev's Hero rooftop plate and ran a real background-removal pass so the drawing — including the small white mask lenses — stayed the drawing.
+
+## 3. Instrumentals on Venice 🎹
+
+Venice exposes ElevenLabs Music as `elevenlabs-music`. There is no bitrate knob (we got 128 kbps). Re-encoding to 192 kbps does not add quality. If you want WAV or `mp3_44100_192`, that's a [Venice feature request](https://featurebase.venice.ai).
+
+Queue, then poll retrieve. Retrieve often returns **raw MP3 bytes** (`ID3` / `0xff`), not JSON.
+
+```python
+payload = {
+    "model": "elevenlabs-music",
+    "prompt": prompt,
+    "duration_seconds": 154,   # hard-cap 179 if you care about Shorts
+    "force_instrumental": True,
+}
+# POST https://api.venice.ai/api/v1/audio/queue
+# then poll POST /audio/retrieve with {"model": "elevenlabs-music", "queue_id": qid}
+```
+
+Prompt shape that behaved:
+
+```
+Instrumental lo-fi hip hop, 75 BPM, E minor, about 2 minutes 34 seconds.
+Deep sub bass, Rhodes, faint server-fan bed. Intimate workshop mood.
+Start with vinyl, bass at 0:16, drums at 0:32.
+No vocals, no lyrics, tape saturation, loop-friendly ending.
+```
+
+Gotchas:
+
+- **Do not name artists.** Venice 422s on content policy. Describe the *sound*.
+- **`force_instrumental: true`.** Otherwise you roll the dice on a hummed hook.
+- **Queue IDs expire.** A 404 on retrieve means requeue, not "poll harder."
+- **402** is credits. Stop.
+- **Shorts are 3:00.** Muxed files overshoot. We capped generation at **179 seconds**, then `ffprobe` the file. YouTube Shorts is unforgiving.
+
+Poll every ~20s. Save when the body looks like audio:
+
+```python
+def looks_like_audio(raw: bytes) -> bool:
+    return (
+        raw[:3] == b"ID3"
+        or raw[:2] in {b"\xff\xfb", b"\xff\xf3", b"\xff\xf2"}
+        or raw[:4] == b"RIFF"
+    )
+```
+
+Then verify duration, don't trust the request:
+
+```bash
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 track.mp3
+```
+
+We liked tracks 1 and 2 immediately. That's the whole review process: play it in the local HTML, keep it or don't.
+
+## 4. Dress the plate 🌙
+
+Once the board is right, `image_edit` the **empty plate** with the boards as extra references:
+
+1. Image 0: frozen empty rooftop (composition and lighting are law)
+2. Image 1: Hero board
+3. Image 2: Dimitris board
+
+Ask for a **new pose**. Our first five dressed stills all used the same three-quarter "standing with laptop" stance. Scene 1 only started working when Hero *sat on the parapet* and Dimitris *stood behind him looking at the screen*.
+
+Keep the laptop a **small prop**, not a product shot. Keep the fire escape flat 2D if that's the bible. If the extra comes out jacked, long-armed, or huge-headed, *fix the board* and dress again — don't nibble the scene for an hour.
+
+## 5. A loop that actually loops 🔁
+
+`image_to_video` from the dressed still. Default 6 seconds, 720p to match a 1280×720 plate.
+
+The prompt that finally behaved:
+
+```
+Static locked camera, no zoom, no pan, no push-in.
+Seamless perfect loop, first frame equals last frame.
+Tiny repeating idle: sitting hero types on the gold laptop;
+magenta cape sways in a slow wind cycle that returns to the start.
+The green teammate does a subtle in-place idle — weight shift and breathing —
+returning to the start. Faces frozen, mouth closed, no smile change.
+```
+
+Then **measure**. Don't trust your eyes on a 6-second clip.
+
+1. Extract every frame: `ffmpeg -i clip.mp4 -vsync 0 f%04d.jpg`
+2. Downscale and compute mean absolute error of the **last frame vs every earlier frame**
+3. Neighbor frames (n vs n+1) are your noise floor — for us ~0.7–1.1
+4. A real loop point is last-vs-n ≈ that noise floor
+5. Trim from that `n` to the end and play it with `<video loop>`
+
+What we learned the hard way:
+
+- **Camera zoom kills the join.** If the framing drifts, no amount of trimming saves it. Put "no zoom, no push-in" in the prompt and check bounding-box width across frames. Ours stayed 1278px. The zoomy take did not.
+- **The model rarely returns to frame 0.** It often returns to ~1–2 seconds in. That's fine. Cut the intro.
+- **Don't palindrome unless you mean it.** Playing the clip forward then reverse is a guaranteed loop and a weird cape.
+- **Faces are a separate channel.** A "subtle idle" on the sidekick became a grin/frown flip. Measure a crop of the face at the loop join, not just the whole frame. Freeze the mouth in the prompt; if the source still is agape, the video will be too.
+- **One motion per subject.** Cape *or* typing *or* a weight shift. Asking for all three at once is how you get a 1.7s jarring cycle with a frozen extra.
+
+When last-vs-join is about the same as n-vs-n+1, put it in the preview:
+
+```html
+<video autoplay loop muted playsinline src="videos/loops/01-cape-on-dusk-loop.mp4"></video>
+```
+
+Mux under the MP3 later (`ffmpeg -stream_loop -1`) if you want a master for the full track. Check the muxed duration with `ffprobe` — AAC wrapping adds a few frames.
+
+## How You Can Do This 🛠️
+
+**You need:** a Grok Imagine-capable client, a [Venice](https://venice.ai) API key, `ffmpeg`, and Python 3.
+
+**Recipe:**
+
+1. Write the slate on one page: title, seconds, BPM/key, who is in the shot.
+2. Generate empty plates. Freeze the folder.
+3. Generate character boards on a flat background. Approve them *out of the scene*.
+4. Queue instrumentals with `force_instrumental: true`. Poll retrieve until the body is an MP3. `ffprobe` durations.
+5. Dress each plate with the boards as references. One new pose per track.
+6. For a loop: locked-camera idle, dump frames, find last≈some-early-frame, trim, `<video loop>`.
+7. Keep a local HTML so you can see the album as an album, not a pile of files.
+
+**Budget your taste, not your GPU.** Stills and six-second clips are cheap. The expensive part is noticing that Dimitris is a green Hero, or that the loop zooms. That's the human job. It's also the [Automate It](https://automate.it.com) job: AI drafts, human approves, then it ships.
+
+If you make one, send it to [X @workingdevshero](https://x.com/workingdevshero). We want to see your empty rooftops.
