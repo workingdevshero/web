@@ -14,7 +14,7 @@ This is the recipe. Two Grok sessions, a pile of stills, Venice's ElevenLabs mus
 
 <video autoplay loop muted playsinline preload="metadata" src="/videos/heroic-lofi-scene-1-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
 
-*Scene 1, looping: Hero on the ledge, Dimitris watching the screen. Cape, typing, a little breathing. No camera zoom.*
+*Scene 1, looping: Hero on the ledge typing, Dimitris standing still and blinking. Cape frozen. No camera zoom.*
 
 ## The Stack 🧰
 
@@ -139,40 +139,41 @@ Keep the laptop a **small prop**, not a product shot. Keep the fire escape flat 
 
 `image_to_video` from the dressed still. Default 6 seconds, 720p to match a 1280×720 plate.
 
-The prompt that finally behaved:
+The prompt that finally behaved — **still wind, frozen cape, two tiny motions**:
 
 ```
-Static locked camera, no zoom, no pan, no push-in.
-Seamless perfect loop, first frame equals last frame.
-Tiny repeating idle: sitting hero types on the gold laptop;
-magenta cape sways in a slow wind cycle that returns to the start.
-The green teammate does a subtle in-place idle — weight shift and breathing —
-returning to the start. Faces frozen, mouth closed, no smile change.
+Locked camera, this exact still. No wind. The magenta cape hangs frozen.
+The sitting plum hero types on the gold laptop, fingers tapping keys.
+The green sidekick stands solemnly in place and blinks occasionally.
+Hero’s purple mask and solid white eyes never change.
+Seamless loop, first frame equals last.
 ```
 
 Then **measure**. Don't trust your eyes on a 6-second clip.
 
 1. Extract every frame: `ffmpeg -i clip.mp4 -vsync 0 f%04d.jpg`
 2. Downscale and compute mean absolute error of the **last frame vs every earlier frame**
-3. Neighbor frames (n vs n+1) are your noise floor — for us ~0.7–1.1
-4. A real loop point is last-vs-n ≈ that noise floor
-5. Trim from that `n` to the end and play it with `<video loop>`
+3. Neighbor frames *inside the settled trim* are your noise floor — consecutive frames of the still-to-motion morph at the start of a take are ~0.7 and will lie to you. Real neighbors are ~0.2
+4. Score a **crop of the sidekick's head**, not the whole 1280×720. Sky and buildings hide a 10px head jump in the average
+5. Aim for a **3–6 second** window. Sub-2s loops look like a stutter
+6. Trim from that `n` to the end with ffmpeg on the original mp4 (no JPEG-frame rebuild, no overlays) and play it with `<video loop>`
 
 What we learned the hard way:
 
-- **Camera zoom kills the join.** If the framing drifts, no amount of trimming saves it. Put "no zoom, no push-in" in the prompt and check bounding-box width across frames. Ours stayed 1278px. The zoomy take did not.
-- **The model rarely returns to frame 0.** It often returns to ~1–2 seconds in. That's fine. Cut the intro.
+- **Camera zoom kills the join.** If the framing drifts, no amount of trimming saves it. Put "no zoom, no push-in" in the prompt and check bounding-box width across frames.
+- **`image_to_video` is not a loop model.** "First frame equals last" is a wish. You search for a trim where the last frame matches some earlier frame.
+- **Cape motion is the default.** A waving cape looks alive and is easy to generate — and it usually won't match at the join. Frozen cape is harder: the model will steal motion into the head unless typing and a blink are named as the *only* motions.
 - **Don't palindrome unless you mean it.** Playing the clip forward then reverse is a guaranteed loop and a weird cape.
-- **Faces are a separate channel.** A "subtle idle" on the sidekick became a grin/frown flip. Measure a crop of the face at the loop join, not just the whole frame. Freeze the mouth in the prompt; if the source still is agape, the video will be too.
-- **One motion per subject.** Cape *or* typing *or* a weight shift. Asking for all three at once is how you get a 1.7s jarring cycle with a frozen extra.
+- **Don't overlay blinks onto a still cape.** You get JPEG mush. Generate until the take already has the blink.
+- **White mask eyes drift.** Hero's blank ovals grow pupils if you don't lock them in the prompt. Check a crop of the mask at both ends of the trim.
 
-When last-vs-join is about the same as n-vs-n+1, put it in the preview:
+When last-vs-join on the *face crop* is close to a real neighbor, put it in the preview:
 
 ```html
 <video autoplay loop muted playsinline src="videos/loops/01-cape-on-dusk-loop.mp4"></video>
 ```
 
-Mux under the MP3 later (`ffmpeg -stream_loop -1`) if you want a master for the full track. Check the muxed duration with `ffprobe` — AAC wrapping adds a few frames.
+Mux under the MP3 later (`ffmpeg -stream_loop -1`) for a 720p master of the full track. Crop that same loop to 9:16 for Shorts. Check the muxed duration with `ffprobe` — AAC wrapping adds a few frames.
 
 ## How You Can Do This 🛠️
 
@@ -185,7 +186,7 @@ Mux under the MP3 later (`ffmpeg -stream_loop -1`) if you want a master for the 
 3. Generate character boards on a flat background. Approve them *out of the scene*.
 4. Queue instrumentals with `force_instrumental: true`. Poll retrieve until the body is an MP3. `ffprobe` durations.
 5. Dress each plate with the boards as references. One new pose per track.
-6. For a loop: locked-camera idle, dump frames, find last≈some-early-frame, trim, `<video loop>`.
+6. For a loop: locked camera, frozen cape, typing + blink, dump frames, score the *face crop* against real neighbors, trim 3–6s, `<video loop>`.
 7. Keep a local HTML so you can see the album as an album, not a pile of files.
 
 **Budget your taste, not your GPU.** Stills and six-second clips are cheap. The expensive part is noticing that Dimitris is a green Hero, or that the loop zooms. That's the human job. It's also the [Automate It](https://automate.it.com) job: AI drafts, human approves, then it ships.
