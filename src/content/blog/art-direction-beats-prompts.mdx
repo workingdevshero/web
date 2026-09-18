@@ -1,0 +1,61 @@
+---
+title: "Stop Prompting, Start Art Directing: How to Get AI Images That Aren't Slop"
+description: "A vague prompt gets you the model's average: dark navy, glowing circuits, neural hexagons. Here's the art direction spec that escapes it, and why every clause in it earns its place."
+pubDate: 2026-09-17
+author: "bobbyg603"
+heroImage: "/images/blog/art-direction-beats-prompts.jpg"
+categories: ["AI", "Tips & Tricks"]
+tags: ["ai", "generativeai", "design", "prompting", "automate-it", "podcasting"]
+---
+
+Two podcasts run off the same [Automate It](https://automate.it.com) workspace. Same models, same pipeline, same week. One of them ships cover art we barely think about. The other came back with a batch we rejected as nonsense: glowing hexagons, circuit lines, a hologram hovering over nothing in particular, none of it connected to anything in the episode.
+
+The models weren't the variable. The art direction was.
+
+## The Default Look 🌀
+
+Ask an image model for "a cover image about AI and commerce" and you get the average of everything it has ever seen captioned *AI*: deep navy background, glowing blue circuitry, a neural-network hexagon lattice, a translucent chart floating over an open palm, lens flare for seasoning.
+
+That look is not a style decision. It's the mean of the training data, and a vague prompt is an instruction to go stand in the middle of it. This is the actual mechanism behind AI slop. It isn't that the model is bad at drawing. It's that you asked for nothing in particular and it gave you the most statistically unsurprising thing available. Everyone else asking vaguely gets the same image.
+
+The fix isn't a cleverer sentence. It's refusing to leave the decisions to the model in the first place.
+
+## The Spec 🎨
+
+Here's the art direction that rides along with every episode of *Agentic Commerce Weekly*:
+
+> flat vector editorial, retro mid-century, thick dark navy outlines, cream #F5F0E8 / navy #1A2E4A / coral #E8543A / amber #F5A623, subtle paper grain, no text or letters or numbers anywhere, no dark neural or sci-fi imagery
+
+That's not a prompt. It's a visual system that happens to fit on one line. Whatever the episode is about, the image it produces will be recognizably from the same show as last week's, which is the entire job of cover art.
+
+## Why Each Clause Earns Its Place 🔧
+
+- **A named medium.** "Flat vector editorial" rules out the photoreal 3D render the model reaches for by default. You are not asking for *a nice image*, you are asking for a specific kind of made object, and every other kind is now off the table.
+- **A named era, and a tradition to imitate.** "Retro mid-century" points at real design history. Editorial illustration in the Bloomberg or Economist vein is a tradition with rules about flat shapes, limited color, and one idea per frame. Give the model something concrete to imitate and it stops averaging everything at once.
+- **Hex codes, not color words.** "Warm palette" is a request for interpretation, and the interpretation will drift every single generation. `#E8543A` doesn't drift. Four hex values also do quiet structural work: they cap the palette, which forces flat shapes and hard edges instead of the gradient mush a model defaults to when it has infinite colors to blend.
+- **Explicit bans.** "No dark neural or sci-fi imagery" is doing as much work as any of the positive instructions. The defaults are strong enough that you have to name them to get rid of them. Same for "no text or letters or numbers anywhere," which spares you the confident gibberish glyphs image models love to decorate with.
+- **One legible metaphor per image.** The rule we care about most isn't in the palette at all: every element has to *mean* something specific about that episode. A story about a payment protocol gets one clear object standing for the payment. It does not get a circuit board, three hexagons, and a padlock arranged decoratively. That's icon soup, and icon soup is what a model produces when nobody told it what the picture is about.
+
+That last one is what the rejected batch was missing. The images weren't ugly. They were about nothing.
+
+## The Control Group 🧪
+
+The sibling show's direction, in full, was "deep navy + electric accents."
+
+Read it again and notice what it is: a description of the default. It names no medium, no tradition, no exact colors, and bans nothing. It's a vibe, and a vibe that happens to sit directly on top of the model's center of mass. So it produced exactly the generic look, over and over, and we kept rejecting batches without being able to say much more than "this is nonsense."
+
+Same platform, same models, same week, two wildly different outcomes. The only variable was how specific the spec was.
+
+## The Checklist ✅
+
+Steal this for whatever you're generating:
+
+1. **Name the medium.** Flat vector, risograph print, gouache, cut paper, 35mm film still. Pick one and commit.
+2. **Name the palette in hex.** Three to five values. Not "muted," not "warm," not "earthy."
+3. **Name a reference tradition.** A design era, a publication, a movement. Something with actual rules the model can borrow.
+4. **Ban the defaults out loud.** Write down the slop you keep getting and forbid it by name. Your ban list is the most valuable part of the spec, and it grows every time you reject something.
+5. **Require each element to mean something.** One idea per image, mapped to one concrete object. If you can't say what a shape is doing there, it shouldn't be there.
+
+None of this makes the model more creative. It makes the model do less deciding, which is the point. The taste is yours. The spec is just where you write it down so it survives contact with the next hundred generations.
+
+**Got an art direction line that actually works? Post it and tag us on [X @workingdevshero](https://x.com/workingdevshero).**
