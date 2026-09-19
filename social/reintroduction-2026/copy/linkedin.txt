@@ -1,0 +1,9 @@
+👋 Allow us to reintroduce ourselves: Working Dev's Hero is the team behind Automate It, social media on autopilot with a human review gate. AI agents draft your posts, threads, and articles, you approve with a swipe, and only what you approve gets published. No slop allowed.
+
+Beyond Automate It, we partner with startups and enterprises from concept to production to build intelligent, AI-powered software that ships: full-stack development, AI integrations, custom automations, and strategic consulting.
+
+Our philosophy in one line: AI drafts, humans approve. We recently rebranded our own site with three AIs and one human. Not a pixel shipped without sign-off. That's the workflow we sell, and the workflow we live.
+
+🦸 Join the Hero Squad on Discord to share what you're building, get help with your projects, and swap strategies with builders who ship.
+
+Discord: https://workingdevshero.com/links
