@@ -10,7 +10,9 @@ tags: ["ai", "grok", "venice", "imagine", "lo-fi", "ffmpeg", "music", "video-loo
 
 One night of vibe coding. Twenty instrumental tracks. Same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run — and illustrated stills (plus a looping scene) that actually look like *us*, not a generic Ghibli still.
 
-This is the recipe. Two Grok sessions, a pile of stills, Venice's ElevenLabs music model, and a lot of "no, the head is still too big." You can steal the whole pipeline.
+This is the recipe. Three Grok sessions, a pile of stills, Venice's ElevenLabs music model, and a lot of "no, the head is still too big." You can steal the whole pipeline.
+
+The chats had to restart. Every still we opened was stored in the transcript as image bytes, and the API eventually refused the next turn. Start a fresh session before the thread is a gallery. Keep the stills on disk.
 
 <video autoplay loop muted playsinline preload="metadata" src="/videos/heroic-lofi-scene-1-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
 
@@ -133,7 +135,7 @@ Once the board is right, `image_edit` the **empty plate** with the boards as ext
 
 Ask for a **new pose**. Our first five dressed stills all used the same three-quarter "standing with laptop" stance. Scene 1 only started working when Hero *sat on the parapet* and Dimitris *stood behind him looking at the screen*.
 
-Keep the laptop a **small prop**, not a product shot. Keep the fire escape flat 2D if that's the bible. If the extra comes out jacked, long-armed, or huge-headed, *fix the board* and dress again — don't nibble the scene for an hour.
+Keep the laptop a **small prop**, not a product shot. If the person holding it already wears a `</>` on the chest, the lid is a plain gold circle. A second emblem on the lid reads as a sticker. Keep the fire escape flat 2D if that's the bible. If the extra comes out jacked, long-armed, or huge-headed, *fix the board* and dress again — don't nibble the scene for an hour.
 
 ## 5. A loop that actually loops 🔁
 
@@ -163,9 +165,11 @@ What we learned the hard way:
 - **Camera zoom kills the join.** If the framing drifts, no amount of trimming saves it. Put "no zoom, no push-in" in the prompt and check bounding-box width across frames.
 - **`image_to_video` is not a loop model.** "First frame equals last" is a wish. You search for a trim where the last frame matches some earlier frame.
 - **Cape motion is the default.** A waving cape looks alive and is easy to generate — and it usually won't match at the join. Frozen cape is harder: the model will steal motion into the head unless typing and a blink are named as the *only* motions.
-- **Don't palindrome unless you mean it.** Playing the clip forward then reverse is a guaranteed loop and a weird cape.
+- **A palindrome is the wrong default for a waving cape.** Forward-then-back makes the cloth swim. It is the right tool when the seam is a *head turn* and a short crossfade looks doubled. On the rooftop ledge we played the approved span forward, then backward to the first frame. The join is two neighboring frames. The head turns out and turns home.
 - **Don't overlay blinks onto a still cape.** You get JPEG mush. Generate until the take already has the blink.
-- **White mask eyes drift.** Hero's blank ovals grow pupils if you don't lock them in the prompt. Check a crop of the mask at both ends of the trim.
+- **White mask eyes drift, and "make them white" makes them worse.** Hero's lenses are slim blank ovals. Asking the still editor to fill them paints the chest emblem white and blows the eyes into circles. Animate from a still that already has the slim lenses, and say the eyes stay exactly as they are. Check a crop of the mask at both ends of the trim.
+- **Pin the first frame only when someone should talk.** Pinning the last frame to the same still pulls the mouth shut. "First frame equals last" is still a wish. Search for a trim.
+- **Let a person scrub the untrimmed take.** Frame-difference scores will call two frames a match while the head has rotated toward the moon. Open the full clip, step with the arrow keys, and cut where they say.
 
 When last-vs-join on the *face crop* is close to a real neighbor, put it in the preview:
 
@@ -173,7 +177,32 @@ When last-vs-join on the *face crop* is close to a real neighbor, put it in the 
 <video autoplay loop muted playsinline src="videos/loops/01-cape-on-dusk-loop.mp4"></video>
 ```
 
-Mux under the MP3 later (`ffmpeg -stream_loop -1`) for a 720p master of the full track. Crop that same loop to 9:16 for Shorts. Check the muxed duration with `ffprobe` — AAC wrapping adds a few frames.
+Mux under the MP3 later. Imagine clips often carry their own AAC (silence, or a voice you did not ask for). Map the streams or that junk wins:
+
+```bash
+ffmpeg -y -stream_loop -1 -i loop.mp4 -i track.mp3 \
+  -map 0:v:0 -map 1:a:0 -t "$DUR" -shortest \
+  -c:v libx264 -pix_fmt yuv420p -preset fast \
+  -c:a aac -b:a 192k -movflags +faststart \
+  masters/track.mp4
+```
+
+Check the muxed duration with `ffprobe`. AAC wrapping adds a few frames.
+
+Crop a wide loop down to 9:16 only when both characters still fit. Generate a native portrait still when they don't. A portrait cropped into a landscape chops the room. Make the wide plate from the wide still.
+
+## Ship the Short, bank the wide cut 📺
+
+Every track wants two masters of the same song.
+
+| Master | Shape | What it's for |
+|---|---|---|
+| 9:16 | 1080×1920 | The YouTube Short. This is what you publish, one track at a time. |
+| 16:9 | 1280×720 | The long cut. All twenty tracks, one night, later. |
+
+Publishing the wide file as its own video spends the compilation. We sent one 16:9 plate to review by mistake and had to swap the attachment for the portrait.
+
+If a tool will post the moment you click approve, set publish to **manual**. Approval and posting are different buttons.
 
 ## How You Can Do This 🛠️
 
@@ -186,8 +215,9 @@ Mux under the MP3 later (`ffmpeg -stream_loop -1`) for a 720p master of the full
 3. Generate character boards on a flat background. Approve them *out of the scene*.
 4. Queue instrumentals with `force_instrumental: true`. Poll retrieve until the body is an MP3. `ffprobe` durations.
 5. Dress each plate with the boards as references. One new pose per track.
-6. For a loop: locked camera, frozen cape, typing + blink, dump frames, score the *face crop* against real neighbors, trim 3–6s, `<video loop>`.
-7. Keep a local HTML so you can see the album as an album, not a pile of files.
+6. For a loop: locked camera, frozen cape, typing + blink, dump frames, score the *face crop* against real neighbors, then let a person pick the cut. Trim 3–6s, or boomerang that span if the head turns and a crossfade looks ghosted.
+7. Mux with `-map 0:v:0 -map 1:a:0`. Make a 9:16 Short and a 16:9 plate. Publish the Short. Keep the wide file.
+8. Keep a local HTML so you can see the album as an album, not a pile of files.
 
 **Budget your taste, not your GPU.** Stills and six-second clips are cheap. The expensive part is noticing that Dimitris is a green Hero, or that the loop zooms. That's the human job. It's also the [Automate It](https://automate.it.com) job: AI drafts, human approves, then it ships.
 
