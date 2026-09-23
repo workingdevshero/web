@@ -1,0 +1,88 @@
+---
+title: "Two Commercials, Four Cuts, Zero Video Editors"
+description: "We made our first Automate It ads the way the product works: AI drafts, a human reviews. Grok wrote the brief, Claude Code cut it in Tesseract, Venice made the music, and every line of copy went through a person with taste. Here's the process, the tools, and what we'd tell anyone making product videos with agents."
+pubDate: 2026-09-23
+author: "bobbyg603"
+heroImage: "/images/blog/automate-it-commercials.jpg"
+categories: ["AI", "Software"]
+tags: ["automate-it", "claude", "grok", "tesseract", "venice", "video", "marketing", "ai-agents"]
+draft: true
+---
+
+[Automate It](https://automate.it.com) needed commercials. Not a three-minute walkthrough (we already [have one of those](/blog/supermog-builds-itself)), but short, loud-on-mute spots for feeds: one wide cut for YouTube and the site, and one tall cut for Reels, Shorts, and TikTok.
+
+We made them the way the product works: **AI drafts, a human reviews.** Agents did all the grunt work. A person said "no, that doesn't make sense" a few dozen times. Here are the results, then how we got there.
+
+## Just Shipped? ⚡
+
+<video controls playsinline preload="metadata" src="/videos/automate-it-just-shipped-16x9.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+<div style="display:flex;justify-content:center;margin:0.5rem 0 1.5rem">
+  <video controls playsinline preload="metadata" src="/videos/automate-it-just-shipped-9x16.mp4" style="width:100%;max-width:360px;border-radius:12px"></video>
+</div>
+
+## While You Were Shipping 🚢
+
+<video controls playsinline preload="metadata" src="/videos/automate-it-while-you-were-shipping-16x9.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+<div style="display:flex;justify-content:center;margin:0.5rem 0 1.5rem">
+  <video controls playsinline preload="metadata" src="/videos/automate-it-while-you-were-shipping-9x16.mp4" style="width:100%;max-width:360px;border-radius:12px"></video>
+</div>
+
+## The Crew 🧩
+
+- **The brief: Grok.** We walked the creative with Grok first. It wrote a handoff doc with the beats, the on-screen lines, the brand rules, and a list of raw screen recordings to pull from. The first version of the brief was confident and specific. About half of it survived contact with a human.
+- **The editor: Claude Code driving [Tesseract](https://github.com/mirage-hq/Tesseract).** Tesseract is Mirage's local, agent-first video engine: a CLI plus two agent skills. It does layers, keyframes, type, and audio, and renders locally. It's free, needs no account, and verifies its own release checksum. Claude read the skill docs, probed the schema, and wrote every composition as editable JSON.
+- **The music: [Venice](https://venice.ai) → ElevenLabs Music.** We generated three 120 BPM instrumental options for about two dollars and picked one by ear. Every cut in both spots lands on that track's beat grid.
+- **The plates: real screens, shot at 3×.** Playwright drove a headed Chrome at 3× pixel density, in dark mode, against the real product. The phone shot in the vertical cut came from the iOS simulator.
+- **The glue: a little Python.** One spec file per spot describes the beats. A shared builder lays that spec out twice, once per aspect ratio, and hands each layout to Tesseract.
+
+## How It Actually Went 🏓
+
+### Music first, then picture
+
+The brief had beat times like 0, 1.2, 3.0, and 7.5 seconds. Those numbers don't sit on any tempo. So before a single frame got cut, we picked the track, and then every cut snapped to its 500 ms grid. The edit feels tight partly because it literally is.
+
+### Stills beat screen recordings
+
+The brief's plan was to punch in on 1920-wide screen recordings. At phone size, the result was mush. We threw out almost all of the footage and reshot each beat as a 3× screenshot of one thing: the blog title, the prompt, the schedule block, the connected platforms, the live post. The "motion" is a smash-in on the cut and a slow push through the hold. It looks crisper and reads faster.
+
+### One spec, two layouts, not one crop
+
+The vertical cut is not a strip sliced out of the wide one. Tesseract holds one canvas per project, so each spot builds two projects from the same spec. The wide cut puts the line on the left and the screen on the right. The tall cut puts the whole line above the screen. Our first tall draft split each line *around* the image ("Make it" / screen / "social."). It looked clever and read terribly. Keeping the line together, above the plate, also keeps it clear of the bottom third, where TikTok, Reels, and Shorts pile on their own buttons.
+
+### The copy is the script, so it has to stand alone
+
+Every line got the same test: *does this make sense to someone scrolling with the sound off?* Plenty didn't.
+
+- **"Together, they are Supermog."** This was lifted straight from the post on screen. It meant nothing outside that post, so it became **"Posted to your socials."**
+- **"Set it once."** This sat over a big purple *Weekly* button, so "once" and "weekly" argued with each other. It became **"Scheduled, on autopilot."**
+- **"New post."** Too vague. We tried "New blog post", but blogs sound dated. **"Just shipped?"** turns the opener into a question aimed at the viewer, and "Make it social." answers it.
+- **"Make it a thread."** This clashed with Instagram, which doesn't do threads. It became **"Make it social."**
+- **"You hit approve."** Two words too many. It became **"You approve."** On the phone cut, where you'd actually swipe, it's **"Swipe to approve."**
+
+We also cut an entire opening, a parody of engagement-bait captions ("Comment YES for the guide!"). The joke was that this is the slop the product doesn't make. Nobody got the joke. The obvious read was that *we* were offering a guide. If a parody needs a paragraph of explanation, it's just noise.
+
+### Don't get creative with the audio
+
+Agent video tools love sound design: risers, whooshes, a dip under the title, a tap on every button. Our feedback was blunt: *"We don't need vacuum noises."* The final mix is one music track at one level, cut on a downbeat, with a single hit on the end card. It's simpler, and it's better.
+
+### Show only what's real
+
+Every screen in these ads is the actual product with the actual data. "Live on X, Instagram, Threads & more" only went in after we checked that each platform has a real publish adapter. Then we connected the ones that weren't connected yet, so the platforms screen shows them all green. The phone shot used the app's real swipe gesture: right approves, left rejects.
+
+### Making the ad was QA
+
+Pointing a camera at your own product is humbling. The shoot turned up two real bugs. The prompt box drew a square focus ring inset from its rounded border. And every native file upload failed on iOS (Expo's newer `fetch` rejects the old React Native `{ uri }` form-data shape). Both became GitHub issues before the ads were finished.
+
+## What You Can Steal 🧠
+
+1. **Pick the music first and cut to its grid.** Decide the tempo before you decide the beats.
+2. **Shoot stills at 2–3×, not screen recordings.** Frame one idea per beat, tight enough to read on a phone, and add motion in the edit.
+3. **Write every line so it works on mute and on its own.** If a line only makes sense next to the previous frame, rewrite it.
+4. **Design the vertical cut separately.** Put the line above the image, keep it whole, and stay out of the bottom third.
+5. **Keep the audio boring.** One track, one level. Add a sound effect only when you can say why.
+6. **Show real screens with real data.** It's more convincing, and you'll find bugs.
+7. **Let agents do the grunt work, and keep the taste.** The agents built, rebuilt, re-timed, and re-rendered dozens of versions without complaint. Every good decision in the final cut still came from a person saying "that doesn't make sense."
+
+That last one is the whole pitch, really. AI drafts. Humans review. [Try Automate It](https://automate.it.com).
