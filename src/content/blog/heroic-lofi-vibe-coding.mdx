@@ -8,7 +8,7 @@ categories: ["AI", "Tutorials"]
 tags: ["ai", "grok", "venice", "imagine", "lo-fi", "ffmpeg", "music", "video-loops", "agents"]
 ---
 
-One night of vibe coding, as an album. Twenty instrumental tracks, about 48 minutes, set in the same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run, with illustrated loops that actually look like *us*, not a generic Ghibli still.
+One night of vibe coding, as an album. Twenty instrumental tracks, about 47 minutes, set in the same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run, with illustrated loops that actually look like *us*, not a generic Ghibli still.
 
 **[Listen to the full album on YouTube](https://youtu.be/_ZXBtcGy73w)**, or browse every scene and track at **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)**.
 
@@ -16,7 +16,7 @@ One night of vibe coding, as an album. Twenty instrumental tracks, about 48 minu
 
 The album concept is one night. Making it took about two weeks of Grok sessions, a pile of stills, Venice's ElevenLabs music model, and a lot of "no, the head is still too big." This is the recipe. You can steal the whole pipeline.
 
-The chats kept having to restart. Every still we opened was stored in the transcript as image bytes, and the API eventually refused the next turn. Start a fresh session before the thread is a gallery. Keep the stills on disk, and keep a handoff note so the next session can pick up where the last one died.
+The chats kept having to restart. Every still we opened was stored in the transcript as image bytes, and the API eventually refused the next turn. Start a fresh session before the thread is a gallery. Keep the stills on disk, and keep a handoff note so the next session can pick up where the last one died. Save prompts to disk too: the prompts behind two of our final songs only survived in an old agent's chat log.
 
 <video autoplay loop muted playsinline preload="metadata" src="/videos/heroic-lofi-scene-1-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
 
@@ -58,6 +58,8 @@ heroic-lofi/
   scenes/dressed/      # stills with/without cast
   scenes/archive/      # every still you replaced, in case you want it back
   audio/               # MP3 masters
+  audio/mastered/      # leveled + trimmed copies for the long cut
+  audio/next-album/    # good songs that didn't fit, prompt beside each
   videos/loops/        # short Imagine idles
   videos/masters/      # muxed loop + audio
   scripts/             # Venice queue/poll
@@ -148,7 +150,23 @@ ffmpeg -y -i track.mp3 -t 116 -af "afade=t=out:st=113:d=3" -c:a libmp3lame -q:a 
 
 When you hear a click in a stitched compilation, check *both* neighboring tracks before blaming one. The noise we heard "between 9 and 10" was the tail of track 9, not the start of 10.
 
-**Regenerate freely.** We replaced eight of the twenty songs after living with the album for a few days. Keep the old take as `-v1.mp3`, generate a new one, and play them side by side. The review process is the same as for the first batch: play it in the local HTML, keep it or don't.
+**Regenerate freely.** We replaced most of the back half after living with the album for a few days. Keep the old take as `-v1.mp3`, generate a new one, and play them side by side. The review process is the same as for the first batch: play it in the local HTML, keep it or don't.
+
+**Count your lead instruments.** When we finally lined up all twenty prompts, piano or Rhodes led sixteen of them, with four piano tracks in a row in the back half. The album felt samey, and the ElevenLabs piano has a sharp, glassy attack that 128 kbps doesn't help. So the remakes changed the lead instead of the mood: muted jazz guitar, a soft-mallet vibraphone in the rain, a muted guitar lullaby, a warm analog synth.
+
+Prompt habits that tamed the harshness:
+
+- **Drums and bass from the first bar.** A sparse intro leaves the lead exposed.
+- **Name the instrument's softness:** "tone knob rolled down," "soft-mallet," "low-passed synth lead with a slow attack."
+- **Say what you don't want:** "no bright attack, no sharp notes, no arpeggios."
+
+**Measure before you argue about it.** Splitting each track into its harmonic and percussive parts showed that two of our "sharp" tracks weren't sharp in the keys at all. It was the snare and the rain.
+
+**Level-match before you compare takes.** The raw takes varied by 4 dB, and louder always sounds better. Normalize every candidate to the same loudness before you pick.
+
+**Fit beats quality.** Twice the better song lost to the one that fit the album. We didn't delete the winners: they sit in `audio/next-album/` with their prompt in a `.txt` next to each.
+
+**Give the side quest the album's glue.** Our first 8-bit track was almost three times brighter than everything around it. Its prompt had banned vinyl, tape, and hiss, so it sounded like a different record. The version that fits keeps the chiptune melody, low-passes it "like a handheld game heard through a cassette," and adds the tape back.
 
 **Open with your strongest track.** We originally started the album at dusk. We moved Midnight Rooftop Flow to track 1 because it was the better song and more likely to keep people listening.
 
@@ -239,7 +257,7 @@ Every track wants two masters of the same song.
 | Master | Shape | What it's for |
 |---|---|---|
 | 9:16 | 1080×1920 | The YouTube Short. One per track, one a day at 8 PM Eastern. |
-| 16:9 | 1280×720 | The long cut. All twenty tracks stitched with short crossfades into one video of about 48 minutes. |
+| 16:9 | 1280×720 | The long cut. All twenty tracks stitched with short crossfades into one video of about 47 minutes. |
 
 **Get the animation right in 16:9, then crop the Short from it.** Don't generate a separate portrait animation: it's a second lottery on the loop, and the two versions won't match. Cropping only goes one way — you can cut a 9:16 out of a 16:9 frame, never the reverse. When both characters won't fit in the crop, choose who stays. Our rule was Dimitris first, and for Waiting on CI we kept Hero, the laptop, and the moon.
 
@@ -248,6 +266,16 @@ ffmpeg -y -i loop-16x9.mp4 -vf "crop=405:720:410:0,scale=1080:1920" -c:v libx264
 ```
 
 Publishing the wide file as its own video spends the compilation. We sent one 16:9 plate to review by mistake and had to swap the attachment for the portrait.
+
+**Master the long cut, not the Shorts.** YouTube levels each Short on its own, but in one 47-minute video our loudness swung 6.6 dB between tracks, and the closer was the loudest thing on the album. We leveled every track to -14 LUFS with peaks under -1 dBTP, trimmed the dead air, and crossfaded one second between tracks. Then we computed the chapter timestamps from the same durations, so they can't drift from the video.
+
+```bash
+# measure, then apply the gain with a limiter as a safety net
+ffmpeg -i track.mp3 -af ebur128=peak=true -f null -
+ffmpeg -i track.mp3 -af "volume=2.4dB,alimiter=limit=0.84:level=0" -c:a libmp3lame -b:a 320k track-mastered.mp3
+```
+
+**Swapping a song after approval means swapping the attachment too.** Six approved Shorts were still carrying the old songs after we remade them. After any remake, check what's actually attached to the scheduled posts.
 
 If a tool will post the moment you click approve, set publish to **manual**. Approval and posting are different buttons.
 
