@@ -1,6 +1,6 @@
 ---
 title: "Heroic Lofi for Vibe Coding: One Developer, Twenty Songs, and a Lot of AI"
-description: "How one developer made a 47-minute illustrated lo-fi album in a little over two weeks with Grok, Grok Imagine, ElevenLabs, and Claude — what worked, what fought back, and why it still feels like magic."
+description: "How one developer made a 47-minute illustrated lo-fi album in a little over two weeks with Grok, Grok Imagine, ElevenLabs, and Claude. What worked, what fought back, and why it still feels like magic."
 pubDate: 2026-10-01
 author: "bobbyg603"
 heroImage: "/images/blog/heroic-lofi-lair.jpg"
@@ -10,11 +10,11 @@ tags: ["ai", "grok", "claude", "venice", "elevenlabs", "imagine", "lo-fi", "musi
 
 ## Intro 🎧
 
-A single developer made an album. Twenty instrumental tracks, about 47 minutes, each one with its own animated scene, a recurring cast of characters, and a release plan that runs for three weeks — made without a recording studio, a drawing tablet, or a video editor.
+Twenty instrumental tracks, about 47 minutes, each one with its own animated scene, a recurring cast of characters, and a release plan that runs for three weeks, all made without a recording studio, a drawing tablet, or a video editor. It's now possible for a single motivated software developer to make an entire album.
 
 **[Listen to the full album on YouTube](https://youtu.be/Lq1RZYq4caM)**, or browse every scene and track at **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)**.
 
-<iframe width="100%" height="450" src="https://www.youtube.com/embed/Lq1RZYq4caM" title="Heroic Lofi for Vibe Coding — full album" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="450" src="https://www.youtube.com/embed/Lq1RZYq4caM" title="Heroic Lofi for Vibe Coding: full album" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 It's lo-fi, so let's keep expectations honest. This isn't going to win a Grammy. But it's a real album you can put on while the tests run: the same characters from track to track, drawn in flat vector art that reads like a graphic novel, each scene animated into a (mostly) seamless loop. A year ago, one person making this in a little over two weeks would have been absurd. And this is the worst this technology will ever be.
 
@@ -22,9 +22,9 @@ This is the story of how it came together, what fought back, and what we'd tell 
 
 ## Plan 🗺️
 
-It started as a conversation. Before generating a single image, we sat down with Grok 4.7 and planned the whole thing: one night of vibe coding on the rooftops of a city, told across twenty tracks. We wrote a slate — every track's title, its length, its tempo and key, and who'd be in the scene — and set the rules of the world. The visual bible was the existing [Working Dev's Hero](/) mascot: clean 2D vector, a plum, gold, and moonlight palette, adult superhero proportions. Every scene should look like a panel from the same book.
+It started as a conversation. Before generating a single image, we sat down with Grok 4.7 and planned the whole thing: one night of vibe coding on the rooftops of a city, told across twenty tracks. We wrote a slate with every track's title, its length, its tempo and key, and who'd be in the scene, and then set the rules of the world. The visual bible was the existing [Working Dev's Hero](/) mascot: clean 2D vector, a plum, gold, and moonlight palette, adult superhero proportions. Every scene should look like a panel from the same book.
 
-Then we picked the tools. Grok Imagine would paint the scenes, populate them with characters, and bring them to life. ElevenLabs' music model, through [Venice](https://venice.ai), would write the songs. Everything else — trimming, muxing, the long-form cut — would be `ffmpeg` and a few hundred lines of Python an agent could write and run for us. No DAW, no video editor, no Photoshop.
+Then we picked the tools. Grok Imagine would paint the scenes, populate them with characters, and bring them to life. ElevenLabs' music model, through [Venice](https://venice.ai), would write the songs. Everything else (trimming, muxing, the long-form cut) would be `ffmpeg` and a few hundred lines of Python an agent could write and run for us. No DAW, no video editor, no Photoshop.
 
 The plan felt tidy. What followed was a lot of back and forth.
 
@@ -44,7 +44,7 @@ The cast needed the same discipline. Each character got a board on a flat plum b
 
 ![Dimitris character board](/images/blog/heroic-lofi-dimitris.jpg)
 
-This is where most of the early struggle lived. Dimitris, Hero's sidekick, started life as a green copy of Hero: same mask, same boots, same beard. The version that worked made him a younger sidekick with no mask, his own boots, and a slimmer build. Even then, he'd balloon to a giant head in the wide shots until we started prompting with comparisons like *"his head is the same size as the sitting hero's head."* And every time we asked the edit model to fix something on top of its last attempt, things drifted further — bug eyes, then a different art style, then a different person. The fix was always the same: go back to the last version we'd approved and make one new edit from there.
+This is where most of the early struggle lived. Dimitris, Hero's sidekick, started life as a green copy of Hero: same mask, same boots, same beard. The version that worked made him a younger sidekick with no mask, his own boots, and a slimmer build. Even then, he'd balloon to a giant head in the wide shots until we started prompting with comparisons like *"his head is the same size as the sitting hero's head."* And every time we asked the edit model to fix something on top of its last attempt, things drifted further: bug eyes, then a different art style, then a different person. The fix was always the same: go back to the last version we'd approved and make one new edit from there.
 
 Populating the scenes used Grok Imagine's edit model with the frozen plate and the character boards as references. We learned to add one character at a time, because two in one edit usually meant one of them came out wrong. We learned to check the image size after every edit, because one quietly came back square. And we learned to save the prompt behind every plate we kept: halfway through, new plates started coming back 3D and outlined, and the fix was reusing the wording of the ones that worked.
 
@@ -82,7 +82,7 @@ Working with Grok, we made the first ten tracks and a first pass at the other te
 
 So we brought in Claude to finish the job, starting with fresh ears. It couldn't actually *listen*, but it could measure. It analyzed all twenty songs for loudness, brightness, how sharp the note attacks were, and which songs sounded alike. The numbers explained what we'd been feeling. Piano or electric piano led sixteen of the twenty songs, with four in a row in the back half. The ElevenLabs piano has a sharp, glassy attack, and 128 kbps audio doesn't help. The loudness swung 6.6 dB from track to track, and the closer was the loudest song on the album.
 
-From there it was a collaboration. Claude proposed new prompts that changed the lead instrument instead of the mood — muted jazz guitar, a soft vibraphone in the rain, a muted guitar lullaby, a warm analog synth — with drums and bass from the first bar, so the lead never sits exposed:
+From there it was a collaboration. Claude proposed new prompts that changed the lead instrument instead of the mood: muted jazz guitar, a soft vibraphone in the rain, a muted guitar lullaby, and a warm analog synth. Each one put drums and bass in from the first bar, so the lead never sits exposed:
 
 ```
 Instrumental lo-fi hip hop, 78 BPM, A minor, about 2 minutes 32 seconds.
@@ -100,7 +100,7 @@ Claude also did the finishing work we wouldn't have known to do: leveling every 
 
 The release plan went through its own back and forth. Where we landed: every track gets its own YouTube Short, one a day at 8 PM Eastern, each a 9:16 crop of its scene. The wide 16:9 versions stay off YouTube as standalone videos, so they don't spend the full album, which launches as one 47-minute video. Around that, we planned a launch-day announcement on X, Threads, Facebook, LinkedIn, and Discord, Instagram and TikTok reels for a handful of favorite scenes, a cast introduction, a few behind-the-scenes threads, and a last call after the final Short.
 
-That's a lot of posts for one person, so all of it — every Short, reel, carousel, and thread — went through [Automate It](https://automate.it.com) for review and scheduling. AI drafts, a human approves, then it ships. That review step earned its keep. Late in the project, after we'd remade six songs, we found the approved Shorts still carrying the old audio, and a forgotten Short with an outdated video and a placeholder title. Because everything sat in one review queue, catching and swapping them took minutes.
+That's a lot of posts for one person, so every Short, reel, carousel, and thread went through [Automate It](https://automate.it.com) for review and scheduling. AI drafts, a human approves, then it ships. That review step earned its keep. Late in the project, after we'd remade six songs, we found the approved Shorts still carrying the old audio, and a forgotten Short with an outdated video and a placeholder title. Because everything sat in one review queue, catching and swapping them took minutes.
 
 ## Gold ⛏️
 
