@@ -1,0 +1,187 @@
+---
+title: "Heroic Lofi for Vibe Coding: One Developer, Twenty Songs, and a Lot of AI"
+description: "How one developer made a 47-minute illustrated lo-fi album in a little over two weeks with Grok, Grok Imagine, ElevenLabs, and Claude. What worked, what fought back, and why it still feels like magic."
+pubDate: 2026-10-01
+author: "bobbyg603"
+heroImage: "/images/blog/heroic-lofi-lair.jpg"
+categories: ["AI", "Tutorials"]
+tags: ["ai", "grok", "claude", "venice", "elevenlabs", "imagine", "lo-fi", "music", "video-loops", "agents"]
+---
+
+## Intro 🎧
+
+Twenty instrumental tracks, about 47 minutes, each one with its own animated scene, a recurring cast of characters, and a release plan that runs for three weeks, all made without a recording studio, a drawing tablet, or a video editor. It's now possible for a single motivated software developer to make an entire album.
+
+**[Listen to the full album on YouTube](https://youtu.be/Lq1RZYq4caM)**, or browse every scene and track at **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)**.
+
+<iframe width="100%" height="450" src="https://www.youtube.com/embed/Lq1RZYq4caM" title="Heroic Lofi for Vibe Coding: full album" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+It's lo-fi, so let's keep expectations honest. This isn't going to win a Grammy. But it's a real album you can put on while the tests run: the same characters from track to track, drawn in flat vector art that reads like a graphic novel, each scene animated into a (mostly) seamless loop. A year ago, one person making this in a little over two weeks would have been absurd. And this is the worst this technology will ever be.
+
+This is the story of how it came together, what fought back, and what we'd tell you if you wanted to make one yourself.
+
+## Plan 🗺️
+
+It started as a conversation. Before generating a single image, we sat down with Grok 4.7 and planned the whole thing: one night of vibe coding on the rooftops of a city, told across twenty tracks. We wrote a slate with every track's title, its length, its tempo and key, and who'd be in the scene, and then set the rules of the world. The visual bible was the existing [Working Dev's Hero](/) mascot: clean 2D vector, a plum, gold, and moonlight palette, adult superhero proportions. Every scene should look like a panel from the same book.
+
+Then we picked the tools. Grok Imagine would paint the scenes, populate them with characters, and bring them to life. ElevenLabs' music model, through [Venice](https://venice.ai), would write the songs. Everything else (trimming, muxing, the long-form cut) would be `ffmpeg` and a few hundred lines of Python an agent could write and run for us. No DAW, no video editor, no Photoshop.
+
+The plan felt tidy. What followed was a lot of back and forth.
+
+## Scenes 🏙️
+
+The single most useful decision we made was to create each scene first, then populate it with the characters one by one.
+
+Grok Imagine generated every rooftop, fire escape, and interior empty, and once we liked one, we froze it and never touched it again. When we tried to generate the scene and the people in one go, we kept getting two art styles in one frame.
+
+![Empty dusk rooftop plate](/images/blog/heroic-lofi-empty.jpg)
+
+*The frozen empty plate for Cape On, IDE Open. The finished scene is this rooftop plus two people, not a new rooftop.*
+
+The cast needed the same discipline. There are five of them: Hero, the lead, still coding at 3 AM; his younger sidekick; and the three Working Dev's Hero agents. Neo is our Hermes agent, always on call and wearing sunglasses indoors, and Claudius and Claudia are our two OpenClaws. Each one got a board on a flat plum background, approved on its own before going anywhere near a scene.
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.6rem;margin:1rem 0">
+  <img src="/images/blog/heroic-lofi-cast-hero.jpg" alt="Hero character board" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-cast-dimitris.jpg" alt="Sidekick character board" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-cast-neo.jpg" alt="Neo character board" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-cast-claudius.jpg" alt="Claudius character board" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-cast-claudia.jpg" alt="Claudia character board" style="width:100%;border-radius:10px;margin:0" />
+</div>
+
+*The cast, left to right: Hero, the sidekick, Neo, Claudius, and Claudia.*
+
+This is where most of the early struggle lived. The sidekick started life as a green copy of Hero: same mask, same boots, same beard. The version that worked made him a younger sidekick with no mask, his own boots, and a slimmer build. Even then, he'd balloon to a giant head in the wide shots until we started prompting with comparisons like *"his head is the same size as the sitting hero's head."* And every time we asked the edit model to fix something on top of its last attempt, things drifted further: bug eyes, then a different art style, then a different person. The fix was always the same: go back to the last version we'd approved and make one new edit from there.
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.6rem;margin:1rem 0">
+  <img src="/images/blog/heroic-lofi-fail-sidekick-plum-clone.jpg" alt="The sidekick in Hero's plum suit and mask, next to Hero" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-fail-sidekick-green-clone.jpg" alt="The sidekick in green but still wearing Hero's mask, beard, and emblem" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-fail-sidekick-giant-head.jpg" alt="The sidekick with an oversized head beside the seated Hero" style="width:100%;border-radius:10px;margin:0" />
+</div>
+
+*The sidekick, three ways he didn't make the album: a second Hero in plum, a green Hero with the same mask and beard, and the giant head.*
+
+Populating the scenes used Grok Imagine's edit model with the frozen plate and the character boards as references. Adding the characters one by one mattered, because two in one edit usually meant one of them came out wrong. We learned to check the image size after every edit, because one quietly came back square. And we learned to save the prompt behind every plate we kept: halfway through, new plates started coming back 3D and outlined, and the fix was reusing the wording of the ones that worked.
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.6rem;margin:1rem 0">
+  <img src="/images/blog/heroic-lofi-fail-diner-3d.jpg" alt="A rainy diner rendered with 3D depth, neon, and reflections" style="width:100%;border-radius:10px;margin:0" />
+  <img src="/images/blog/heroic-lofi-fail-diner-outlined.jpg" alt="The same diner redone with thick black outlines and flat fills" style="width:100%;border-radius:10px;margin:0" />
+</div>
+
+*Two tries at a diner scene. The first came back too 3D, the second like a diagram. Neither made the album.*
+
+## Loops 🔁
+
+Then came the part that ate the most time. Grok Imagine's video model can turn a still into six seconds of motion, but it isn't a loop model. Asking for "first frame equals last" is a wish. So for every track we generated takes, measured which frames matched, and had a person scrub through and pick the cut.
+
+<video autoplay loop muted playsinline preload="metadata" src="/videos/heroic-lofi-scene-1-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+*Cape On, IDE Open, looping: Hero typing, the sidekick standing still and blinking.*
+
+The biggest enemy was the camera. A slow zoom you barely notice in a six-second clip breaks the seam every time it loops, and it happened on at least six of the twenty tracks. What finally held was saying it like we meant it:
+
+```
+Non-negotiable: the camera stays locked. No zoom, no pan, no push-in.
+Only animate the character in the black suit and the lobster.
+The billboard and the hero stay absolutely static for the entire clip.
+```
+
+The rest was a long list of small lessons. A waving cape looks alive but never matches at the join, so we froze the capes and named typing and a blink as the only motion. Eyes that move loop; heads that turn don't. Playing a clip forward and then backward saved four tracks, but it can't save fog drifting across the frame. And Hero's slim white mask lenses were a constant fight. The video model wanted to give him pupils.
+
+Every loop was made in 16:9 first, and the 9:16 version for Shorts was cropped from it. Cropping only goes one way, and animating a second portrait version is a second roll of the dice.
+
+## Music 🎹
+
+While the scenes came together, the songs did too. ElevenLabs Music through Venice takes a text prompt and a length and returns an instrumental, usually within a minute or two. The first pass at all twenty tracks cost under $40.
+
+We learned to describe the sound and never name an artist (that gets the request refused), to vary the lengths so the songs didn't all come back with the same shape, and to cap everything under three minutes so each one could be a YouTube Short. We also learned to listen to the first and last few seconds of every track, because generated songs love to hide crackle, a screech, or a stray blip right at the edges.
+
+Then we lived with the album for a few days, and it didn't hold together.
+
+## Handoff 🤝
+
+Working with Grok, we made the first ten tracks and a first pass at the other ten. By the back half, the long-running session had lost the plot. It kept remaking the same tracks without converging, and we couldn't put a finger on why the album felt off.
+
+So we brought in Claude to finish the job, starting with fresh ears. It couldn't actually *listen*, but it could measure. It analyzed all twenty songs for loudness, brightness, how sharp the note attacks were, and which songs sounded alike. The numbers explained what we'd been feeling. Piano or electric piano led sixteen of the twenty songs, with four in a row in the back half. The ElevenLabs piano has a sharp, glassy attack, and 128 kbps audio doesn't help. The loudness swung 6.6 dB from track to track, and the closer was the loudest song on the album.
+
+From there it was a collaboration. Claude proposed new prompts that changed the lead instrument instead of the mood: muted jazz guitar, a soft vibraphone in the rain, a muted guitar lullaby, and a warm analog synth. Each one put drums and bass in from the first bar, so the lead never sits exposed:
+
+```
+Instrumental lo-fi hip hop, 78 BPM, A minor, about 2 minutes 32 seconds.
+A clean electric jazz guitar with the tone knob rolled down plays a slow,
+singing melody over warm chords. Dusty boom-bap drums and a round upright
+bass from the first bar. No piano, no bright attack, no long intro.
+Light tape saturation. No vocals, no lyrics, loop-friendly ending with no crash.
+```
+
+Claude measured; we listened and decided. Twice we kept a track the numbers flagged, because we loved it. Twice the better song lost to the one that fit the album, so those went into a folder for the next one.
+
+Rubber Duck on the Ledge shows how that back and forth really went. It was the last song we replaced, the night before launch, and it went through three versions.
+
+The original prompt asked for something quiet:
+
+```
+Instrumental lo-fi hip hop, 70 BPM, F minor, about 1 minute 48 seconds.
+Sparse warm Rhodes, bowed bass, drums whispered in late after 0:40.
+Quiet late-night conversation in the chords, vinyl dust, almost nothing extra.
+```
+
+Two things were wrong with what came back. The sparse arrangement left the piano's glassy attack exposed. And although we'd asked for F minor, the song came back in A-flat major, which uses the same notes and happens to be the key of Rainy Bus Stop Deploy, the very next track. Back to back, they sounded like one song that wouldn't end.
+
+<audio controls preload="none" src="/audio/blog/heroic-lofi-duck-original-intro.mp3" style="width:100%;margin:0.25rem 0"></audio>
+
+*The original Rubber Duck on the Ledge, opening.*
+
+<audio controls preload="none" src="/audio/blog/heroic-lofi-duck-original-into-08.mp3" style="width:100%;margin:0.25rem 0"></audio>
+
+*The original running into Rainy Bus Stop Deploy. Same key, same feel.*
+
+Claude's first fix overcorrected. It swapped the piano for a soft, breathy flute trading phrases with an upright bass, in D major. On paper it solved both problems. In practice it sounded like it belonged on a different album, and our honest reaction was "what in tarnation."
+
+So we steered back toward home: drums and bass from the first bar, and a warm, muffled electric piano in the low and middle register with a gentle tremolo, "like it's coming from the next room," in D minor. We queued three takes. One hung at Venice for more than thirteen minutes and never came back, so we queued a replacement and kept listening. The first take of the batch was the keeper: it still sounds like the rest of the album, and it finally steps away from its neighbor.
+
+<audio controls preload="none" src="/audio/blog/heroic-lofi-duck-final-intro.mp3" style="width:100%;margin:0.25rem 0"></audio>
+
+*The final Rubber Duck on the Ledge, opening.*
+
+<audio controls preload="none" src="/audio/blog/heroic-lofi-duck-final-into-08.mp3" style="width:100%;margin:0.25rem 0"></audio>
+
+*The final version running into Rainy Bus Stop Deploy.*
+
+
+Claude also did the finishing work we wouldn't have known to do: leveling every track to the same loudness, trimming dead air, crossfading the long cut, and computing the YouTube chapter timestamps from the same numbers so they can't drift.
+
+## Launch 🚀
+
+The release plan went through its own back and forth. Where we landed: every track gets its own YouTube Short, one a day at 8 PM Eastern, each a 9:16 crop of its scene. The wide 16:9 versions stay off YouTube as standalone videos, so they don't spend the full album, which launches as one 47-minute video. Around that, we planned a launch-day announcement on X, Threads, Facebook, LinkedIn, and Discord, Instagram and TikTok reels for a handful of favorite scenes, a cast introduction, a few behind-the-scenes threads, and a last call after the final Short.
+
+That's a lot of posts for one person, so every Short, reel, carousel, and thread went through [Automate It](https://automate.it.com) for review and scheduling. AI drafts, a human approves, then it ships. That review step earned its keep. Late in the project, after we'd remade six songs, we found the approved Shorts still carrying the old audio, and a forgotten Short with an outdated video and a placeholder title. Because everything sat in one review queue, catching and swapping them took minutes.
+
+## Gold ⛏️
+
+We want to be honest about the downside, because it's real.
+
+Working this way feels a lot like panning for gold. You describe what you want, pull the lever, and see what comes out. Sometimes it's beautiful. Often it's a giant-headed sidekick, a camera that won't sit still, or a song with a glassy piano that sets your teeth on edge. A lot of those two weeks went into pulling the lever again, and learning which prompts tilt the odds.
+
+Here's what that looked like in practice, counted from the session logs:
+
+| | |
+|---|---|
+| Days of work | 11, between September 14 and September 30 |
+| Scene and character stills generated | 40 |
+| Image edits (placing characters, fixing faces and boards) | 354 |
+| Video takes for the loops | 210, for 20 loops |
+| Songs generated | 69, for 20 tracks |
+| Music cost | under $140 in Venice credits |
+| Rate and credit limits hit | 7 logged (6 on Grok Imagine, 1 on Venice) |
+
+That's about ten video takes for every loop we kept, and three or four songs for every track. And those are just the logged calls. We also maxed out our SuperGrok Heavy subscription on a few occasions, though in fairness we were building other things with it at the same time, like [Supermog](/blog/supermog-builds-itself).
+
+Making something from scratch without generative AI is much harder. But it gives the artist maximum control: every brushstroke and every note is a decision. Here, a lot of our decisions were *choosing*, not *making*. We could steer, reject, and refine, but we couldn't always get exactly what we had in mind. For a lo-fi album to code to, that trade was worth it. For something more personal, it might not be.
+
+## Magic ✨
+
+Even with all of that, the whole thing still feels magical. One developer, a few AI tools, and a little over two weeks produced an illustrated album with a cast, twenty animated scenes, and a three-week release plan. The tools will get better: longer loops, real control over the camera, higher-fidelity audio, fewer pulls of the lever. It'll be fascinating to watch what's possible a year from now, and a few years after that.
+
+If you want to make one yourself, everything is out in the open. Every scene and song on **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)** has the exact prompt that made it behind a hover. The MP3s, loops, character boards, and scripts are all in [workingdevshero/lofi](https://github.com/workingdevshero/lofi). Steal whatever helps.
+
+**[Put the album on while you code](https://youtu.be/Lq1RZYq4caM)**, and if you make something of your own, send it to [X @workingdevshero](https://x.com/workingdevshero). We'd love to see it.
