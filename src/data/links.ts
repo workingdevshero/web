@@ -5,7 +5,7 @@ export type BioLink = {
   href: string;
   description?: string;
   external?: boolean;
-  icon: 'discord' | 'bolt' | 'mail' | 'blog';
+  icon: 'discord' | 'bolt' | 'mail' | 'blog' | 'music';
 };
 
 export const featuredLinks: readonly BioLink[] = [
@@ -24,10 +24,11 @@ export const featuredLinks: readonly BioLink[] = [
     icon: 'bolt',
   },
   {
-    title: 'Newsletter',
-    href: '/newsletter',
-    description: 'Join the Hero Squad: learn to ship with AI agents',
-    icon: 'mail',
+    title: 'Listen to Heroic Lofi',
+    href: 'https://youtu.be/Lq1RZYq4caM',
+    description: '47 minutes of lo-fi to code to',
+    external: true,
+    icon: 'music',
   },
 ];
 

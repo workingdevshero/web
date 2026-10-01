@@ -78,12 +78,20 @@ describe('Discord invite', () => {
 });
 
 describe('link-in-bio', () => {
-  it('features Discord, Automate It, and the newsletter', () => {
+  it('features Discord, Automate It, and the Heroic Lofi album', () => {
     expect(featuredLinks.map((link) => link.title)).toEqual([
       'Join Discord',
       'Automate It',
-      'Newsletter',
+      'Listen to Heroic Lofi',
     ]);
+  });
+
+  it('sends the album highlight straight to the YouTube album', () => {
+    const album = featuredLinks.find((link) => link.title === 'Listen to Heroic Lofi');
+    expect(album?.href).toBe('https://youtu.be/Lq1RZYq4caM');
+    expect(album?.external).toBe(true);
+    const card = readFileSync(repoFile('src/components/links/BioLink.astro'), 'utf8');
+    expect(card).toContain("link.icon === 'music'");
   });
 
   it('picks the three newest published posts', () => {
