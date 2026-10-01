@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { featuredLinks } from './links';
 import { socialLinks } from './social';
 
 const repoFile = (path: string) => readFileSync(fileURLToPath(new URL(`../../${path}`, import.meta.url)), 'utf8');
@@ -10,7 +9,6 @@ describe('newsletter copy', () => {
   const surfaces = {
     homepage: repoFile('src/components/home/NewsletterCTA.astro'),
     page: repoFile('src/pages/newsletter.astro'),
-    links: featuredLinks.find((link) => link.title === 'Newsletter')?.description ?? '',
   };
 
   it.each(Object.entries(surfaces))('makes no cadence or subscriber-count promise on the %s', (_, text) => {

@@ -69,8 +69,9 @@ describe('Discord invite', () => {
   });
 
   it('is the Join Discord destination, not a landing page', () => {
-    expect(featuredLinks[0]?.href).toBe(DISCORD_INVITE_URL);
-    expect(featuredLinks[0]?.external).toBe(true);
+    const discord = featuredLinks.find((link) => link.title === 'Join Discord');
+    expect(discord?.href).toBe(DISCORD_INVITE_URL);
+    expect(discord?.external).toBe(true);
     expect(existsSync(repoFile('src/pages/discord.astro'))).toBe(false);
     const redirects = readFileSync(repoFile('public/_redirects'), 'utf8');
     expect(redirects).toContain('/discord https://discord.gg/UxNXrBukjZ');
@@ -78,12 +79,25 @@ describe('Discord invite', () => {
 });
 
 describe('link-in-bio', () => {
-  it('features Discord, Automate It, and the newsletter', () => {
+  it('leads with the Heroic Lofi album, then Discord and Automate It', () => {
     expect(featuredLinks.map((link) => link.title)).toEqual([
+      'Listen to Heroic Lofi',
       'Join Discord',
       'Automate It',
-      'Newsletter',
     ]);
+  });
+
+  it('highlights the first card', () => {
+    const page = readFileSync(repoFile('src/pages/links.astro'), 'utf8');
+    expect(page).toContain('featured={index === 0}');
+  });
+
+  it('sends the album highlight straight to the YouTube album', () => {
+    const album = featuredLinks.find((link) => link.title === 'Listen to Heroic Lofi');
+    expect(album?.href).toBe('https://youtu.be/Lq1RZYq4caM');
+    expect(album?.external).toBe(true);
+    const card = readFileSync(repoFile('src/components/links/BioLink.astro'), 'utf8');
+    expect(card).toContain("link.icon === 'music'");
   });
 
   it('picks the three newest published posts', () => {
