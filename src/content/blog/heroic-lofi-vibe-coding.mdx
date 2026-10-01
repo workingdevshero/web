@@ -10,7 +10,7 @@ tags: ["ai", "grok", "venice", "imagine", "lo-fi", "ffmpeg", "music", "video-loo
 
 ## Intro 🎧
 
-One night of vibe coding, as an album. Twenty instrumental tracks, about 47 minutes, set in the same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run, with illustrated loops that actually look like *us*, not a generic Ghibli still.
+One night of vibe coding, as an album. Twenty instrumental tracks, about 47 minutes, set in the same 2D plum-and-gold rooftop universe as the [Working Dev's Hero](/) mascot. We wanted a lo-fi album you could put on while the tests run, with a cast that sticks around: the same characters from track to track, drawn in flat vector art that reads like a graphic novel, each scene animated into a (mostly) seamless loop.
 
 **[Listen to the full album on YouTube](https://youtu.be/Lq1RZYq4caM)**, or browse every scene and track at **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)**.
 
@@ -37,7 +37,7 @@ Nothing here needs a DAW or a video editor.
 - **ffmpeg** + a few hundred lines of Python for queue/retrieve, loop trimming, muxing, mastering, and the long cut
 - A local `index.html` so you can actually *listen* while you look
 
-The visual bible is the existing mascot: flat 2D vector, plum / gold / moonlight, adult superhero proportions. Not painterly. Not chibi stickers. If a generation looks like a die-cut emoji, throw it out.
+The visual bible is the existing mascot: flat 2D vector with clean graphic-novel shapes, a plum / gold / moonlight palette, and adult superhero proportions. Every scene should look like a panel from the same book. If a generation looks like a die-cut emoji sticker, throw it out.
 
 ## Plates 🏙️
 
@@ -81,7 +81,7 @@ Don't invent a teammate inside the scene. Lock a **character board** on a flat p
 What burned us:
 
 - **Sticker boards vs scene art.** The original busts were cute die-cut stickers. The rooftop stills were adult 2D vector. Putting sticker-Dimitris next to scene-Hero looked like two shows. Style-lock from a *scene* you already like, not from the kawaii sheet.
-- **Edit chains drift.** Five `image_edit`s on the same file will give you bug eyes, then a Ghibli cousin, then a different person. When a board is close, go back to the last version you approved and make one new edit from there. Don't keep asking the model to "fix the eyes" on top of its last attempt.
+- **Edit chains drift.** Five `image_edit`s on the same file will give you bug eyes, then a different art style, then a different person. When a board is close, go back to the last version you approved and make one new edit from there. Don't keep asking the model to "fix the eyes" on top of its last attempt.
 - **Named extras need their own silhouette.** Dimitris started as a green-suited Hero clone: same mask, same white lenses, same magenta boots, same beard. The version that worked is a *younger sidekick* — no mask, short beard, brown eyes, green suit, green boots, slimmer than the lead. Distinguish costume **and** age **and** proportions.
 - **Head size is a scene problem.** A board can look fine and still balloon in the wide shot. Prompt the dressed still with a concrete comparison: *"his head is the same size as the sitting hero's head."* Then look. Then do it again.
 
