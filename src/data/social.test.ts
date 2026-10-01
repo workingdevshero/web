@@ -25,11 +25,31 @@ describe('social links', () => {
     });
   });
 
+  it('includes the Working Dev\'s Hero Threads and Facebook profiles', () => {
+    expect(socialLinks).toContainEqual({
+      label: 'Threads',
+      href: 'https://www.threads.com/@workingdevshero',
+      icon: 'threads',
+    });
+    expect(socialLinks).toContainEqual({
+      label: 'Facebook',
+      href: 'https://www.facebook.com/workingdevshero',
+      icon: 'facebook',
+    });
+  });
+
+  it('has an icon for every profile', () => {
+    const icons = readFileSync(repoFile('src/components/ui/SocialIcons.astro'), 'utf8');
+    for (const link of socialLinks) {
+      expect(icons).toContain(`link.icon === '${link.icon}'`);
+    }
+  });
+
   it('keeps the existing profiles', () => {
     const hrefs = socialLinks.map((link) => link.href);
     expect(hrefs).toEqual(expect.arrayContaining([
       'https://github.com/workingdevshero',
-      'https://twitter.com/workingdevshero',
+      'https://x.com/workingdevshero',
       'https://linkedin.com/company/workingdevshero',
       'https://youtube.com/@workingdevshero',
     ]));
