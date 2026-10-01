@@ -29,7 +29,7 @@ describe('social links', () => {
     const hrefs = socialLinks.map((link) => link.href);
     expect(hrefs).toEqual(expect.arrayContaining([
       'https://github.com/workingdevshero',
-      'https://twitter.com/workingdevshero',
+      'https://x.com/workingdevshero',
       'https://linkedin.com/company/workingdevshero',
       'https://youtube.com/@workingdevshero',
     ]));

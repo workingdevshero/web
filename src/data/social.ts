@@ -8,7 +8,7 @@ export type SocialLink = {
 
 export const socialLinks: readonly SocialLink[] = [
   { label: 'GitHub', href: 'https://github.com/workingdevshero', icon: 'github' },
-  { label: 'Twitter', href: 'https://twitter.com/workingdevshero', icon: 'twitter' },
+  { label: 'X', href: 'https://x.com/workingdevshero', icon: 'twitter' },
   { label: 'LinkedIn', href: 'https://linkedin.com/company/workingdevshero', icon: 'linkedin' },
   { label: 'Instagram', href: 'https://www.instagram.com/workingdevshero/', icon: 'instagram' },
   { label: 'YouTube', href: 'https://youtube.com/@workingdevshero', icon: 'youtube' },

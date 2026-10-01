@@ -26,7 +26,7 @@ export const featuredLinks: readonly BioLink[] = [
   {
     title: 'Newsletter',
     href: '/newsletter',
-    description: 'Join the Hero Squad — weekly AI that ships',
+    description: 'Join the Hero Squad: what we ship with AI agents',
     icon: 'mail',
   },
 ];
