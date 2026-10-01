@@ -10,6 +10,13 @@ export type BioLink = {
 
 export const featuredLinks: readonly BioLink[] = [
   {
+    title: 'Listen to Heroic Lofi',
+    href: 'https://youtu.be/Lq1RZYq4caM',
+    description: '47 minutes of lo-fi to code to',
+    external: true,
+    icon: 'music',
+  },
+  {
     title: 'Join Discord',
     href: DISCORD_INVITE_URL,
     description: 'The squad hangs out here',
@@ -22,13 +29,6 @@ export const featuredLinks: readonly BioLink[] = [
     description: 'Social media on autopilot. No slop allowed.',
     external: true,
     icon: 'bolt',
-  },
-  {
-    title: 'Listen to Heroic Lofi',
-    href: 'https://youtu.be/Lq1RZYq4caM',
-    description: '47 minutes of lo-fi to code to',
-    external: true,
-    icon: 'music',
   },
 ];
 
