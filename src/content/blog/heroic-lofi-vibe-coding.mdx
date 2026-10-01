@@ -10,7 +10,7 @@ tags: ["ai", "grok", "claude", "venice", "elevenlabs", "imagine", "lo-fi", "musi
 
 ## Intro 🎧
 
-I made an album. Twenty instrumental tracks, about 47 minutes, each one with its own animated scene, a recurring cast of characters, and a release plan that runs for three weeks. I'm a software developer, and I made it without a recording studio, a drawing tablet, or a video editor.
+A single developer made an album. Twenty instrumental tracks, about 47 minutes, each one with its own animated scene, a recurring cast of characters, and a release plan that runs for three weeks — made without a recording studio, a drawing tablet, or a video editor.
 
 **[Listen to the full album on YouTube](https://youtu.be/Lq1RZYq4caM)**, or browse every scene and track at **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)**.
 
@@ -18,13 +18,13 @@ I made an album. Twenty instrumental tracks, about 47 minutes, each one with its
 
 It's lo-fi, so let's keep expectations honest. This isn't going to win a Grammy. But it's a real album you can put on while the tests run: the same characters from track to track, drawn in flat vector art that reads like a graphic novel, each scene animated into a (mostly) seamless loop. A year ago, one person making this in a little over two weeks would have been absurd. And this is the worst this technology will ever be.
 
-This is the story of how it came together, what fought back, and what I'd tell you if you wanted to make one yourself.
+This is the story of how it came together, what fought back, and what we'd tell you if you wanted to make one yourself.
 
 ## Plan 🗺️
 
-It started as a conversation. Before generating a single image, I sat down with Grok 4.7 and planned the whole thing: one night of vibe coding on the rooftops of a city, told across twenty tracks. We wrote a slate — every track's title, its length, its tempo and key, and who'd be in the scene — and set the rules of the world. The visual bible was the existing [Working Dev's Hero](/) mascot: clean 2D vector, a plum, gold, and moonlight palette, adult superhero proportions. Every scene should look like a panel from the same book.
+It started as a conversation. Before generating a single image, we sat down with Grok 4.7 and planned the whole thing: one night of vibe coding on the rooftops of a city, told across twenty tracks. We wrote a slate — every track's title, its length, its tempo and key, and who'd be in the scene — and set the rules of the world. The visual bible was the existing [Working Dev's Hero](/) mascot: clean 2D vector, a plum, gold, and moonlight palette, adult superhero proportions. Every scene should look like a panel from the same book.
 
-Then we picked the tools. Grok Imagine would paint the scenes, populate them with characters, and bring them to life. ElevenLabs' music model, through [Venice](https://venice.ai), would write the songs. Everything else — trimming, muxing, the long-form cut — would be `ffmpeg` and a few hundred lines of Python an agent could write and run for me. No DAW, no video editor, no Photoshop.
+Then we picked the tools. Grok Imagine would paint the scenes, populate them with characters, and bring them to life. ElevenLabs' music model, through [Venice](https://venice.ai), would write the songs. Everything else — trimming, muxing, the long-form cut — would be `ffmpeg` and a few hundred lines of Python an agent could write and run for us. No DAW, no video editor, no Photoshop.
 
 The plan felt tidy. What followed was a lot of back and forth.
 
@@ -32,7 +32,7 @@ The plan felt tidy. What followed was a lot of back and forth.
 
 The single most useful decision we made was to paint the rooms before the people.
 
-Grok Imagine generated every rooftop, fire escape, and interior empty, and once I liked one, we froze it and never touched it again. Characters got added later. When we tried to generate the scene and the people in one go, we kept getting two art styles in one frame.
+Grok Imagine generated every rooftop, fire escape, and interior empty, and once we liked one, we froze it and never touched it again. Characters got added later. When we tried to generate the scene and the people in one go, we kept getting two art styles in one frame.
 
 ![Empty dusk rooftop plate](/images/blog/heroic-lofi-empty.jpg)
 
@@ -44,7 +44,7 @@ The cast needed the same discipline. Each character got a board on a flat plum b
 
 ![Dimitris character board](/images/blog/heroic-lofi-dimitris.jpg)
 
-This is where most of the early struggle lived. Dimitris, Hero's sidekick, started life as a green copy of Hero: same mask, same boots, same beard. The version that worked made him a younger sidekick with no mask, his own boots, and a slimmer build. Even then, he'd balloon to a giant head in the wide shots until we started prompting with comparisons like *"his head is the same size as the sitting hero's head."* And every time we asked the edit model to fix something on top of its last attempt, things drifted further — bug eyes, then a different art style, then a different person. The fix was always the same: go back to the last version I'd approved and make one new edit from there.
+This is where most of the early struggle lived. Dimitris, Hero's sidekick, started life as a green copy of Hero: same mask, same boots, same beard. The version that worked made him a younger sidekick with no mask, his own boots, and a slimmer build. Even then, he'd balloon to a giant head in the wide shots until we started prompting with comparisons like *"his head is the same size as the sitting hero's head."* And every time we asked the edit model to fix something on top of its last attempt, things drifted further — bug eyes, then a different art style, then a different person. The fix was always the same: go back to the last version we'd approved and make one new edit from there.
 
 Populating the scenes used Grok Imagine's edit model with the frozen plate and the character boards as references. We learned to add one character at a time, because two in one edit usually meant one of them came out wrong. We learned to check the image size after every edit, because one quietly came back square. And we learned to save the prompt behind every plate we kept: halfway through, new plates started coming back 3D and outlined, and the fix was reusing the wording of the ones that worked.
 
@@ -78,9 +78,9 @@ Then we lived with the album for a few days, and it didn't hold together.
 
 ## Handoff 🤝
 
-Grok and I made the first ten tracks and a first pass at the other ten. By the back half, the long-running session had lost the plot. It kept remaking the same tracks without converging, and I couldn't put my finger on why the album felt off.
+Working with Grok, we made the first ten tracks and a first pass at the other ten. By the back half, the long-running session had lost the plot. It kept remaking the same tracks without converging, and we couldn't put a finger on why the album felt off.
 
-So I brought in Claude to finish the job, starting with fresh ears. It couldn't actually *listen*, but it could measure. It analyzed all twenty songs for loudness, brightness, how sharp the note attacks were, and which songs sounded alike. The numbers explained what I'd been feeling. Piano or electric piano led sixteen of the twenty songs, with four in a row in the back half. The ElevenLabs piano has a sharp, glassy attack, and 128 kbps audio doesn't help. The loudness swung 6.6 dB from track to track, and the closer was the loudest song on the album.
+So we brought in Claude to finish the job, starting with fresh ears. It couldn't actually *listen*, but it could measure. It analyzed all twenty songs for loudness, brightness, how sharp the note attacks were, and which songs sounded alike. The numbers explained what we'd been feeling. Piano or electric piano led sixteen of the twenty songs, with four in a row in the back half. The ElevenLabs piano has a sharp, glassy attack, and 128 kbps audio doesn't help. The loudness swung 6.6 dB from track to track, and the closer was the loudest song on the album.
 
 From there it was a collaboration. Claude proposed new prompts that changed the lead instrument instead of the mood — muted jazz guitar, a soft vibraphone in the rain, a muted guitar lullaby, a warm analog synth — with drums and bass from the first bar, so the lead never sits exposed:
 
@@ -92,9 +92,9 @@ bass from the first bar. No piano, no bright attack, no long intro.
 Light tape saturation. No vocals, no lyrics, loop-friendly ending with no crash.
 ```
 
-I listened and decided. Twice I kept a track the numbers flagged, because I loved it. Twice the better song lost to the one that fit the album, so those went into a folder for the next one. And once Claude got it completely wrong: it pitched a breathy flute for Rubber Duck on the Ledge, and my honest reaction was "what in tarnation." The version that shipped is a muffled electric piano in a new key, right back in the album's home sound.
+Claude measured; we listened and decided. Twice we kept a track the numbers flagged, because we loved it. Twice the better song lost to the one that fit the album, so those went into a folder for the next one. And once Claude got it completely wrong: it pitched a breathy flute for Rubber Duck on the Ledge, and our honest reaction was "what in tarnation." The version that shipped is a muffled electric piano in a new key, right back in the album's home sound.
 
-Claude also did the finishing work I never would have known to do: leveling every track to the same loudness, trimming dead air, crossfading the long cut, and computing the YouTube chapter timestamps from the same numbers so they can't drift.
+Claude also did the finishing work we wouldn't have known to do: leveling every track to the same loudness, trimming dead air, crossfading the long cut, and computing the YouTube chapter timestamps from the same numbers so they can't drift.
 
 ## Launch 🚀
 
@@ -104,16 +104,16 @@ That's a lot of posts for one person, so all of it — every Short, reel, carous
 
 ## Gold ⛏️
 
-I want to be honest about the downside, because it's real.
+We want to be honest about the downside, because it's real.
 
 Working this way feels a lot like panning for gold. You describe what you want, pull the lever, and see what comes out. Sometimes it's beautiful. Often it's a giant-headed sidekick, a camera that won't sit still, or a song with a glassy piano that sets your teeth on edge. A lot of those two weeks went into pulling the lever again, and learning which prompts tilt the odds.
 
-Making something from scratch without generative AI is much harder. But it gives the artist maximum control: every brushstroke and every note is a decision. Here, a lot of my decisions were *choosing*, not *making*. I could steer, reject, and refine, but I couldn't always get exactly what was in my head. For a lo-fi album to code to, that trade was worth it. For something more personal, it might not be.
+Making something from scratch without generative AI is much harder. But it gives the artist maximum control: every brushstroke and every note is a decision. Here, a lot of our decisions were *choosing*, not *making*. We could steer, reject, and refine, but we couldn't always get exactly what we had in mind. For a lo-fi album to code to, that trade was worth it. For something more personal, it might not be.
 
 ## Magic ✨
 
-Even with all of that, the whole thing still feels magical to me. One developer, a few AI tools, and a little over two weeks produced an illustrated album with a cast, twenty animated scenes, and a three-week release plan. The tools will get better: longer loops, real control over the camera, higher-fidelity audio, fewer pulls of the lever. It'll be fascinating to watch what's possible a year from now, and a few years after that.
+Even with all of that, the whole thing still feels magical. One developer, a few AI tools, and a little over two weeks produced an illustrated album with a cast, twenty animated scenes, and a three-week release plan. The tools will get better: longer loops, real control over the camera, higher-fidelity audio, fewer pulls of the lever. It'll be fascinating to watch what's possible a year from now, and a few years after that.
 
 If you want to make one yourself, everything is out in the open. Every scene and song on **[lofi.workingdevshero.com](https://lofi.workingdevshero.com)** has the exact prompt that made it behind a hover. The MP3s, loops, character boards, and scripts are all in [workingdevshero/lofi](https://github.com/workingdevshero/lofi). Steal whatever helps.
 
-**[Put the album on while you code](https://youtu.be/Lq1RZYq4caM)**, and if you make something of your own, send it to [X @workingdevshero](https://x.com/workingdevshero). I'd love to see it.
+**[Put the album on while you code](https://youtu.be/Lq1RZYq4caM)**, and if you make something of your own, send it to [X @workingdevshero](https://x.com/workingdevshero). We'd love to see it.
