@@ -62,6 +62,14 @@ const socialImageURL = new URL(image, Astro.site);
 
     <!-- Self-hosted display font -->
     <link rel="preload" href="/fonts/BricolageGrotesque-ExtraBold.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- PostHog web analytics (shared WDH project, product = workingdevshero) -->
+    <script>
+      import posthog from 'posthog-js';
+      import { initAnalytics } from '@/lib/analytics';
+
+      initAnalytics(posthog);
+    </script>
   </head>
   <body class:list={['min-h-screen flex flex-col', bodyClass]}>
     {chrome === 'full' && <Header />}
