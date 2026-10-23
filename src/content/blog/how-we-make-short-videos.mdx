@@ -1,0 +1,100 @@
+---
+title: "How We Make Short Videos With Agents"
+description: "In one month we shipped four short spots, each with a cut for every feed, without opening a video editor. Claude Code builds them in Tesseract from real app recordings and a track picked first, and a person reviews every cut. Here's the process and what we'd tell anyone trying it."
+pubDate: 2026-10-23
+author: "bobbyg603"
+heroImage: "/images/blog/how-we-make-short-videos.jpg"
+categories: ["AI", "Tutorials"]
+tags: ["video", "claude", "tesseract", "venice", "automate-it", "marketing", "ai-agents", "heroic-lofi"]
+---
+
+Between September 23 and October 23 we made four short videos: three ads for [Automate It](https://automate.it.com) and one for the [animated link previews](/blog/animated-link-previews) on this site. Each one has a vertical cut for TikTok, Reels and Shorts and a wide cut for LinkedIn, X and YouTube. Nobody opened a video editor.
+
+<video controls playsinline preload="metadata" poster="/images/blog/short-videos-code-into-content-16x9.jpg" src="/videos/short-videos-code-into-content-16x9.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+<div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:0.5rem 0 1.5rem">
+  <video controls playsinline preload="metadata" poster="/images/blog/short-videos-just-shipped-9x16.jpg" src="/videos/short-videos-just-shipped-9x16.mp4" style="width:100%;max-width:300px;border-radius:12px"></video>
+  <video controls playsinline preload="metadata" poster="/images/blog/short-videos-animated-previews-9x16.jpg" src="/videos/short-videos-animated-previews-9x16.mp4" style="width:100%;max-width:300px;border-radius:12px"></video>
+</div>
+
+They're made the way Automate It works: **AI drafts, a human reviews.** An agent builds every cut, and a person watches it and says what's wrong. Here's the setup, then what we learned.
+
+## The Setup 🧩
+
+- **The editor: Claude Code driving [Tesseract](https://github.com/mirage-hq/Tesseract).** Tesseract is a local video engine built for agents. It takes layers, keyframes, text and audio as JSON and renders an MP4 on your machine. Claude never drags a clip. It writes a small Python script that describes the whole edit, and Tesseract renders it.
+- **The footage: the real product.** For Automate It, Playwright drives Chrome at 3× pixel density in dark mode and records each beat, like typing a prompt or clicking Approve, with a drawn cursor and a ring on every click. For the link previews video, Claude drove the iOS simulator from the command line with AXe: open Messages, paste the link, wait for the preview.
+- **The music: picked before anything else.** The Automate It ads use a 120 BPM track we generated with ElevenLabs Music through [Venice](https://venice.ai). The link previews reel uses another Venice track, and its LinkedIn cut uses "City Lights Boot Sequence" from our [Heroic Lofi album](/blog/heroic-lofi-vibe-coding).
+- **The repo: one place for every source file.** A private `marketing` repo holds each spot's build script, footage, fonts, music and editable project, with the media in Git LFS. One command rebuilds any video, and we check that the rebuild matches the approved one frame for frame.
+
+## Music First, Then Picture 🎵
+
+The first brief listed beats at 0, 1.2, 3.0 and 7.5 seconds. None of those land on a tempo. So we pick the track first, map its downbeats, and put every cut on one. At 120 BPM that's a 500 ms grid. The link previews reel runs at 128 BPM, so a bar is 1,875 ms, and the card pops onto the screen on a downbeat.
+
+An agent can't listen, so it does this from a waveform: it finds the kicks, measures the bar length, and checks the rendered mix against the plan. A person still listens to every cut, because the waveform can't tell you whether a track is any good. We threw out the first song for the link previews reel for exactly that reason.
+
+## Real Screens, Moving 🖱️
+
+Our first Automate It cuts used 3× screenshots with a slow push-in. They were crisp, and two marketing friends told us they felt flat and moved too fast. So we replaced the stills with recordings of the real app: the cursor moving, the prompt being typed, the click landing.
+
+The recorder takes a full-resolution screenshot after every cursor step or keystroke and holds each one for its own duration. That gives a smooth 60 fps clip at 3× no matter how slow the browser is. One lesson cost us something: the first takes of the approve beat really clicked Approve, and approved two test drafts. Now the recorder only draws the click ring. None of its beats save, submit or publish anything.
+
+## One Script, Two Layouts 📐
+
+A Tesseract project has one canvas size, so the vertical cut isn't a crop of the wide one. Each spot is a single spec that gets laid out twice. The wide cut puts the text on the left and the screen on the right. The vertical cut puts the whole line above the screen and keeps the bottom third clear for TikTok's and Instagram's buttons.
+
+Different feeds also want different videos, not just different shapes:
+
+| Where | Cut | Length |
+|---|---|---|
+| TikTok, Reels, Shorts, Facebook | Vertical, fast, music up | 17 seconds |
+| LinkedIn, X, Threads | Wide, calmer, one technical detail | 32 seconds |
+| Google Business Profile | The wide cut, trimmed | Under 30 seconds |
+
+The LinkedIn cut of the link previews video slows down and explains the catch: iMessage only plays the video if your server answers byte-range requests. That detail fits a LinkedIn audience, while the reel just needs to show the preview playing.
+
+<video controls playsinline preload="metadata" poster="/images/blog/short-videos-animated-previews-16x9.jpg" src="/videos/short-videos-animated-previews-16x9.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+## Every Line Has to Work on Mute 🔇
+
+Most people watch these without sound, so the words carry the video. Every line gets the same test: does it make sense to someone scrolling past with the sound off?
+
+- **"Together, they are Supermog."** It was copied from the post on screen, and it meant nothing outside that post. It became **"Posted to your socials."**
+- **"Set it once."** It sat over a big *Weekly* button, so the line and the screen contradicted each other. It became **"Scheduled, on autopilot."**
+- **"Copy the animated link preview from workingdevshero.com/blog/animated-link-previews."** Nobody remembers a URL that long. We added a short link, and the line became **"Add animated link previews to my site like workingdevshero.com/previews."**
+
+We also cut a whole opening that parodied engagement bait ("Comment YES for the guide!"). Nobody got the joke. They thought we were offering a guide. If a joke needs explaining, it doesn't belong in the first two seconds of an ad.
+
+## Hold Long Enough to Read ⏱️
+
+Every round of feedback on every spot asked for the same thing: more time on screen. The hook, the moment the preview starts playing, and the end card each got longer. The link previews reel grew from 15 to 17 seconds, and the LinkedIn cut from 28 to 32. We'd rather lose a viewer to a slow second than to a line they couldn't finish.
+
+## Keep the Audio Boring 🔈
+
+Agents love sound design: risers, whooshes, a dip under the title, a tap on every button. Our feedback was "we don't need vacuum noises." The Automate It ads play one track at one level and cut it on a downbeat, with one hit on the end card. The link previews reel keeps two effects, a pop when the card appears and a whoosh into the call to action, because each marks something happening on screen. The LinkedIn cut has no effects at all.
+
+## Check the Render, Not the Plan 🔍
+
+The agent checks every export the way a person can't: frame by frame. That catches problems a quick watch would miss.
+
+- **A blank frame in the source.** The simulator recording has one frame where the preview card is plain purple. It lasts 3 milliseconds and still showed up in an export, so the builder skips it.
+- **A two-frame blink.** In the Google Business cut, two copies of the same background loop overlapped during a crossfade, and the renderer dropped both for two frames. The fix was giving the end card its own copy of the file.
+- **Platform rules.** Google Business Profile rejects videos over 30 seconds or 30 fps. Our first 60 fps Automate It exports failed there twice before we checked.
+
+Text that looks centered often isn't, so the agent also measures the pixels inside every box and moves the text until the space above and below match.
+
+## Making the Ad Is QA 🐛
+
+Filming your own product means using it closely. The Automate It shoot turned up a square focus ring inside a rounded prompt box, and every native file upload failing on iOS. The link previews shoot turned up a bug in Automate It's agent tools: they showed the name of the account that connected LinkedIn instead of the company page it posts to. All three became GitHub issues before the videos were done.
+
+## What You Can Steal 🧠
+
+1. **Pick the music first and cut on its beats.**
+2. **Record the real product, with a visible cursor.** Make sure the recorder can't change anything.
+3. **Write every line to work on mute, on its own.**
+4. **Lay out the vertical cut separately, and make a separate cut for each kind of feed.**
+5. **Hold every line long enough to read twice.**
+6. **Use sound effects only to mark something on screen.**
+7. **Check the export, not the plan.** Scan the frames, measure the loudness, and test against each platform's limits.
+8. **Keep the build script and the source files in a repo,** so any cut can be rebuilt exactly.
+
+The agent did the grunt work: dozens of rebuilds, retimings and re-renders. Every good decision in the final cuts still came from a person watching and saying "that's not right yet." Every post that shares these videos goes through the same review queue in [Automate It](https://automate.it.com) before it publishes.
