@@ -3,15 +3,13 @@ title: "Upgrade Your Website with Animated Previews"
 description: "Send someone a link and iMessage can play a looping video in the preview bubble instead of a static image. Here's how we added animated previews to workingdevshero.com with og:video, why the first try only showed the picture, and the one-file Cloudflare Worker that fixed it."
 pubDate: 2026-10-23
 author: "bobbyg603"
-heroImage: "/images/blog/animated-link-previews.jpg"
-heroVideo: "/videos/hero-midnight-wide.mp4"
+heroImage: "/og-image.jpg"
+heroVideo: "/og-video.mp4"
 categories: ["Software", "Tutorials"]
 tags: ["open-graph", "og-video", "imessage", "cloudflare", "workers", "ffmpeg", "claude", "heroic-lofi"]
 ---
 
-Most link previews are a still image. Send a link to workingdevshero.com in iMessage now and the bubble plays this instead:
-
-<video autoplay muted loop playsinline src="/og-video.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+Most link previews are a still image. Send a link to workingdevshero.com in iMessage now and the bubble plays the video at the top of this post instead.
 
 That's the Midnight Rooftop Flow loop from our [Heroic Lofi album](/blog/heroic-lofi-vibe-coding), with the site headline laid over the empty sky. We didn't make anything new for it: the album had already left us twenty animated scenes, each cut into a clean loop. A handful of meta tags asks for it. Getting it to actually play took one more fix.
 
@@ -33,7 +31,7 @@ A few things we settled on along the way:
 - **The image is the video's first frame.** Previews show the image first, so starting the video on that exact frame means nothing jumps when it begins to play.
 - **The video is silent and small.** 6 seconds, 1200×630 H.264, 237 KB. Apple caps a preview's images and video at 10 MB total, and smaller files start playing sooner.
 - **The text is baked in with ffmpeg.** We lay out the headline as an HTML page, screenshot it with a transparent background in headless Chrome, and overlay it on every frame. One script rebuilds both files.
-- **Only the default image gets the video.** Blog posts have their own hero images, so they keep a plain image preview instead of borrowing the rooftop.
+- **Only the default image gets the video.** Blog posts have their own hero images, so they keep a plain image preview instead of borrowing the rooftop, unless a post brings a loop of its own (this one uses the site's).
 
 ## Why It Only Showed the Picture 🔍
 

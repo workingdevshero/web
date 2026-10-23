@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import PostMedia from '@components/blog/PostMedia.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -102,11 +103,12 @@ function getTagSlug(tag: string): string {
       </div>
     </header>
 
-    <!-- Hero Image -->
+    <!-- Hero: the post's looping heroVideo when it has one, otherwise its image -->
     {heroImage && (
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 mb-12">
-        <img
-          src={heroImage}
+        <PostMedia
+          image={heroImage}
+          video={heroVideo}
           alt={title}
           class="w-full rounded-2xl shadow-xl"
         />
