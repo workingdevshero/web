@@ -62,4 +62,17 @@ The Worker fetches the file through the `ASSETS` binding, parses the `Range` hea
 
 Once the loop was in previews, the home page's still hero looked a little flat next to it. The hero was already this scene, so it's now the loop too: a 16:9 version on desktop and a 9:16 one on phones, about 220 KB each. Both are set to `preload="none"`, and a few lines of script play only the one on screen, so phones never download the desktop file. Anyone with reduced motion turned on gets the first frame as a still.
 
+## Copy It With Your Agent 🤖
+
+This site's code is public, so you don't have to rebuild any of this from the snippets above. Point your coding agent at this post and tell it:
+
+> Copy the animated link preview from workingdevshero.com/blog/animated-link-previews into this site, using our own logo and a short loop of our own.
+
+These are the files it needs:
+
+- [`scripts/build-og-video.mjs`](https://github.com/workingdevshero/web/blob/main/scripts/build-og-video.mjs) and [`scripts/og-video.html`](https://github.com/workingdevshero/web/blob/main/scripts/og-video.html): build the MP4 and the matching image from a loop and an HTML text overlay.
+- [`src/lib/social-preview.ts`](https://github.com/workingdevshero/web/blob/main/src/lib/social-preview.ts) and [`src/layouts/BaseLayout.astro`](https://github.com/workingdevshero/web/blob/main/src/layouts/BaseLayout.astro): pick each page's preview and write the meta tags.
+- [`worker/range.ts`](https://github.com/workingdevshero/web/blob/main/worker/range.ts), [`worker/index.ts`](https://github.com/workingdevshero/web/blob/main/worker/index.ts) and [`wrangler.jsonc`](https://github.com/workingdevshero/web/blob/main/wrangler.jsonc): the range-request fix, if you host on Cloudflare Workers static assets. Most other hosts already support range requests; `curl -sI -H "Range: bytes=0-1"` on your video will tell you (you want `206`).
+- [`src/components/home/Hero.astro`](https://github.com/workingdevshero/web/blob/main/src/components/home/Hero.astro) and [`src/lib/hero-video.ts`](https://github.com/workingdevshero/web/blob/main/src/lib/hero-video.ts): the animated home page hero.
+
 If you want to try it yourself, send [workingdevshero.com](https://workingdevshero.com) to a friend in iMessage. And if the rooftop looks familiar, the whole album is [on YouTube](https://youtu.be/Lq1RZYq4caM).
