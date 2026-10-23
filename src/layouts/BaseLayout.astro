@@ -1,12 +1,15 @@
 ---
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
+import { PREVIEW_HEIGHT, PREVIEW_WIDTH, socialPreview } from '@/lib/social-preview';
 import '@/styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
+  /** Looping link preview played in place of the image; see src/lib/social-preview.ts. */
+  video?: string;
   type?: 'website' | 'article';
   chrome?: 'full' | 'none';
   bodyClass?: string;
@@ -15,14 +18,15 @@ interface Props {
 const {
   title,
   description = "Working Dev's Hero - AI-enabled software development company. We build AI-powered software that ships.",
-  image = '/og-image.png',
+  image,
+  video,
   type = 'website',
   chrome = 'full',
   bodyClass = 'bg-white',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(image, Astro.site);
+const { image: socialImageURL, video: socialVideoURL } = socialPreview(Astro.site!, image, video);
 ---
 
 <!doctype html>
@@ -48,6 +52,15 @@ const socialImageURL = new URL(image, Astro.site);
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Working Dev's Hero — We build AI-powered software that ships" />
+    {socialVideoURL && (
+      <>
+        <meta property="og:video" content={socialVideoURL} />
+        <meta property="og:video:secure_url" content={socialVideoURL} />
+        <meta property="og:video:type" content="video/mp4" />
+        <meta property="og:video:width" content={PREVIEW_WIDTH} />
+        <meta property="og:video:height" content={PREVIEW_HEIGHT} />
+      </>
+    )}
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
