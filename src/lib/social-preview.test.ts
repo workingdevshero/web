@@ -9,21 +9,10 @@ import {
   PREVIEW_WIDTH,
   socialPreview,
 } from './social-preview';
+import { topLevelBoxes } from './mp4';
 
 const publicFile = (path: string) => fileURLToPath(new URL(`../../public${path}`, import.meta.url));
 const SITE = 'https://workingdevshero.com';
-
-/** Top-level MP4 box types in file order, e.g. ['ftyp', 'moov', 'mdat']. */
-function topLevelBoxes(mp4: Buffer): string[] {
-  const boxes: string[] = [];
-  for (let offset = 0; offset + 8 <= mp4.length; ) {
-    const size = mp4.readUInt32BE(offset);
-    boxes.push(mp4.toString('latin1', offset + 4, offset + 8));
-    if (size < 8) break;
-    offset += size;
-  }
-  return boxes;
-}
 
 describe('socialPreview', () => {
   it('sends the rooftop loop with the default image', () => {

@@ -1,24 +1,38 @@
 ---
 import Button from '@components/ui/Button.astro';
-import heroMobile from '@assets/images/hero-scene-mobile.png';
-import heroScene from '@assets/images/hero-scene-wide.png';
-import { Image } from 'astro:assets';
+import tallPoster from '@assets/images/hero-midnight-tall-poster.jpg';
+import widePoster from '@assets/images/hero-midnight-wide-poster.jpg';
+import { getImage } from 'astro:assets';
+
+// Posters are each loop's first frame (scripts/build-hero-video.mjs), so nothing
+// jumps when playback starts, and they are what reduced-motion visitors see.
+const wide = await getImage({ src: widePoster, width: 1280, format: 'webp' });
+const tall = await getImage({ src: tallPoster, width: 720, format: 'webp' });
 ---
 
 <section class="relative overflow-hidden bg-[#2d1941]">
   <!-- Composition wrapper: caps the scene+text at 1920px and centers both on ultrawide displays;
        #2d1941 is the scene's night-sky color, so pillars and fades stay seamless beyond it -->
   <div class="relative max-w-[120rem] mx-auto">
-    <!-- Full-bleed rooftop scene (desktop); the opaque sky canvas replaces the mobile gradient at lg+
-         and both image edges fade into it -->
+    <!-- Full-bleed rooftop loop (desktop); the opaque sky canvas replaces the mobile gradient at lg+
+         and both video edges fade into it -->
     <div class="absolute inset-0 hidden lg:block bg-[#2d1941]" aria-hidden="true">
-      <Image
-        src={heroScene}
-        alt=""
-        width={2000}
-        height={848}
-        class="absolute inset-y-0 right-8 h-full w-auto max-w-none"
-      />
+      <!-- right-44 keeps the hero where the old, wider still had him and the sidekick clear of the edge fade -->
+      <div class="absolute inset-y-0 right-44 h-full aspect-video">
+        <video
+          data-hero-video
+          src="/videos/hero-midnight-wide.mp4"
+          poster={wide.src}
+          muted
+          loop
+          playsinline
+          preload="none"
+          class="h-full w-full object-cover"
+        ></video>
+        <!-- The loop's left edge carries a pink glow; on ultrawide it lands past the text fade below -->
+        <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-[#2d1941] to-transparent"></div>
+        <div class="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#2d1941] to-transparent"></div>
+      </div>
       <div class="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-[#2d1941] from-45% to-transparent"></div>
       <div class="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#2d1941] from-[25%] via-[#2d1941]/80 to-transparent"></div>
     </div>
@@ -45,16 +59,21 @@ import { Image } from 'astro:assets';
         </div>
       </div>
 
-      <!-- Hero Image (mobile/tablet full-bleed banner whose bottom fades into the section canvas;
-           the desktop scene is the section background) -->
+      <!-- Hero loop (mobile/tablet full-bleed banner whose bottom fades into the section canvas;
+           the desktop loop is the section background) -->
       <div class="relative -mx-4 sm:-mx-6 -mt-16 md:-mt-24 order-first lg:hidden">
-        <Image
-          src={heroMobile}
-          alt="The Working Dev's Hero coding on a city rooftop at night"
-          width={720}
-          height={1280}
+        <video
+          data-hero-video
+          src="/videos/hero-midnight-tall.mp4"
+          poster={tall.src}
+          muted
+          loop
+          playsinline
+          preload="none"
+          role="img"
+          aria-label="The Working Dev's Hero coding on a city rooftop at night"
           class="w-full aspect-[9/10] md:aspect-[16/10] object-cover object-[center_55%] md:object-[center_30%]"
-        />
+        ></video>
       </div>
     </div>
     </div>
@@ -67,3 +86,16 @@ import { Image } from 'astro:assets';
     </svg>
   </div>
 </section>
+
+<script>
+  import { syncHeroVideos } from '@/lib/hero-video';
+
+  const videos = document.querySelectorAll<HTMLVideoElement>('video[data-hero-video]');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const sync = () => syncHeroVideos(videos, reduceMotion.matches);
+
+  sync();
+  reduceMotion.addEventListener('change', sync);
+  // Crossing lg swaps which loop is visible.
+  matchMedia('(min-width: 1024px)').addEventListener('change', sync);
+</script>
