@@ -25,4 +25,12 @@ describe('Full-Stack Development copy', () => {
     const page = readFileSync(repoFile('src/pages/services/full-stack.astro'), 'utf8');
     expect(page).toContain("'Desktop app development'");
   });
+
+  it.each([
+    ['src/pages/services/index.astro'],
+    ['src/pages/services/full-stack.astro'],
+  ])('%s offers API, MCP, and CLI design, not just APIs', (path) => {
+    const page = readFileSync(repoFile(path), 'utf8');
+    expect(page).toContain("'API, MCP, and CLI design and implementation'");
+  });
 });
