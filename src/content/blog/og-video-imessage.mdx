@@ -1,0 +1,65 @@
+---
+title: "Our Links Now Play a Video in iMessage"
+description: "Send someone a link and iMessage can play a looping video in the preview bubble instead of a static image. Here's how we added it to workingdevshero.com with og:video, why the first try only showed the picture, and the one-file Cloudflare Worker that fixed it."
+pubDate: 2026-10-23
+author: "bobbyg603"
+heroImage: "/images/blog/og-video-imessage.jpg"
+categories: ["Software", "Tutorials"]
+tags: ["open-graph", "og-video", "imessage", "cloudflare", "workers", "ffmpeg", "claude", "heroic-lofi"]
+---
+
+Most link previews are a still image. Send a link to workingdevshero.com in iMessage now and the bubble plays this instead:
+
+<video autoplay muted loop playsinline src="/og-video.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+That's the Midnight Rooftop Flow loop from our [Heroic Lofi album](/blog/heroic-lofi-vibe-coding), with the site headline laid over the empty sky. A handful of meta tags asks for it. Getting it to actually play took one more fix.
+
+## The Tags 🏷️
+
+Open Graph has had an `og:video` property for years. Apple's link previews in Messages will download an MP4 from it and play it muted, on a loop, right in the conversation. Here's what we serve on the home page:
+
+```html
+<meta property="og:image" content="https://workingdevshero.com/og-image.jpg" />
+<meta property="og:video" content="https://workingdevshero.com/og-video.mp4" />
+<meta property="og:video:secure_url" content="https://workingdevshero.com/og-video.mp4" />
+<meta property="og:video:type" content="video/mp4" />
+<meta property="og:video:width" content="1200" />
+<meta property="og:video:height" content="630" />
+```
+
+A few things we settled on along the way:
+
+- **The image is the video's first frame.** Previews show the image first, so starting the video on that exact frame means nothing jumps when it begins to play.
+- **The video is silent and small.** 6 seconds, 1200×630 H.264, 237 KB. Apple caps a preview's images and video at 10 MB total, and smaller files start playing sooner.
+- **The text is baked in with ffmpeg.** We lay out the headline as an HTML page, screenshot it with a transparent background in headless Chrome, and overlay it on every frame. One script rebuilds both files.
+- **Only the default image gets the video.** Blog posts have their own hero images, so they keep a plain image preview instead of borrowing the rooftop.
+
+## Why It Only Showed the Picture 🔍
+
+We shipped it, pasted the link into iMessage, and got the new image but no video.
+
+The tags were right and the file was right. To see what Apple's side was doing, we ran the macOS LinkPresentation framework (`LPMetadataProvider`, the API apps use to build these previews) against the site. It found the image and returned no video at all.
+
+So we served the same page and video from two local servers. The one that supports HTTP range requests (`Range: bytes=0-1` returns `206 Partial Content`) got a video. The one that doesn't got nothing. Production was the second kind: our site runs on Cloudflare Workers static assets, which ignores `Range` and always sends the whole file with a `200`. Safari has the same expectation, which is why some MP4s show a crossed-out play button there.
+
+## The Fix 🔧
+
+We added a Worker that only runs for video paths and turns a full response into the requested slice:
+
+```jsonc
+// wrangler.jsonc
+"main": "./worker/index.ts",
+"assets": {
+  "directory": "./dist",
+  "binding": "ASSETS",
+  "run_worker_first": ["/og-video.mp4", "/videos/*"]
+}
+```
+
+The Worker fetches the file through the `ASSETS` binding, parses the `Range` header, and answers `206` with a `Content-Range`, or `416` when the range starts past the end. Every other path still goes straight to static assets with no Worker in the way. With it deployed locally, the same LinkPresentation check downloaded the full video.
+
+## Then the Home Page 🌙
+
+Once the loop was in previews, the home page's still hero looked a little flat next to it. The hero was already this scene, so it's now the loop too: a 16:9 version on desktop and a 9:16 one on phones, about 220 KB each. Both are set to `preload="none"`, and a few lines of script play only the one on screen, so phones never download the desktop file. Anyone with reduced motion turned on gets the first frame as a still.
+
+If you want to try it yourself, send [workingdevshero.com](https://workingdevshero.com) to a friend in iMessage. And if the rooftop looks familiar, the whole album is [on YouTube](https://youtu.be/Lq1RZYq4caM).
