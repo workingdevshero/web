@@ -4,6 +4,9 @@
 /link /links 301
 /discord https://discord.gg/UxNXrBukjZ 302
 
+# Short link from the animated link previews videos ("…like workingdevshero.com/previews")
+/previews /blog/animated-link-previews 301
+
 # Old WordPress category pages
 /category/* /blog 301
 

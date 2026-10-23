@@ -78,6 +78,14 @@ describe('Discord invite', () => {
   });
 });
 
+describe('short links', () => {
+  it('sends /previews, the link in the animated link previews videos, to that post', () => {
+    const redirects = readFileSync(repoFile('public/_redirects'), 'utf8');
+    expect(redirects).toMatch(/^\/previews \/blog\/animated-link-previews 301$/m);
+    expect(existsSync(repoFile('src/content/blog/animated-link-previews.mdx'))).toBe(true);
+  });
+});
+
 describe('link-in-bio', () => {
   it('leads with the Heroic Lofi album, then Discord and Automate It', () => {
     expect(featuredLinks.map((link) => link.title)).toEqual([
