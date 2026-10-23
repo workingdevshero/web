@@ -1,4 +1,6 @@
 ---
+import PostMedia from '@components/blog/PostMedia.astro';
+
 interface Props {
   href: string;
   title: string;
@@ -21,21 +23,10 @@ const dateLabel = date.toLocaleDateString('en-US', {
   class="group flex flex-col h-full w-full min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-white/10 text-white hover:bg-white/15 backdrop-blur-md transition-colors"
 >
   <div class="aspect-video overflow-hidden bg-gradient-to-br from-primary/40 to-secondary/40">
-    {heroVideo ? (
-      <video
-        data-card-video
-        src={heroVideo}
-        poster={heroImage}
-        muted
-        loop
-        playsinline
-        preload="none"
-        aria-hidden="true"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      ></video>
-    ) : heroImage ? (
-      <img
-        src={heroImage}
+    {heroImage ? (
+      <PostMedia
+        image={heroImage}
+        video={heroVideo}
         alt=""
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       />
@@ -51,14 +42,3 @@ const dateLabel = date.toLocaleDateString('en-US', {
   </div>
 </a>
 
-<script>
-  import { syncHeroVideos } from '@/lib/hero-video';
-
-  // Same rules as the home hero: muted, only when visible, and not for reduced motion.
-  const videos = document.querySelectorAll<HTMLVideoElement>('video[data-card-video]');
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const sync = () => syncHeroVideos(videos, reduceMotion.matches);
-
-  sync();
-  reduceMotion.addEventListener('change', sync);
-</script>

@@ -1,0 +1,44 @@
+---
+/**
+ * A post's card image, or its looping heroVideo when it has one. The video
+ * starts on heroImage (its first frame) and plays muted, only while visible,
+ * and never for reduced motion; see src/lib/hero-video.ts.
+ */
+interface Props {
+  image: string;
+  video?: string;
+  alt: string;
+  class?: string;
+}
+
+const { image, video, alt, class: className } = Astro.props;
+---
+
+{video ? (
+  <video
+    data-post-video
+    src={video}
+    poster={image}
+    muted
+    loop
+    playsinline
+    preload="none"
+    aria-label={alt}
+    class={className}
+  ></video>
+) : (
+  <img src={image} alt={alt} class={className} />
+)}
+
+<script>
+  import { syncHeroVideos } from '@/lib/hero-video';
+
+  const videos = document.querySelectorAll<HTMLVideoElement>('video[data-post-video]');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const sync = () => syncHeroVideos(videos, reduceMotion.matches);
+
+  sync();
+  reduceMotion.addEventListener('change', sync);
+  // Cards can sit in a hidden lg:/md: column; re-check when the layout changes.
+  addEventListener('resize', sync);
+</script>
