@@ -11,8 +11,8 @@ const blog = defineCollection({
     heroImage: z.string().optional(),
     /**
      * A silent, looping MP4 in public/ whose first frame is heroImage. It becomes
-     * the post's og:video (iMessage plays it in the link preview) and plays on
-     * the post's /links card. Most posts leave it out and preview as a still.
+     * the post's og:video (iMessage plays it in the link preview) and plays in
+     * the post's header and on its blog cards. Most posts leave it out and stay a still.
      */
     heroVideo: z.string().optional(),
     categories: z.array(z.string()).default([]),
