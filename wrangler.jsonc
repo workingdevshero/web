@@ -1,8 +1,11 @@
 {
   "name": "web",
   "compatibility_date": "2025-12-28",
+  // Only video paths hit the Worker, to answer Range requests (see worker/range.ts).
+  "main": "./worker/index.ts",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/og-video.mp4", "/videos/*"]
   }
 }
-
