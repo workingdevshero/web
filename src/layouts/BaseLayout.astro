@@ -83,6 +83,12 @@ const { image: socialImageURL, video: socialVideoURL } = socialPreview(Astro.sit
 
       initAnalytics(posthog);
     </script>
+
+    <!-- Feeds, and the plain-text site index for AI agents (see src/utils/agentContent.ts) -->
+    <link rel="alternate" type="application/rss+xml" title="Working Dev's Hero Blog" href="/rss.xml" />
+    <link rel="alternate" type="text/plain" title="Index for AI agents (llms.txt)" href="/llms.txt" />
+
+    <slot name="head" />
   </head>
   <body class:list={['min-h-screen flex flex-col', bodyClass]}>
     {chrome === 'full' && <Header />}
