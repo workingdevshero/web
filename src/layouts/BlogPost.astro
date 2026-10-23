@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, updatedDate, author, heroImage, categories, tags } = post.data;
+const { title, description, pubDate, updatedDate, author, heroImage, heroVideo, categories, tags } = post.data;
 
 const canonicalURL = new URL(`/blog/${post.slug}/`, Astro.site);
 const markdownURL = new URL(`/blog/${post.slug}.md`, Astro.site);
@@ -51,7 +51,7 @@ function getTagSlug(tag: string): string {
 }
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} type="article">
+<BaseLayout title={title} description={description} image={heroImage} video={heroVideo} type="article">
   <Fragment slot="head">
     <link rel="alternate" type="text/markdown" href={markdownURL} title="Markdown version of this article" />
     <script is:inline type="application/ld+json" set:html={jsonLdHtml} />

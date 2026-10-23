@@ -1,12 +1,16 @@
 ---
+import PostMedia from '@components/blog/PostMedia.astro';
+
 interface Props {
   href: string;
   title: string;
   date: Date;
   heroImage?: string;
+  /** The post's looping preview; heroImage is its first frame and stays up until it plays. */
+  heroVideo?: string;
 }
 
-const { href, title, date, heroImage } = Astro.props;
+const { href, title, date, heroImage, heroVideo } = Astro.props;
 const dateLabel = date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'short',
@@ -20,8 +24,9 @@ const dateLabel = date.toLocaleDateString('en-US', {
 >
   <div class="aspect-video overflow-hidden bg-gradient-to-br from-primary/40 to-secondary/40">
     {heroImage ? (
-      <img
-        src={heroImage}
+      <PostMedia
+        image={heroImage}
+        video={heroVideo}
         alt=""
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       />
@@ -36,3 +41,4 @@ const dateLabel = date.toLocaleDateString('en-US', {
     <time class="block text-xs text-white/65 mt-1.5" datetime={date.toISOString()}>{dateLabel}</time>
   </div>
 </a>
+

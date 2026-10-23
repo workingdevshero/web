@@ -9,9 +9,18 @@ const blog = defineCollection({
     updatedDate: z.coerce.date().optional(),
     author: z.string().default('bobbyg603'),
     heroImage: z.string().optional(),
+    /**
+     * A silent, looping MP4 in public/ whose first frame is heroImage. It becomes
+     * the post's og:video (iMessage plays it in the link preview) and plays on
+     * the post's /links card. Most posts leave it out and preview as a still.
+     */
+    heroVideo: z.string().optional(),
     categories: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+  }).refine((data) => !data.heroVideo || data.heroImage, {
+    message: 'heroVideo needs a heroImage: it is the poster and the preview for apps that only show stills',
+    path: ['heroVideo'],
   }),
 });
 

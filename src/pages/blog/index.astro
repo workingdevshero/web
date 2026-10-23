@@ -1,4 +1,5 @@
 ---
+import PostMedia from '@components/blog/PostMedia.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
@@ -80,8 +81,9 @@ function getReadingTime(content: string): string {
             >
               {post.data.heroImage ? (
                 <div class="aspect-video bg-gradient-to-br from-primary-100 to-secondary-100 overflow-hidden">
-                  <img
-                    src={post.data.heroImage}
+                  <PostMedia
+                    image={post.data.heroImage}
+                    video={post.data.heroVideo}
                     alt={post.data.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
