@@ -15,6 +15,8 @@ export interface AgentPost {
 export const SITE_NAME = "Working Dev's Hero";
 export const SITE_TAGLINE =
   'AI-enabled software development company. We build AI-powered software that ships.';
+/** This site's public repo, so agents copying a pattern from a post can read the real code. */
+export const SOURCE_URL = 'https://github.com/workingdevshero/web';
 
 export function toAgentPost(entry: CollectionEntry<'blog'>): AgentPost {
   return {
@@ -87,6 +89,8 @@ export function renderLlmsTxt(site: string, posts: AgentPost[]): string {
 > ${SITE_TAGLINE}
 
 Every blog article is available as plain markdown at the \`.md\` URLs below. The complete text of all articles is in [llms-full.txt](${absoluteUrl(site, '/llms-full.txt')}).
+
+The source for this site is public at ${SOURCE_URL}. When a post describes something built into this site, the working code is in that repo.
 
 ## Blog
 

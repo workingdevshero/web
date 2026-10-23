@@ -1,0 +1,35 @@
+---
+title: "90 Minutes of Pironman Assembly in 60 Seconds (No Video Editor Allowed)"
+description: "The Supermog fleet got its Pironman 5 cases, and the build timelapse got made the same way the system itself did: entirely in conversation with Claude Code. One ffmpeg filter graph, AI-generated music, and beat-synced glitches. No editing software was opened."
+pubDate: 2026-08-31
+author: "bobbyg603"
+heroImage: "/images/blog/pironman-build.jpg"
+categories: ["AI", "Software"]
+tags: ["claude", "ffmpeg", "raspberry-pi", "pironman", "video", "venice", "timelapse"]
+---
+
+The two Raspberry Pis that run [Supermog](/blog/supermog-builds-itself) recently moved into Pironman 5 cases: real PCIe for the NVMe drives, tower coolers, and the little OLEDs our pixel mascot hammers away on. We filmed the first case build, and then made ourselves a rule for the edit: **no video editor.** The whole thing had to come together in conversation with Claude Code (Fable 5), the same way Supermog itself did.
+
+<video controls playsinline preload="metadata" src="/videos/pironman-build-timelapse.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+## The Pieces 🧩
+
+- **The footage**: one static iPhone take on the bench at the [Sparx](https://sparx-fire.com) lab. 90-some minutes across two clips, because there's a mid-build run for a flathead screwdriver hiding in the gap.
+- **The edit**: a single ffmpeg filter graph. Both clips concatenated, run at 115×, titles drawn straight onto the frames in the site's own Bricolage Grotesque, then a snap back to real time at the exact second the finished case gets held up to the camera.
+- **The music**: [Venice's](https://venice.ai) music API, a 66-second instrumental prompt to the ElevenLabs Music model. Third take kept. The mix ducks under the real-time reveal and fades over the end card.
+- **The effects**: a little Python onset analysis found the track's drop at 16 seconds and its strongest drum hits. The glitch bursts (hard RGB split plus analog noise) sit on those beats: a double-stutter leading into the drop, single hits on three kicks, and a final burst landing exactly on the timelapse-to-real-time cut. The audio visualizer riding the bottom edge is ffmpeg's `showfreqs` in the brand palette.
+- **The end card**: the mascot on a background color-sampled from the logo PNG itself, so the two are seamless.
+
+## The Back-and-Forth 🏓
+
+What made this fun wasn't any single trick, it was the loop. Every round was a sentence of feedback and a fresh preview in the chat:
+
+- *"We ended too fast — slow to normal speed when I show the finished case and smile."* Claude scrubbed the footage, found the exact second the case comes up (and the thumbs-up two seconds later), and re-cut with a speed ramp.
+- *"Make the visualizer about 3× bigger, and put the glitches on interesting points in the audio — before the beat drop, or on drum kicks."* That's where the onset analysis came from: the effects stopped being decoration and started following the song.
+- *"Can we say 90 minutes instead of 95? It's cleaner."* One word in a filter graph, one re-render.
+
+There were honest stumbles, too. An ffmpeg quirk where `fontfile=` silently swallowed every option after it. A music API whose innocently named `complete` endpoint turned out to *delete* the finished track — we paid for two songs nobody will ever hear. Each one cost a minute, not an afternoon.
+
+Total tooling: a phone, ffmpeg, one API, and a chat window. The video about the system that builds itself got built the same way the system did.
+
+*Want the full story of what these little towers actually run? That's over here: [We Built a System That Builds Itself](/blog/supermog-builds-itself).*

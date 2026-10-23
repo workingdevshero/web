@@ -116,6 +116,10 @@ describe('renderLlmsTxt', () => {
     );
     expect(txt).toContain('https://workingdevshero.com/llms-full.txt');
   });
+
+  it('points agents at the public source so they can copy what a post describes', () => {
+    expect(renderLlmsTxt(SITE, [makePost()])).toContain('https://github.com/workingdevshero/web');
+  });
 });
 
 describe('renderLlmsFullTxt', () => {
