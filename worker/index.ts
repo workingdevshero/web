@@ -22,8 +22,8 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
-// Matches /wp-content/**, /wp-includes/**, /wp-json/**, and any /wp-*.php.
-const LEGACY_WP_PATTERN = /^\/(?:wp-content|wp-includes|wp-json)(?:\/|$)|^\/wp-[^/]*\.php(?:\?|$)/i;
+// Matches /wp-content/**, /wp-includes/**, /wp-json/**, /wp-admin(/**, and any /wp-*.php.
+const LEGACY_WP_PATTERN = /^\/(?:wp-content|wp-includes|wp-json|wp-admin)(?:\/|$)|^\/wp-[^/]*\.php(?:\?|$)/i;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
