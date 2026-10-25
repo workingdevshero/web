@@ -1,11 +1,12 @@
 {
   "name": "web",
   "compatibility_date": "2025-12-28",
-  // Only video paths hit the Worker, to answer Range requests (see worker/range.ts).
+  // The Worker handles two things: Range requests for MP4 paths, and 410 Gone
+  // for permanently-deleted legacy WordPress URLs (see worker/index.ts).
   "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": ["/og-video.mp4", "/videos/*"]
+    "run_worker_first": ["/og-video.mp4", "/videos/*", "/wp-content/*", "/wp-includes/*", "/wp-json/*", "/wp-login.php", "/wp-admin", "/wp-admin/*", "/wp-cron.php", "/wp-mail.php", "/wp-trackback.php", "/wp-signup.php", "/wp-activate.php", "/wp-load.php", "/wp-blog-header.php", "/wp-comments-post.php", "/wp-links-opml.php", "/wp-xmlrpc.php", "/wp-settings.php", "/wp-pass.php"]
   }
 }
