@@ -46,8 +46,7 @@
 /chatgpt-practice-makes-perfect/* /blog/chatgpt-practice-makes-perfect 301
 
 # Common WordPress paths
-/wp-admin /blog 301
-/wp-login.php /blog 301
+# /wp-admin and /wp-login.php: 410 Gone from the Worker (see worker/index.ts).
 /feed /blog 301
 /rss /blog 301
 

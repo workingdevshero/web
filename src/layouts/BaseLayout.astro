@@ -2,6 +2,7 @@
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
 import { PREVIEW_HEIGHT, PREVIEW_WIDTH, socialPreview } from '@/lib/social-preview';
+import { getCollection } from 'astro:content';
 import '@/styles/global.css';
 
 interface Props {
@@ -13,6 +14,14 @@ interface Props {
   type?: 'website' | 'article';
   chrome?: 'full' | 'none';
   bodyClass?: string;
+  /** Article-only: when the post was first published. */
+  publishedDate?: Date;
+  /** Article-only: when the post was last updated. */
+  updatedDate?: Date;
+  /** Article-only: byline name. */
+  author?: string;
+  /** Article-only: emitted as JSON-LD keywords. */
+  tags?: string[];
 }
 
 const {
@@ -23,11 +32,76 @@ const {
   type = 'website',
   chrome = 'full',
   bodyClass = 'bg-white',
+  publishedDate,
+  updatedDate,
+  author,
+  tags = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 // A page video's first frame is its image (tested for blog posts), so they share a size.
 const { image: socialImageURL, video: socialVideo } = socialPreview(Astro.site!, image, video);
+
+// Newest published post: the modification date of pages that list posts.
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const siteLatest = posts
+  .map((p) => p.data.updatedDate ?? p.data.pubDate)
+  .reduce((acc, d) => (d > acc ? d : acc), new Date(0));
+
+const siteURL = new URL('/', Astro.site).href;
+const isHome = Astro.url.pathname === '/';
+const listsPosts = /^\/(?:blog(?:\/(?:category|tag)\/.*)?\/?)?$/.test(Astro.url.pathname);
+
+// Articles use their own dates; listing pages use the newest post; other pages emit no date.
+const pub = type === 'article' ? (publishedDate ?? siteLatest) : undefined;
+const mod =
+  type === 'article' ? (updatedDate ?? publishedDate ?? siteLatest) : listsPosts ? siteLatest : undefined;
+
+const publisher = {
+  '@type': 'Organization',
+  name: "Working Dev's Hero",
+  url: siteURL,
+  logo: { '@type': 'ImageObject', url: new URL('/logo.png', Astro.site).href },
+};
+const website = { '@type': 'WebSite', '@id': `${siteURL}#website`, name: "Working Dev's Hero", url: siteURL };
+
+// JSON-LD structured data: BlogPosting for articles; otherwise a WebPage (CollectionPage
+// for post listings) that is part of the WebSite, which is only described in full on the homepage.
+const jsonLd =
+  type === 'article'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        image: socialImageURL.href,
+        datePublished: pub!.toISOString(),
+        dateModified: mod!.toISOString(),
+        ...(author && { author: { '@type': 'Person', name: author } }),
+        publisher,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
+        ...(tags.length > 0 && { keywords: tags.join(', ') }),
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@graph': [
+          isHome ? { ...website, description, publisher } : website,
+          {
+            '@type': listsPosts && !isHome ? 'CollectionPage' : 'WebPage',
+            '@id': canonicalURL.href,
+            url: canonicalURL.href,
+            name: title,
+            description,
+            isPartOf: { '@id': website['@id'] },
+            ...(mod && { dateModified: mod.toISOString() }),
+          },
+        ],
+      };
+// Escape <, > and & so JSON-LD cannot break out of the surrounding <script> tag.
+const jsonLdHtml = JSON.stringify(jsonLd)
+  .replace(/</g, '\\u003c')
+  .replace(/>/g, '\\u003e')
+  .replace(/&/g, '\\u0026');
 ---
 
 <!doctype html>
@@ -53,6 +127,14 @@ const { image: socialImageURL, video: socialVideo } = socialPreview(Astro.site!,
     <meta property="og:image:width" content={socialVideo?.width ?? PREVIEW_WIDTH} />
     <meta property="og:image:height" content={socialVideo?.height ?? PREVIEW_HEIGHT} />
     <meta property="og:image:alt" content="Working Dev's Hero — We build AI-powered software that ships" />
+    {mod && <meta property="og:updated_time" content={mod.toISOString()} />}
+    {pub && mod && (
+      <>
+        <meta property="article:published_time" content={pub.toISOString()} />
+        <meta property="article:modified_time" content={mod.toISOString()} />
+        {author && <meta property="article:author" content={author} />}
+      </>
+    )}
     {socialVideo && (
       <>
         <meta property="og:video" content={socialVideo.url} />
@@ -88,6 +170,9 @@ const { image: socialImageURL, video: socialVideo } = socialPreview(Astro.site!,
     <!-- Feeds, and the plain-text site index for AI agents (see src/utils/agentContent.ts) -->
     <link rel="alternate" type="application/rss+xml" title="Working Dev's Hero Blog" href="/rss.xml" />
     <link rel="alternate" type="text/plain" title="Index for AI agents (llms.txt)" href="/llms.txt" />
+
+    <!-- Structured data: tells crawlers the real publication and modification dates. -->
+    <script is:inline type="application/ld+json" set:html={jsonLdHtml} />
 
     <slot name="head" />
   </head>
