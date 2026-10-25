@@ -7,6 +7,6 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": ["/og-video.mp4", "/videos/*", "/wp-content/*", "/wp-includes/*", "/wp-json/*", "/wp-login.php", "/wp-admin", "/wp-admin/*", "/wp-cron.php", "/wp-mail.php", "/wp-trackback.php", "/wp-signup.php", "/wp-activate.php", "/wp-load.php", "/wp-blog-header.php", "/wp-comments-post.php", "/wp-links-opml.php", "/wp-xmlrpc.php", "/wp-settings.php", "/wp-pass.php"]
+    "run_worker_first": ["/og-video.mp4", "/videos/*", "/wp-content/*", "/wp-includes/*", "/wp-json/*", "/wp-login.php", "/wp-admin", "/wp-admin/*", "/wp-cron.php", "/wp-mail.php", "/wp-trackback.php", "/wp-signup.php", "/wp-activate.php", "/wp-load.php", "/wp-blog-header.php", "/wp-comments-post.php", "/wp-links-opml.php", "/xmlrpc.php", "/wp-settings.php", "/wp-pass.php"]
   }
 }

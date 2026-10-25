@@ -46,8 +46,7 @@
 /chatgpt-practice-makes-perfect/* /blog/chatgpt-practice-makes-perfect 301
 
 # Common WordPress paths
-# /wp-admin and /wp-login.php previously 301'd to /blog (soft-404 anti-pattern).
-# They are now handled by the Worker with HTTP 410 Gone (see worker/index.ts).
+# /wp-admin and /wp-login.php: 410 Gone from the Worker (see worker/index.ts).
 /feed /blog 301
 /rss /blog 301
 

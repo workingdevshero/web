@@ -6,28 +6,30 @@ import rehypeExternalLinks from './src/plugins/rehype-external-links.mjs';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-// Build a slug → { pubDate, updatedDate } map at config time by parsing the
-// blog frontmatter directly. We avoid importing astro:content here (not
-// available in the config scope) and add no new dependencies: a minimal
-// regex pulls the first occurrence of pubDate / updatedDate from each file.
-// Used to set <lastmod> on sitemap entries so indexers see freshness signals.
+// Build a slug → last-modified map at config time by parsing the blog
+// frontmatter directly (astro:content is not available in the config scope).
+// Drafts are skipped. Used to set <lastmod> on sitemap entries.
+function frontmatterDate(fm, key) {
+  const raw = fm.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))?.[1];
+  if (!raw) return null;
+  const date = new Date(raw.replace(/\s+#.*$/, '').trim().replace(/^(['"])(.*)\1$/, '$2'));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function buildSlugDateMap() {
   const dir = join(process.cwd(), 'src/content/blog');
   const map = new Map();
-  let maxDate = new Date(0);
+  let maxDate = null;
   try {
     for (const file of readdirSync(dir)) {
       if (!file.endsWith('.mdx') && !file.endsWith('.md')) continue;
       const slug = file.replace(/\.(mdx|md)$/, '');
-      const text = readFileSync(join(dir, file), 'utf8');
-      const fm = text.split('---\n', 2)[1] ?? '';
-      const pub = fm.match(/^pubDate:\s*(.+)$/m)?.[1]?.trim();
-      const upd = fm.match(/^updatedDate:\s*(.+)$/m)?.[1]?.trim();
-      const pubDate = pub ? new Date(pub) : null;
-      const updatedDate = upd ? new Date(upd) : null;
-      const effective = updatedDate ?? pubDate;
-      if (effective && effective > maxDate) maxDate = effective;
-      map.set(slug, { pubDate, updatedDate, effective });
+      const fm = readFileSync(join(dir, file), 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+      if (/^draft:\s*true\b/m.test(fm)) continue;
+      const effective = frontmatterDate(fm, 'updatedDate') ?? frontmatterDate(fm, 'pubDate');
+      if (!effective) continue;
+      if (!maxDate || effective > maxDate) maxDate = effective;
+      map.set(slug, effective);
     }
   } catch {
     // Non-fatal: sitemap just won't have lastmod if parsing fails.
@@ -43,16 +45,14 @@ export default defineConfig({
     mdx(),
     sitemap({
       serialize(item) {
-        // /blog/<slug> → updatedDate || pubDate for that post; everything else
-        // (homepage, /blog index, category/tag pages, etc.) → site-wide latest.
-        const match = item.url.match(/\/blog\/([^/]+)\/?$/);
-        if (match && slugDateMap.has(match[1])) {
-          const entry = slugDateMap.get(match[1]);
-          const last = entry.updatedDate ?? entry.pubDate;
-          if (last) item.lastmod = last.toISOString();
-        } else if (siteLatest > new Date(0)) {
-          item.lastmod = siteLatest.toISOString();
-        }
+        // /blog/<slug> and its /blog/<slug>.md mirror → that post's updatedDate || pubDate.
+        // Pages that list posts (home, /blog, category/tag indexes, feeds) → newest post.
+        // Everything else gets no lastmod rather than a synthetic one.
+        const { pathname } = new URL(item.url);
+        const slug = pathname.match(/^\/blog\/([^/]+?)(?:\.md)?\/?$/)?.[1];
+        const listsPosts = /^\/(?:blog(?:\/(?:category|tag)\/.*)?\/?|rss\.xml|llms(?:-full)?\.txt)?$/.test(pathname);
+        const last = slug && slugDateMap.has(slug) ? slugDateMap.get(slug) : listsPosts ? siteLatest : null;
+        if (last) item.lastmod = last.toISOString();
         return item;
       },
     }),

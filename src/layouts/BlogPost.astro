@@ -30,7 +30,7 @@ function getTagSlug(tag: string): string {
 }
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} video={heroVideo} type="article" publishedDate={pubDate} updatedDate={updatedDate ?? pubDate} author={author}>
+<BaseLayout title={title} description={description} image={heroImage} video={heroVideo} type="article" publishedDate={pubDate} updatedDate={updatedDate ?? pubDate} author={author} tags={tags}>
   <Fragment slot="head">
     <link rel="alternate" type="text/markdown" href={markdownURL} title="Markdown version of this article" />
   </Fragment>

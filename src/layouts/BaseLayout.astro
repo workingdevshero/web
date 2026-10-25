@@ -20,6 +20,8 @@ interface Props {
   updatedDate?: Date;
   /** Article-only: byline name. */
   author?: string;
+  /** Article-only: emitted as JSON-LD keywords. */
+  tags?: string[];
 }
 
 const {
@@ -33,25 +35,38 @@ const {
   publishedDate,
   updatedDate,
   author,
+  tags = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 // A page video's first frame is its image (tested for blog posts), so they share a size.
 const { image: socialImageURL, video: socialVideo } = socialPreview(Astro.site!, image, video);
 
-// Site-wide latest content date: max updatedDate||pubDate across all blog posts.
-// Crawlers see this as the homepage's dateModified so the index stops showing a stale 2023 entry.
-const posts = await getCollection('blog');
+// Newest published post: the modification date of pages that list posts.
+const posts = await getCollection('blog', ({ data }) => !data.draft);
 const siteLatest = posts
   .map((p) => p.data.updatedDate ?? p.data.pubDate)
   .reduce((acc, d) => (d > acc ? d : acc), new Date(0));
 
-// Effective dates: articles fall back to siteLatest so every page emits a real date.
-const pub = type === 'article' ? (publishedDate ?? siteLatest) : siteLatest;
-const mod = type === 'article' ? (updatedDate ?? publishedDate ?? siteLatest) : siteLatest;
+const siteURL = new URL('/', Astro.site).href;
+const isHome = Astro.url.pathname === '/';
+const listsPosts = /^\/(?:blog(?:\/(?:category|tag)\/.*)?\/?)?$/.test(Astro.url.pathname);
 
-// JSON-LD structured data. Articles use BlogPosting; everything else uses WebSite + Organization.
-// Escape < so JSON-LD cannot break out of the surrounding <script> tag.
+// Articles use their own dates; listing pages use the newest post; other pages emit no date.
+const pub = type === 'article' ? (publishedDate ?? siteLatest) : undefined;
+const mod =
+  type === 'article' ? (updatedDate ?? publishedDate ?? siteLatest) : listsPosts ? siteLatest : undefined;
+
+const publisher = {
+  '@type': 'Organization',
+  name: "Working Dev's Hero",
+  url: siteURL,
+  logo: { '@type': 'ImageObject', url: new URL('/logo.png', Astro.site).href },
+};
+const website = { '@type': 'WebSite', '@id': `${siteURL}#website`, name: "Working Dev's Hero", url: siteURL };
+
+// JSON-LD structured data: BlogPosting for articles; otherwise a WebPage (CollectionPage
+// for post listings) that is part of the WebSite, which is only described in full on the homepage.
 const jsonLd =
   type === 'article'
     ? {
@@ -60,31 +75,33 @@ const jsonLd =
         headline: title,
         description,
         image: socialImageURL.href,
-        datePublished: pub.toISOString(),
-        dateModified: mod.toISOString(),
+        datePublished: pub!.toISOString(),
+        dateModified: mod!.toISOString(),
         ...(author && { author: { '@type': 'Person', name: author } }),
-        publisher: {
-          '@type': 'Organization',
-          name: "Working Dev's Hero",
-          logo: { '@type': 'ImageObject', url: new URL('/logo.png', Astro.site).href },
-        },
+        publisher,
         mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
+        ...(tags.length > 0 && { keywords: tags.join(', ') }),
       }
     : {
         '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        name: "Working Dev's Hero",
-        url: canonicalURL.href,
-        description,
-        dateModified: mod.toISOString(),
-        publisher: {
-          '@type': 'Organization',
-          name: "Working Dev's Hero",
-          url: new URL('/', Astro.site).href,
-          logo: { '@type': 'ImageObject', url: new URL('/logo.png', Astro.site).href },
-        },
+        '@graph': [
+          isHome ? { ...website, description, publisher } : website,
+          {
+            '@type': listsPosts && !isHome ? 'CollectionPage' : 'WebPage',
+            '@id': canonicalURL.href,
+            url: canonicalURL.href,
+            name: title,
+            description,
+            isPartOf: { '@id': website['@id'] },
+            ...(mod && { dateModified: mod.toISOString() }),
+          },
+        ],
       };
-const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, '\u003c');
+// Escape <, > and & so JSON-LD cannot break out of the surrounding <script> tag.
+const jsonLdHtml = JSON.stringify(jsonLd)
+  .replace(/</g, '\\u003c')
+  .replace(/>/g, '\\u003e')
+  .replace(/&/g, '\\u0026');
 ---
 
 <!doctype html>
@@ -110,8 +127,8 @@ const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, '\u003c');
     <meta property="og:image:width" content={socialVideo?.width ?? PREVIEW_WIDTH} />
     <meta property="og:image:height" content={socialVideo?.height ?? PREVIEW_HEIGHT} />
     <meta property="og:image:alt" content="Working Dev's Hero — We build AI-powered software that ships" />
-    <meta property="og:updated_time" content={mod.toISOString()} />
-    {type === 'article' && (
+    {mod && <meta property="og:updated_time" content={mod.toISOString()} />}
+    {pub && mod && (
       <>
         <meta property="article:published_time" content={pub.toISOString()} />
         <meta property="article:modified_time" content={mod.toISOString()} />

@@ -5,16 +5,8 @@
  * legacy WordPress paths here (run_worker_first), so everything else is served
  * by the asset layer as before.
  *
- * Legacy WordPress asset URLs (/wp-content/**, /wp-includes/**, /wp-json/**,
- * and /wp-*.php) get HTTP 410 Gone. We deliberately use 410 instead of a 301 to
- * the homepage: WordPress uploads were permanently deleted in the migration to
- * Astro, and mass-redirecting to home is a soft-404 anti-pattern that confuses
- * crawlers. 410 tells indexers the resource is gone for good, so they deindex
- * the URLs faster than they would for a 404, and they stop associating the
- * stale 2023 WordPress entry with workingdevshero.com.
- *
- * Cloudflare Pages _redirects only supports 200/301/302/303/307/308 — not 410 —
- * so the Worker is the only correct place to emit this status.
+ * Legacy WordPress URLs get 410 Gone on purpose (not a 301 to home, which is a
+ * soft 404). _redirects cannot emit 410, so it has to happen here.
  */
 import { withRangeSupport } from './range';
 
@@ -22,8 +14,7 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
-// Matches /wp-content/**, /wp-includes/**, /wp-json/**, /wp-admin(/**, and any /wp-*.php.
-const LEGACY_WP_PATTERN = /^\/(?:wp-content|wp-includes|wp-json|wp-admin)(?:\/|$)|^\/wp-[^/]*\.php(?:\?|$)/i;
+const LEGACY_WP_PATTERN = /^\/(?:wp-content|wp-includes|wp-json|wp-admin)(?:\/|$)|^\/(?:wp-[^/]*|xmlrpc)\.php\/?$/i;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
