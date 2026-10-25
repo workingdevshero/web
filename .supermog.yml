@@ -1,0 +1,18 @@
+# supermog config: schema documented in workingdevshero/supermog.
+verify:
+  # The prose the QA session follows: build, serve through the Worker, what to look at, teardown.
+  notes: docs/VERIFY.md
+  # A PR touching none of these is not verified: tests, scripts and brand assets don't change
+  # what the site serves.
+  paths:
+    - "src/**"
+    - "public/**"
+    - "worker/**"
+    - "astro.config.mjs"
+    - "tailwind.config.mjs"
+    - "wrangler.jsonc"
+    - "package.json"
+    - "!**/*.test.*"
+  # The site is public, so there's no login. Record the session even if the agent takes no
+  # screenshots.
+  evidence: both
