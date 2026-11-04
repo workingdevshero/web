@@ -46,7 +46,7 @@
     --grad: linear-gradient(90deg, #A78BFA, #EC4899);
     /* Horizontal crop for the scene. 100% = right edge flush (hero centred-ish);
        lower values crop more off the right and push the hero further right. */
-    --scene-pos: 70%;
+    --scene-pos: 80%;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,16 +84,18 @@
   /* ---------- Front: contact details ---------- */
   .front-bg {
     position: absolute; inset: 0;
+    /* Same night-sky palette as the hero scene on the back: deep purple base
+       with the plum/magenta glow from the scene's left edge. */
     background:
-      radial-gradient(ellipse 760px 520px at 108% -10%, rgba(124, 58, 237, 0.38), transparent 62%),
-      radial-gradient(ellipse 680px 560px at -8% 112%, rgba(162, 28, 175, 0.30), transparent 60%),
-      var(--sky);
+      radial-gradient(ellipse 700px 780px at -6% 36%, rgba(122, 52, 104, 0.52), transparent 60%),
+      radial-gradient(ellipse 780px 600px at 106% -12%, rgba(92, 50, 128, 0.40), transparent 62%),
+      linear-gradient(160deg, #2e1b45 0%, #27163a 44%, #191025 100%);
   }
   .grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(167, 139, 250, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(167, 139, 250, 0.06) 1px, transparent 1px);
+      linear-gradient(rgba(178, 108, 162, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(178, 108, 162, 0.07) 1px, transparent 1px);
     background-size: 42px 42px;
     -webkit-mask-image: radial-gradient(ellipse 72% 92% at 50% 50%, #000 35%, transparent 100%);
     mask-image: radial-gradient(ellipse 72% 92% at 50% 50%, #000 35%, transparent 100%);
