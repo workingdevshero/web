@@ -6,26 +6,31 @@
  *
  * Writes the print-ready front and back to brand/business-cards/, plus a
  * two-up sheet for quick review. The card is a standard US size (3.5in x 2in)
- * rendered at 2x device scale, so each PNG is 2100x1200 — 600 DPI, which any
- * print shop can take as-is.
+ * at 300 DPI, so each PNG is exactly 1050x600 and prints at true size.
  *
  * Requires a Chromium/Chrome binary. Set CHROME to override the path; otherwise
  * the usual macOS, Linux and Windows install locations are searched.
  */
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
-import { access, mkdir, readFile, stat } from 'node:fs/promises';
+import { access, mkdir, readFile, rm, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const OUT_DIR = join(ROOT, 'brand/business-cards');
+const TMP = join(ROOT, '.tmp');
 
-// 3.5in x 2in at 300 DPI, rendered at 2x for a crisp 600 DPI file.
+// 3.5in x 2in at 300 DPI.
 const CARD_W = 1050;
 const CARD_H = 600;
-const SCALE = 2;
+
+// Headless Chrome reserves room for browser chrome, so --window-size yields a
+// shorter viewport than asked for. We request extra and crop the card back out,
+// which keeps the output exact on every platform.
+const SLACK = 400;
 
 const CHROME_CANDIDATES = [
   process.env.CHROME,
@@ -81,10 +86,10 @@ function screenshot(chrome, url, out, width, height) {
     const proc = spawn(chrome, [
       '--headless=new', '--disable-gpu', '--hide-scrollbars',
       '--no-sandbox', '--disable-dev-shm-usage',
-      `--force-device-scale-factor=${SCALE}`,
+      '--force-device-scale-factor=1',
       '--default-background-color=00000000',
       '--virtual-time-budget=6000',
-      `--window-size=${width},${height}`,
+      `--window-size=${width + SLACK},${height + SLACK}`,
       `--screenshot=${out}`,
       url,
     ], { stdio: 'ignore' });
@@ -93,21 +98,32 @@ function screenshot(chrome, url, out, width, height) {
   });
 }
 
+async function render(chrome, url, out, width, height) {
+  const raw = join(TMP, `business-card-${width}x${height}.png`);
+  await screenshot(chrome, url, raw, width, height);
+  await sharp(raw)
+    .extract({ left: 0, top: 0, width, height })
+    .png()
+    .toFile(out);
+  await rm(raw, { force: true });
+}
+
 const chrome = await findChrome();
 await mkdir(OUT_DIR, { recursive: true });
+await mkdir(TMP, { recursive: true });
 
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}/scripts/business-card.html`;
 const jobs = [
   { side: 'front', file: 'business-card-front.png', w: CARD_W, h: CARD_H },
   { side: 'back', file: 'business-card-back.png', w: CARD_W, h: CARD_H },
-  // Two-up review sheet: 2 cards + a 40px gap and 20px padding all round.
+  // Two-up review sheet: 2 cards, a 40px gap and 20px padding all round.
   { side: 'sheet', file: 'business-card-sheet.png', w: CARD_W * 2 + 80, h: CARD_H + 40 },
 ];
 
 try {
   for (const { side, file, w, h } of jobs) {
-    await screenshot(chrome, `${base}?side=${side}`, join(OUT_DIR, file), w, h);
+    await render(chrome, `${base}?side=${side}`, join(OUT_DIR, file), w, h);
   }
 } finally {
   server.close();

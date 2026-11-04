@@ -2,6 +2,10 @@
 <!--
   Source for the Working Dev's Hero business card (front + back).
 
+  Styled after the homepage hero (src/components/home/Hero.astro): the rooftop
+  night scene, the "We Build AI-Powered Software That Ships" headline, and the
+  white bottom wave.
+
   Rendered to brand/business-cards/ by scripts/build-business-card.mjs — do not
   screenshot this by hand unless you are tuning. The card is a standard US size
   (3.5in x 2in); the build renders it at 2x device scale, so the PNGs come out
@@ -34,10 +38,11 @@
   :root {
     --card-w: 1050px;
     --card-h: 600px;
-    --pad: 78px;               /* ~1/4in at 300dpi — well inside the trim */
+    --pad: 78px;                 /* ~1/4in at 300dpi — well inside the trim */
+    --sky: #2d1941;              /* the hero scene's night-sky color */
     --violet: #A78BFA;
     --pink: #EC4899;
-    --muted: #B9AEC9;
+    --muted: rgba(255, 255, 255, 0.82);
     --grad: linear-gradient(90deg, #A78BFA, #EC4899);
   }
 
@@ -47,17 +52,15 @@
     width: var(--card-w);
     height: var(--card-h);
     overflow: hidden;
-    font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   /* Sheet view: two cards side by side with a gap, for tuning/preview. */
   body.sheet {
-    width: calc(var(--card-w) * 2 + 40px);
+    width: calc(var(--card-w) * 2 + 80px);
     height: calc(var(--card-h) + 40px);
-    display: flex;
-    gap: 40px;
-    padding: 20px;
+    display: flex; gap: 40px; padding: 20px;
     background: #0b0710;
   }
   body.sheet .card { display: flex !important; }
@@ -70,135 +73,157 @@
     overflow: hidden;
     color: #fff;
     display: none;
-    background:
-      radial-gradient(ellipse 820px 520px at 104% -8%, rgba(124, 58, 237, 0.40), transparent 62%),
-      radial-gradient(ellipse 720px 560px at -8% 108%, rgba(162, 28, 175, 0.34), transparent 60%),
-      linear-gradient(150deg, #2c1028 0%, #1b0a1a 58%, #120712 100%);
+    background: var(--sky);
   }
   body[data-side="front"] .card.front,
   body[data-side="back"]  .card.back { display: block; }
 
-  /* Faint code-ish grid, keeps the flat purple from feeling empty. */
-  .grid {
+  /* ---------- Front: mini hero ---------- */
+  .scene {
     position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(167, 139, 250, 0.055) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(167, 139, 250, 0.055) 1px, transparent 1px);
-    background-size: 42px 42px;
-    -webkit-mask-image: radial-gradient(ellipse 70% 90% at 50% 50%, #000 35%, transparent 100%);
-    mask-image: radial-gradient(ellipse 70% 90% at 50% 50%, #000 35%, transparent 100%);
+    background-image: url('../src/assets/images/hero-scene-wide.png');
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
   }
-  .vignette {
+  /* Same left-to-right fade the hero uses to keep the headline clear of the scene. */
+  .scene-fade {
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 120% 120% at 50% 50%, transparent 55%, rgba(8, 4, 10, 0.55) 100%);
+    background:
+      linear-gradient(90deg,
+        var(--sky) 0%, var(--sky) 40%,
+        rgba(45, 25, 65, 0.92) 54%, rgba(45, 25, 65, 0.45) 68%, transparent 82%);
+  }
+  /* Hero's left pink glow, plus a bottom lift so the wave doesn't sit on the scene. */
+  .scene-glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 620px 720px at -6% 42%, rgba(150, 45, 110, 0.42), transparent 62%),
+      linear-gradient(to bottom, transparent 66%, rgba(45, 25, 65, 0.55) 100%);
   }
 
+  .front-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 var(--pad) 44px;
+  }
+  .brandline {
+    position: absolute; top: 60px; left: var(--pad);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .brandline img { height: 58px; width: auto; }
+  .brandline .word { font-size: 27px; font-weight: 800; letter-spacing: 0.2px; }
+
+  .hero-text { position: relative; z-index: 2; max-width: 580px; }
+  .headline {
+    font-size: 49px; font-weight: 800; line-height: 1.04;
+    letter-spacing: -0.5px; color: #fff; margin-bottom: 20px;
+  }
   .grad {
     background: var(--grad);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
   }
-
-  /* ---------- Front ---------- */
-  .front-inner {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 var(--pad);
+  .subhead {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 20px; font-weight: 400; line-height: 1.42; color: var(--muted);
+    max-width: 520px; margin-bottom: 22px;
   }
-  .front-text { position: relative; z-index: 2; max-width: 650px; }
-  .eyebrow {
-    font-size: 19px; font-weight: 600; letter-spacing: 5px;
-    text-transform: uppercase; color: var(--violet);
-    margin-bottom: 22px;
-  }
-  .wordmark {
-    font-size: 80px; font-weight: 800; line-height: 0.94;
-    letter-spacing: -1.5px; color: #fff; margin-bottom: 24px;
-  }
-  .tagline {
-    font-size: 26px; font-weight: 400; line-height: 1.32; color: var(--muted);
-    margin-bottom: 26px;
-  }
-  .rule { width: 92px; height: 5px; border-radius: 3px; background: var(--grad); margin-bottom: 22px; }
-  .url { font-size: 23px; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
+  .url { font-size: 21px; font-weight: 600; letter-spacing: 0.4px; color: #fff; }
   .url .dot { color: var(--pink); }
 
-  .mascot-wrap {
-    position: relative; z-index: 2;
-    width: 300px; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .mascot-glow {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 55%, rgba(139, 92, 246, 0.42), transparent 66%);
-  }
-  .mascot { position: relative; z-index: 2; height: 400px; width: auto; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.5)); }
+  /* The hero's signature bottom wave. */
+  .wave { position: absolute; left: 0; right: 0; bottom: -1px; height: 26px; }
+  .wave svg { display: block; width: 100%; height: 100%; }
 
-  /* ---------- Back ---------- */
+  /* ---------- Back: contact ---------- */
+  .back-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 760px 520px at 108% -10%, rgba(124, 58, 237, 0.38), transparent 62%),
+      radial-gradient(ellipse 680px 560px at -8% 112%, rgba(162, 28, 175, 0.30), transparent 60%),
+      var(--sky);
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(167, 139, 250, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167, 139, 250, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 90% at 50% 50%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 90% at 50% 50%, #000 35%, transparent 100%);
+  }
   .back-inner {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 var(--pad);
+    padding: 0 var(--pad) 44px;
   }
   .back-left { position: relative; z-index: 2; }
   .name { font-size: 60px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
   .role {
-    font-size: 21px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+    font-size: 20px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
     color: var(--violet); margin-top: 12px;
   }
-  .back-left .rule { margin: 26px 0 26px; }
-  .contact { list-style: none; display: grid; gap: 14px; }
+  .rule { width: 92px; height: 5px; border-radius: 3px; background: var(--grad); margin: 24px 0; }
+  .contact { list-style: none; display: grid; gap: 13px; }
   .contact li { display: flex; align-items: baseline; gap: 18px; }
   .contact .k {
-    width: 96px; flex: 0 0 auto;
-    font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    width: 92px; flex: 0 0 auto;
+    font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
     color: #8d7fa0;
   }
-  .contact .v { font-size: 22px; font-weight: 400; color: #fff; }
+  .contact .v { font-size: 21px; font-weight: 400; color: #fff; }
   .contact .v .grad { font-weight: 600; }
 
   .back-right {
     position: relative; z-index: 2; text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
   }
-  .mark { height: 178px; width: auto; filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5)); }
-  .wordmark-sm { font-size: 25px; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
+  .back-right .mark { height: 176px; width: auto; filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45)); }
+  .back-right .word { font-size: 24px; font-weight: 800; letter-spacing: 0.3px; white-space: nowrap; }
 
   /* ---------- Guides (tuning only) ---------- */
   body.guides .card::after {
     content: ''; position: absolute; inset: 38px;
-    border: 1px dashed rgba(236, 72, 153, 0.65); pointer-events: none;
+    border: 1px dashed rgba(236, 72, 153, 0.65); pointer-events: none; z-index: 9;
   }
   body.guides .card::before {
     content: ''; position: absolute; inset: 0;
-    border: 1px dashed rgba(167, 139, 250, 0.5); pointer-events: none;
+    border: 1px dashed rgba(167, 139, 250, 0.5); pointer-events: none; z-index: 9;
   }
 </style>
 </head>
 <body data-side="front">
   <!-- Front -->
   <section class="card front">
-    <div class="grid"></div>
-    <div class="vignette"></div>
+    <div class="scene"></div>
+    <div class="scene-fade"></div>
+    <div class="scene-glow"></div>
+
+    <div class="brandline">
+      <img src="../brand/hero/logo-no-text.png" alt="" />
+      <span class="word">Working Dev's <span class="grad">Hero</span></span>
+    </div>
+
     <div class="front-inner">
-      <div class="front-text">
-        <div class="eyebrow">AI-Enabled Software Studio</div>
-        <h1 class="wordmark">Working Dev's<br /><span class="grad">Hero</span></h1>
-        <p class="tagline">We build AI-powered software<br />that ships.</p>
-        <div class="rule"></div>
+      <div class="hero-text">
+        <h1 class="headline">We Build <span class="grad">AI-Powered</span><br />Software That Ships</h1>
+        <p class="subhead">From concept to production — your AI-enabled development partner.</p>
         <div class="url">workingdevshero<span class="dot">.</span>com</div>
       </div>
-      <div class="mascot-wrap">
-        <div class="mascot-glow"></div>
-        <img class="mascot" src="../brand/hero/logo-no-text.png" alt="" />
-      </div>
+    </div>
+
+    <div class="wave">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
+      </svg>
     </div>
   </section>
 
   <!-- Back -->
   <section class="card back">
+    <div class="back-bg"></div>
     <div class="grid"></div>
-    <div class="vignette"></div>
     <div class="back-inner">
       <div class="back-left">
         <div class="name">Bobby</div>
@@ -207,14 +232,18 @@
         <ul class="contact">
           <li><span class="k">Email</span><span class="v">bobby@workingdevshero.com</span></li>
           <li><span class="k">Web</span><span class="v">workingdevshero<span class="grad">.</span>com</span></li>
-          <li><span class="k">GitHub</span><span class="v">@workingdevshero</span></li>
-          <li><span class="k">X</span><span class="v">@workingdevshero</span></li>
+          <li><span class="k">Cell</span><span class="v">603-748-2915</span></li>
         </ul>
       </div>
       <div class="back-right">
         <img class="mark" src="../brand/hero/logo-no-text.png" alt="" />
-        <div class="wordmark-sm">Working Dev's <span class="grad">Hero</span></div>
+        <div class="word">Working Dev's <span class="grad">Hero</span></div>
       </div>
+    </div>
+    <div class="wave">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
+      </svg>
     </div>
   </section>
 
