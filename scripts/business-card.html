@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--
+  Source for the Working Dev's Hero business card.
+
+  Two sides:
+    front — contact details, on the brand purple (grid + gradient)
+    back  — the homepage hero scene, full bleed, no text
+
+  The scene side is the rooftop art from src/assets/images/hero-scene-wide.png,
+  the same image the homepage hero uses.
+
+  Rendered to brand/business-cards/ by scripts/build-business-card.mjs — do not
+  screenshot this by hand unless you are tuning. The card is a standard US size
+  (3.5in x 2in) at 300 DPI, so the PNGs come out exactly 1050x600.
+
+  Query params:
+    side=front | back | sheet   which side to render (default front)
+    phone=<number>              add a Cell row; omitted from the repo by default
+    guides                      overlay the trim and safe margins while tuning
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Working Dev's Hero — business card</title>
+<style>
+  @font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../public/fonts/BricolageGrotesque-ExtraBold.woff2') format('woff2');
+    font-weight: 800; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../social/reintroduction-2026/generator/fonts/bricolage-600.woff2') format('woff2');
+    font-weight: 600; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../social/reintroduction-2026/generator/fonts/bricolage-400.woff2') format('woff2');
+    font-weight: 400; font-style: normal;
+  }
+
+  :root {
+    --card-w: 1050px;
+    --card-h: 600px;
+    --pad: 80px;                 /* even margin on all sides */
+    --sky: #2d1941;              /* the hero scene's night-sky color */
+    --violet: #A78BFA;
+    --grad: linear-gradient(90deg, #A78BFA, #EC4899);
+    /* Horizontal crop for the scene. 100% = right edge flush (hero centred-ish);
+       lower values crop more off the right and push the hero further right. */
+    --scene-pos: 80%;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: var(--card-w);
+    height: var(--card-h);
+    overflow: hidden;
+    font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Sheet view: two cards side by side with a gap, for tuning/preview. */
+  body.sheet {
+    width: calc(var(--card-w) * 2 + 80px);
+    height: calc(var(--card-h) + 40px);
+    display: flex; gap: 40px; padding: 20px;
+    background: #0b0710;
+  }
+  body.sheet .card { display: block !important; }
+
+  .card {
+    position: relative;
+    width: var(--card-w);
+    height: var(--card-h);
+    flex: 0 0 auto;
+    overflow: hidden;
+    color: #fff;
+    display: none;
+    background: var(--sky);
+  }
+  body[data-side="front"] .card.front,
+  body[data-side="back"]  .card.back { display: block; }
+
+  /* ---------- Front: contact details ---------- */
+  .front-bg {
+    position: absolute; inset: 0;
+    /* Vertical night-sky ramp sampled from the hero scene on the back: dark
+       purple at the top easing into the plum/magenta glow near the horizon. */
+    background: linear-gradient(to bottom,
+      #201032 0%, #27153c 34%, #331843 58%, #46224c 78%, #5a2d55 92%, #65315a 100%);
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(178, 108, 162, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(178, 108, 162, 0.07) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 72% 92% at 50% 50%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 72% 92% at 50% 50%, #000 35%, transparent 100%);
+  }
+  .front-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--pad);
+  }
+  .front-left { position: relative; z-index: 2; }
+  .name { font-size: 64px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+  .role {
+    font-size: 21px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--violet); margin-top: 12px;
+  }
+  .what {
+    font-size: 22px; font-weight: 400; line-height: 1.35;
+    color: rgba(255, 255, 255, 0.76); margin-top: 16px; max-width: 500px;
+  }
+  .rule { width: 92px; height: 5px; border-radius: 3px; background: var(--grad); margin: 23px 0; }
+  .contact { list-style: none; display: grid; gap: 15px; }
+  .contact li { display: flex; align-items: baseline; gap: 18px; }
+  .contact .k {
+    width: 98px; flex: 0 0 auto;
+    font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: #9486a6;
+  }
+  .contact .v { font-size: 23px; font-weight: 400; color: #fff; }
+
+  .front-right {
+    position: relative; z-index: 2; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    /* Nudged down so the logo's top edge lines up with the name's. */
+    transform: translateY(4px);
+  }
+  .front-right .mark { height: 240px; width: auto; filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45)); }
+  .front-right .word { font-size: 30px; font-weight: 800; letter-spacing: 0.3px; white-space: nowrap; color: #fff; }
+
+  /* ---------- Back: hero scene, full bleed ---------- */
+  .scene {
+    position: absolute; inset: 0;
+    background-image: url('../src/assets/images/hero-scene-wide.png');
+    background-size: cover;
+    background-position: var(--scene-pos) center;
+    background-repeat: no-repeat;
+  }
+
+  /* ---------- Guides (tuning only) ---------- */
+  body.guides .card::after {
+    content: ''; position: absolute; inset: 38px;
+    border: 1px dashed rgba(236, 72, 153, 0.65); pointer-events: none; z-index: 9;
+  }
+  body.guides .card::before {
+    content: ''; position: absolute; inset: 0;
+    border: 1px dashed rgba(167, 139, 250, 0.5); pointer-events: none; z-index: 9;
+  }
+</style>
+</head>
+<body data-side="front">
+  <!-- Front: contact details -->
+  <section class="card front">
+    <div class="front-bg"></div>
+    <div class="grid"></div>
+    <div class="front-inner">
+      <div class="front-left">
+        <div class="name">Bobby Galli</div>
+        <div class="role">Founder &amp; Principal Engineer</div>
+        <div class="what">Software development and IT services, supercharged by AI</div>
+        <div class="rule"></div>
+        <ul class="contact">
+          <li><span class="k">Email</span><span class="v">bobby@workingdevshero.com</span></li>
+          <li><span class="k">Web</span><span class="v">workingdevshero.com</span></li>
+        </ul>
+      </div>
+      <div class="front-right">
+        <img class="mark" src="../brand/hero/logo-no-text.png" alt="" />
+        <div class="word">Working Dev's Hero</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back: hero scene, no text -->
+  <section class="card back">
+    <div class="scene"></div>
+  </section>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const side = params.get('side') || 'front';
+    document.body.dataset.side = side;
+    if (side === 'sheet') document.body.classList.add('sheet');
+    if (params.has('guides')) document.body.classList.add('guides');
+
+    // A cell number is injected at build time and deliberately kept out of the
+    // source, so the repo never carries it. Absent -> no Cell row.
+    const phone = params.get('phone');
+    if (phone) {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="k">Cell</span><span class="v"></span>';
+      li.querySelector('.v').textContent = phone;
+      document.querySelector('.contact').appendChild(li);
+    }
+
+    // Size the logo so the right column spans the same height as the text
+    // column, which lines their top and bottom edges up.
+    const align = () => {
+      const left = document.querySelector('.front-left');
+      const right = document.querySelector('.front-right');
+      if (!left || !right) return;
+      const mark = right.querySelector('.mark');
+      const word = right.querySelector('.word');
+      const gap = 20;
+      const target = left.getBoundingClientRect().height;
+      const markH = Math.max(120, Math.round(target - gap - word.getBoundingClientRect().height));
+      mark.style.height = markH + 'px';
+    };
+    align();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+    window.addEventListener('load', align);
+  </script>
+</body>
+</html>
