@@ -84,12 +84,10 @@
   /* ---------- Front: contact details ---------- */
   .front-bg {
     position: absolute; inset: 0;
-    /* Same night-sky palette as the hero scene on the back: deep purple base
-       with the plum/magenta glow from the scene's left edge. */
-    background:
-      radial-gradient(ellipse 700px 780px at -6% 36%, rgba(122, 52, 104, 0.52), transparent 60%),
-      radial-gradient(ellipse 780px 600px at 106% -12%, rgba(92, 50, 128, 0.40), transparent 62%),
-      linear-gradient(160deg, #2e1b45 0%, #27163a 44%, #191025 100%);
+    /* Vertical night-sky ramp sampled from the hero scene on the back: dark
+       purple at the top easing into the plum/magenta glow near the horizon. */
+    background: linear-gradient(to bottom,
+      #201032 0%, #27153c 34%, #331843 58%, #46224c 78%, #5a2d55 92%, #65315a 100%);
   }
   .grid {
     position: absolute; inset: 0;
