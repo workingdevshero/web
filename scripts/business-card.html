@@ -3,7 +3,7 @@
   Source for the Working Dev's Hero business card.
 
   Two sides:
-    front — contact details, on the brand purple (grid + glow)
+    front — contact details, on the brand purple (grid + gradient)
     back  — the homepage hero scene, full bleed, no text
 
   The scene side is the rooftop art from src/assets/images/hero-scene-wide.png,
@@ -13,8 +13,10 @@
   screenshot this by hand unless you are tuning. The card is a standard US size
   (3.5in x 2in) at 300 DPI, so the PNGs come out exactly 1050x600.
 
-  Add ?side=front | ?side=back to render one side, or ?side=sheet for both side
-  by side (the tuning view). Add ?guides to overlay the trim and safe margins.
+  Query params:
+    side=front | back | sheet   which side to render (default front)
+    phone=<number>              add a Cell row; omitted from the repo by default
+    guides                      overlay the trim and safe margins while tuning
 -->
 <html lang="en">
 <head>
@@ -129,7 +131,7 @@
     /* Nudged down so the logo's top edge lines up with the name's. */
     transform: translateY(4px);
   }
-  .front-right .mark { height: 283px; width: auto; filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45)); }
+  .front-right .mark { height: 240px; width: auto; filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45)); }
   .front-right .word { font-size: 30px; font-weight: 800; letter-spacing: 0.3px; white-space: nowrap; color: #fff; }
 
   /* ---------- Back: hero scene, full bleed ---------- */
@@ -166,7 +168,6 @@
         <ul class="contact">
           <li><span class="k">Email</span><span class="v">bobby@workingdevshero.com</span></li>
           <li><span class="k">Web</span><span class="v">workingdevshero.com</span></li>
-          <li><span class="k">Cell</span><span class="v">603-748-2915</span></li>
         </ul>
       </div>
       <div class="front-right">
@@ -187,6 +188,33 @@
     document.body.dataset.side = side;
     if (side === 'sheet') document.body.classList.add('sheet');
     if (params.has('guides')) document.body.classList.add('guides');
+
+    // A cell number is injected at build time and deliberately kept out of the
+    // source, so the repo never carries it. Absent -> no Cell row.
+    const phone = params.get('phone');
+    if (phone) {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="k">Cell</span><span class="v"></span>';
+      li.querySelector('.v').textContent = phone;
+      document.querySelector('.contact').appendChild(li);
+    }
+
+    // Size the logo so the right column spans the same height as the text
+    // column, which lines their top and bottom edges up.
+    const align = () => {
+      const left = document.querySelector('.front-left');
+      const right = document.querySelector('.front-right');
+      if (!left || !right) return;
+      const mark = right.querySelector('.mark');
+      const word = right.querySelector('.word');
+      const gap = 20;
+      const target = left.getBoundingClientRect().height;
+      const markH = Math.max(120, Math.round(target - gap - word.getBoundingClientRect().height));
+      mark.style.height = markH + 'px';
+    };
+    align();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+    window.addEventListener('load', align);
   </script>
 </body>
 </html>

@@ -4,33 +4,45 @@
  *
  *   node scripts/build-business-card.mjs
  *
- * Writes the print-ready front and back to brand/business-cards/, plus a
- * two-up sheet for quick review. The card is a standard US size (3.5in x 2in)
- * at 300 DPI, so each PNG is exactly 1050x600 and prints at true size.
+ * Writes the front, back and a two-up review sheet to brand/business-cards/.
+ * The card is a standard US size (3.5in x 2in) at 300 DPI, so each PNG is
+ * exactly 1050x600 and prints at true size.
  *
- * Requires a Chromium/Chrome binary. Set CHROME to override the path; otherwise
- * the usual macOS, Linux and Windows install locations are searched.
+ * Options:
+ *   --bleed          add 0.125in bleed on every side (3.75in x 2.25in output)
+ *   --out <dir>      write somewhere other than brand/business-cards/
+ *   CARD_PHONE=...   add a Cell row. Deliberately an env var, not source, so a
+ *                    personal number never lands in the repo.
+ *
+ * Requires a Chromium/Chrome binary (CHROME overrides the path) and sharp.
  */
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { access, mkdir, readFile, rm, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
-import { extname, join } from 'node:path';
+import { extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const OUT_DIR = join(ROOT, 'brand/business-cards');
 const TMP = join(ROOT, '.tmp');
 
-// 3.5in x 2in at 300 DPI.
-const CARD_W = 1050;
-const CARD_H = 600;
+const CARD_W = 1050;   // 3.5in @ 300dpi
+const CARD_H = 600;    // 2in @ 300dpi
+const BLEED = 37.5;    // 0.125in @ 300dpi
 
 // Headless Chrome reserves room for browser chrome, so --window-size yields a
 // shorter viewport than asked for. We request extra and crop the card back out,
 // which keeps the output exact on every platform.
 const SLACK = 400;
+
+const argv = process.argv.slice(2);
+const hasFlag = (f) => argv.includes(f);
+const argValue = (f) => (argv.indexOf(f) >= 0 ? argv[argv.indexOf(f) + 1] : undefined);
+
+const BLEED_ON = hasFlag('--bleed');
+const OUT_DIR = resolve(argValue('--out') || join(ROOT, 'brand/business-cards'));
+const PHONE = process.env.CARD_PHONE || '';
 
 const CHROME_CANDIDATES = [
   process.env.CHROME,
@@ -101,10 +113,15 @@ function screenshot(chrome, url, out, width, height) {
 async function render(chrome, url, out, width, height) {
   const raw = join(TMP, `business-card-${width}x${height}.png`);
   await screenshot(chrome, url, raw, width, height);
-  await sharp(raw)
-    .extract({ left: 0, top: 0, width, height })
-    .png()
-    .toFile(out);
+  let image = sharp(raw).extract({ left: 0, top: 0, width, height });
+  if (BLEED_ON) {
+    image = image.extend({
+      top: Math.ceil(BLEED), bottom: Math.floor(BLEED),
+      left: Math.ceil(BLEED), right: Math.floor(BLEED),
+      extendWith: 'copy',
+    });
+  }
+  await image.png().toFile(out);
   await rm(raw, { force: true });
 }
 
@@ -114,6 +131,7 @@ await mkdir(TMP, { recursive: true });
 
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}/scripts/business-card.html`;
+const phoneQuery = PHONE ? `&phone=${encodeURIComponent(PHONE)}` : '';
 const jobs = [
   { side: 'front', file: 'business-card-front.png', w: CARD_W, h: CARD_H },
   { side: 'back', file: 'business-card-back.png', w: CARD_W, h: CARD_H },
@@ -123,14 +141,17 @@ const jobs = [
 
 try {
   for (const { side, file, w, h } of jobs) {
-    await render(chrome, `${base}?side=${side}`, join(OUT_DIR, file), w, h);
+    await render(chrome, `${base}?side=${side}${phoneQuery}`, join(OUT_DIR, file), w, h);
   }
 } finally {
   server.close();
 }
 
+const suffix = BLEED_ON ? ` + ${BLEED}px bleed` : '';
+console.log(`Wrote to ${OUT_DIR.replace(ROOT, '.')}${PHONE ? ' (with cell number)' : ''}${suffix}`);
 for (const { file } of jobs) {
   const out = join(OUT_DIR, file);
   const { size } = await stat(out);
-  console.log(`${out.replace(ROOT, '')}: ${(size / 1024).toFixed(0)} KB`);
+  const meta = await sharp(out).metadata();
+  console.log(`  ${file}: ${meta.width}x${meta.height} — ${(size / 1024).toFixed(0)} KB`);
 }

@@ -21,7 +21,27 @@ homepage hero uses (`src/components/home/Hero.astro`). Tune the crop with the
 `--scene-pos` variable in the template (`100%` = right edge flush; lower values
 push the hero further right).
 
-Print notes: the artwork has no bleed. Keep ~1/8in of the edge clear (the layout
-already pads to ~1/4in), and tell the printer "3.5 × 2in, no bleed" or let them
-scale to fit. To preview the source with trim/safe guides, open
-`scripts/business-card.html?side=sheet&guides` from a local server.
+## Print files
+
+Add 0.125in bleed on every side for a printer (3.75in × 2.25in output):
+
+```bash
+node scripts/build-business-card.mjs --bleed --out .tmp/print
+```
+
+## The cell number
+
+The Cell row is optional and injected at build time, so a personal number never
+lands in the repo:
+
+```bash
+CARD_PHONE=555-010-0000 node scripts/build-business-card.mjs --bleed --out .tmp/print
+```
+
+Without `CARD_PHONE` the row simply isn't rendered, which is what the committed
+`brand/business-cards/` artwork shows.
+
+Print notes: no crop marks are added. Tell the printer "3.5 × 2in, 0.125in
+bleed" or let them place the 1050 × 600 art themselves. To preview the source
+with trim/safe guides, open `scripts/business-card.html?side=sheet&guides` from a
+local server.
