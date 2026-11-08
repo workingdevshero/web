@@ -1,0 +1,85 @@
+---
+title: "Make a Header Video for Your App Store Page"
+description: "Since October 5, an App Store product page can open with a looping header video instead of jumping straight to screenshots. Here are Apple's specs and rules for it, the safe area we pulled out of Apple's template, and how we built the 14-second loop for Automate It from real app recordings."
+pubDate: 2026-11-07
+author: "bobbyg603"
+heroImage: "/images/blog/app-store-header-video.jpg"
+heroVideo: "/videos/app-store-header-video-loop.mp4"
+categories: ["Software", "Tutorials"]
+tags: ["app-store", "ios", "video", "ffmpeg", "claude", "automate-it", "marketing"]
+---
+
+The top of an App Store product page used to be your screenshots. Since October 5 it can be a header: a wide image or a looping video that plays above everything else on the page. The loop at the top of this post is a crop of the one we made for [Automate It](https://automate.it.com).
+
+Apple first showed headers at WWDC26 in [Enhance your presence on the App Store](https://developer.apple.com/videos/play/wwdc2026/205/), and they went live with [Showcase your apps with new assets on the App Store](https://developer.apple.com/news/?id=ljpl7kyn) on October 5, 2026. The same release added a separate image or video for search results, an Asset Library in App Store Connect, and a preview tool that shows how a page will look before you submit it. Headers show on iOS 27 and iPadOS 27.
+
+## The Specs 📏
+
+A header video is one file for every device. These are from Apple's [creative asset specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications):
+
+| | Header video | Search results video |
+|---|---|---|
+| Size | 3840×1646 (21:9) | 1920×1280 to 3840×2560 (3:2) |
+| Length | 5–30 s | 5–30 s |
+| Frame rate | 30 or 60 fps | 30 or 60 fps |
+| Files | .mov, .m4v, .mp4 | .mov, .m4v, .mp4 |
+| Sound | Muted by default; people can unmute | Always muted |
+
+Both loop forever. A still header is 3840×1646 too (or 5244×2950 at 16:9), with no transparency.
+
+The classic app preview is still there and still follows its own rules: up to three per device size, 886×1920 portrait on iPhone, 15–30 seconds, 30 fps at most, made from screen captures of the app. A header doesn't replace previews or screenshots; it sits above them.
+
+## The Rules 🚦
+
+Headers get their own App Review guideline, [2.3.14](https://developer.apple.com/app-store/review/guidelines/), added on October 16. It says creative assets "must pertain to your app's content and functionality or overarching brand" and "should not include inappropriate content, references to other apps with an intent to mislead, unverifiable product claims, or specific or discounted pricing information."
+
+Unlike a preview, a header doesn't have to be a screen recording. Apple's [asset best practices](https://developer.apple.com/app-store/asset-best-practices/) fill in the rest, and these are the ones that shaped ours:
+
+- "Don't include specific pricing, discounts, website URLs, copyright symbols." Our ads end on "Try it free for 7 days" and our web address, so the header has neither.
+- "Don't include logos or references to other platforms or marketplaces."
+- "Your creative must work silently first." Ours has no sound at all.
+- "Ensure your video is polished and loops smoothly without visible jumps or breaks."
+- "Avoid quick cuts and fast-moving visuals."
+- "If using text, use a short phrase that enhances your visual rather than describes it."
+- Assets "must meet a 4+ age rating, even if your app's rating is higher."
+
+## The Safe Area Is Small 🎯
+
+The best practices say to keep key art "within the safe area defined in each template", but no page gives the numbers. So we downloaded Apple's [Photoshop header template](https://developer.apple.com/go/?id=photoshop-product-page-header-template) and read its layers with [psd-tools](https://github.com/psd-tools/psd-tools). The layer named "Art Safe Area" is 1646×661, centered, from x 1097 to 2743 and y 493 to 1154.
+
+That's 43% of the width and 40% of the height. Anything that has to read, like a line of text, goes inside that box. The rest of the 3840×1646 frame can be cropped away on narrower screens, so treat it as background, or as something that still works with its top and bottom trimmed.
+
+## How We Built Ours 🎬
+
+We kept to one idea: **Social media, on autopilot.** The line sits inside the safe area. Beside it, a phone runs nearly the full height of the frame, playing a real recording of the app's review queue: swipe right to approve a draft, swipe up to ask for "an OHLC candlestick chart, please", then swipe left to send it back for a redo. On a narrow crop the phone's status bar and tab bar get trimmed, and the post in the middle stays on screen.
+
+Behind it, on each side, one column of approved posts drifts slowly up or down. They're real posts from our demo workspace, with their own text and images, drawn as plain social cards with an "Approved" check. They carry no X, Instagram or LinkedIn badges, because Apple doesn't allow other platforms' logos.
+
+Our first version had a much smaller phone, an "AI drafts. You approve." line, and four columns of app screenshots. It was too busy, and the phone, the one thing that shows the product, was the smallest thing in the frame.
+
+Everything comes from the running app, recorded on the iOS Simulator with `xcrun simctl io recordVideo` and driven by [AXe](https://github.com/cameroncooke/AXe). Two things made our first swipes look choppy:
+
+- **Too few touch points.** A swipe built from about five steps makes the card jump every 90 ms. Sending it with `--delta 4` makes every frame of the drag a new position.
+- **A development build.** A dev bundle froze for about 200 ms after each swipe before the card flew off. Serving the bundle with `npx expo start --no-dev --minify` fixed it.
+
+The loop is 14 seconds and has to end on the frame it starts with. We handle the phone and the cards differently:
+
+- **The phone.** We take 0.8 seconds more footage than the loop needs. Those extra 0.8 seconds crossfade into the opening 0.8 seconds, so the file starts where its last frame leaves off:
+
+  ```text
+  body = take[0.8 : 14.0]
+  seam = xfade(take[14.0 : 14.8] → take[0 : 0.8])
+  loop = body + seam
+  ```
+
+- **The card columns.** Each column is a strip of cards drawn several times, scrolled by an ffmpeg `crop` whose y position is `mod(t * speed, period)`. The speed is the strip's height divided by 14, so every column moves exactly one strip per loop. With three cards per column that's about 130 pixels a second. Our first version drifted at about 220, which read as busy next to "avoid fast-moving visuals".
+
+The line, the cards and the background gradient are HTML pages screenshotted in headless Chrome with transparent backgrounds. ffmpeg stacks them over the footage and exports 3840×1646 H.264 at 30 fps. One thing Chrome got wrong: the phone's rounded-screen mask, a white rounded rectangle 1,480 pixels tall, rendered with a second rounded edge near the bottom. We draw that mask with ffmpeg's `geq` filter instead. The whole header is one Python script.
+
+## Copy It With Your Agent 🤖
+
+We had Claude Code build ours, and yours can too. Give your coding agent this post and something like:
+
+> Make an App Store header video for our app from this post: 3840×1646, a 14-second seamless loop, our tagline inside Apple's 1646×661 safe area, a near-full-height phone recording of our app beside it, and slow columns of our real posts outside it. No prices, URLs or other platforms' logos.
+
+Before you submit, check it in App Store Connect's preview tool. Approved creative assets can wait in the Asset Library until you want them, so you can make a seasonal version early and switch to it when the season starts.
