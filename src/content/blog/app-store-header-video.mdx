@@ -1,7 +1,7 @@
 ---
 title: "Make a Header Video for Your App Store Page"
-description: "Since October 5, an App Store product page can open with a looping header video instead of jumping straight to screenshots. Here are Apple's specs and rules for it, the safe area we pulled out of Apple's template, and how we built the 14-second loop for Automate It from real app recordings."
-pubDate: 2026-11-07
+description: "Since October 5, an App Store product page can open with a looping header video instead of jumping straight to screenshots. Here are Apple's specs and rules for it, the safe area we pulled out of Apple's template, and how we built Automate It's 28-second loop: a real app recording over a slowly scrolling wall of approved posts."
+pubDate: 2026-11-16
 author: "bobbyg603"
 heroImage: "/images/blog/app-store-header-video.jpg"
 heroVideo: "/videos/app-store-header-video-loop.mp4"
@@ -51,35 +51,60 @@ That's 43% of the width and 40% of the height. Anything that has to read, like a
 
 ## How We Built Ours 🎬
 
-We kept to one idea: **Social media, on autopilot.** The line sits inside the safe area. Beside it, a phone runs nearly the full height of the frame, playing a real recording of the app's review queue: swipe right to approve a draft, swipe up to ask for "an OHLC candlestick chart, please", then swipe left to send it back for a redo. On a narrow crop the phone's status bar and tab bar get trimmed, and the post in the middle stays on screen.
+We kept to one idea: **Social media, on autopilot.** The line sits inside the safe area on a dark rounded plate with a thin purple border. Beside it, a phone runs nearly the full height of the frame, playing a real recording of the app's review queue: swipe right to approve a draft, swipe up to ask for "an OHLC candlestick chart, please", then swipe left to send it back for a redo. On a narrow crop the phone's status bar and tab bar get trimmed, and the post in the middle stays on screen.
 
-Behind it, on each side, one column of approved posts drifts slowly up or down. They're real posts from our demo workspace, with their own text and images, drawn as plain social cards with an "Approved" check. They carry no X, Instagram or LinkedIn badges, because Apple doesn't allow other platforms' logos.
+Behind both is a wall of approved posts, tilted 8 degrees and scrolling slowly down. They're real Working Dev's Hero posts that went through Automate It: Heroic Lofi tracks, AI Hero and Agentic Commerce Weekly episodes, and blog announcements. Each is drawn as a plain social card with our `</>` avatar and an "Approved" check. They carry no X, Instagram or LinkedIn badges, because Apple doesn't allow other platforms' logos. A dark radial shade over the middle of the wall keeps the tagline and phone easy to read.
 
-Our first version had a much smaller phone, an "AI drafts. You approve." line, and four columns of app screenshots. It was too busy, and the phone, the one thing that shows the product, was the smallest thing in the frame.
+It took a few versions to get here:
+
+- The first had a much smaller phone, an "AI drafts. You approve." line, and four columns of app screenshots. It was too busy, and the phone, the one thing that shows the product, was the smallest thing in the frame.
+- The second had one column of cards on each side of the phone. It was calm but empty.
+- The first full wall scrolled neighbouring columns in opposite directions, which was hard to watch. Now every column moves down together.
+- We also tried holding the wall still and playing the Heroic Lofi loops inside their cards. At card size the motion was too small to notice.
+
+### Recording the Phone
 
 Everything comes from the running app, recorded on the iOS Simulator with `xcrun simctl io recordVideo` and driven by [AXe](https://github.com/cameroncooke/AXe). Two things made our first swipes look choppy:
 
 - **Too few touch points.** A swipe built from about five steps makes the card jump every 90 ms. Sending it with `--delta 4` makes every frame of the drag a new position.
 - **A development build.** A dev bundle froze for about 200 ms after each swipe before the card flew off. Serving the bundle with `npx expo start --no-dev --minify` fixed it.
 
-The loop is 14 seconds and has to end on the frame it starts with. We handle the phone and the cards differently:
+### Making It Loop
 
-- **The phone.** We take 0.8 seconds more footage than the loop needs. Those extra 0.8 seconds crossfade into the opening 0.8 seconds, so the file starts where its last frame leaves off:
+The file is 28 seconds and has to end on the frame it starts with. The phone and the wall loop separately:
+
+- **The phone.** The raw take runs about 24 seconds, pauses included. We cut it into five pieces (approve, open comments, wait for the sheet, type and send, redo), drop the dead time between them, and play the wait for the empty comment sheet at 3× speed. That leaves a 14-second loop that ends on the "Redo requested" toast for about two seconds. To close it, we keep 0.8 seconds more than the loop needs and crossfade them into the opening 0.8 seconds. The loop then plays twice:
 
   ```text
-  body = take[0.8 : 14.0]
-  seam = xfade(take[14.0 : 14.8] → take[0 : 0.8])
-  loop = body + seam
+  take = approve + comments + wait (3×) + type + redo     # 14.8 s
+  loop = take[0.8 : 14.0] + xfade(take[14.0 : 14.8] → take[0 : 0.8])
+  file = loop + loop                                       # 28 s
   ```
 
-- **The card columns.** Each column is a strip of cards drawn several times, scrolled by an ffmpeg `crop` whose y position is `mod(t * speed, period)`. The speed is the strip's height divided by 14, so every column moves exactly one strip per loop. With three cards per column that's about 130 pixels a second. Our first version drifted at about 220, which read as busy next to "avoid fast-moving visuals".
+- **The wall.** Twelve columns of 580-pixel cards are laid out upright on a 4400×2400 canvas, big enough to still cover the frame after an 8-degree turn. Each column is a strip of four cards drawn three times in a row. Every frame, ffmpeg crops each strip at `y0 - t * speed`, lays the columns on the canvas, rotates it and crops it to 3840×1646. The speed is one strip's height divided by 28 seconds, so every column moves exactly one strip per loop and the last frame meets the first: 3,428 pixels in 28 seconds, about 122 pixels a second.
 
-The line, the cards and the background gradient are HTML pages screenshotted in headless Chrome with transparent backgrounds. ffmpeg stacks them over the footage and exports 3840×1646 H.264 at 30 fps. One thing Chrome got wrong: the phone's rounded-screen mask, a white rounded rectangle 1,480 pixels tall, rendered with a second rounded edge near the bottom. We draw that mask with ffmpeg's `geq` filter instead. The whole header is one Python script.
+  That's why the file is 28 seconds and not 14. A 14-second wall would have to scroll twice as fast, and Apple asks you to "avoid quick cuts and fast-moving visuals."
+
+A strip of four cards needs posts for slots nobody sees in the first frame. We fill each one with the least-used post whose scene isn't already in the three nearest columns on either side, so the same picture never sits side by side.
+
+The cards, plate, line and shade are HTML pages screenshotted in headless Chrome with transparent backgrounds. One Python script renders the wall as its own background loop, and a second lays the phone and tagline over it and exports 3840×1646 H.264 at 30 fps. Chrome got one thing wrong: the phone's rounded-screen mask, a white rounded rectangle 1,480 pixels tall, rendered with a second rounded edge near the bottom. We draw that mask with ffmpeg's `geq` filter instead.
+
+## The Search Results Video 🔎
+
+The search results asset shows much smaller than a header, next to other apps in a list, so ours is the same scene made bigger. The same two scripts render it at 3840×2560: the wall gets a 4400×3200 canvas and five cards per strip, the phone grows to 1,640 pixels tall, and the tagline to 190 pixels. The safe area in Apple's search results template is 2168×1030 from x 836 and y 765, and we centre the tagline and phone in the frame as a pair.
+
+<video controls muted loop playsinline preload="metadata" poster="/images/blog/app-store-search-video.jpg" src="/videos/app-store-search-video-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
+
+## The Same Loop as a Link Preview 🔗
+
+We already use a looping `og:video` for this site's link previews (here's [how we set it up](/blog/animated-link-previews)). Automate It's preview is now a crop of the header: 3135×1646 from x 352, around the tagline and phone, scaled to 1200×630. It runs the full 28 seconds in 3.7 MB, under Apple's 10 MB cap for a preview, and its `og:image` is the video's first frame. The server answers `Range` requests with `206 Partial Content`, which Messages needs before it will play a video.
+
+The docs site at docs.automate.it.com runs on Mintlify. It adds the same tags through `seo.metatags` in `docs.json`, with `og:video` pointing at the file on automate.it.com. An Open Graph URL can be on any domain: crawlers fetch it from their own servers, so browser cross-origin rules don't apply.
 
 ## Copy It With Your Agent 🤖
 
 We had Claude Code build ours, and yours can too. Give your coding agent this post and something like:
 
-> Make an App Store header video for our app from this post: 3840×1646, a 14-second seamless loop, our tagline inside Apple's 1646×661 safe area, a near-full-height phone recording of our app beside it, and slow columns of our real posts outside it. No prices, URLs or other platforms' logos.
+> Make an App Store header video for our app from this post: 3840×1646, a 28-second seamless loop, our tagline on a plate inside Apple's 1646×661 safe area, a near-full-height phone recording of our app beside it, and behind both a tilted wall of our real posts with every column scrolling slowly down. Then make the 3840×2560 search results version and a 1200×630 og:video crop. No prices, URLs or other platforms' logos.
 
 Before you submit, check it in App Store Connect's preview tool. Approved creative assets can wait in the Asset Library until you want them, so you can make a seasonal version early and switch to it when the season starts.
