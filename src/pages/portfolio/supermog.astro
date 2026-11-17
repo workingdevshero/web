@@ -25,7 +25,7 @@ const fates = [
 const more = [
   { value: formatCount(stats.runs), label: 'runs', note: `Develop rounds, QA rounds and rebases, across ${stats.activeDays} active days.` },
   { value: `${formatCount(hours.developing)} h`, label: 'spent developing', note: 'Writing code, reviewing it, addressing the review and resolving conflicts.' },
-  { value: `${formatCount(hours.verifying)} h`, label: 'spent verifying', note: `${formatCount(verification.sessions)} QA sessions in a real browser or on a phone.` },
+  { value: `${formatCount(hours.verifying)} h`, label: 'spent verifying', note: `${formatCount(verification.sessions)} QA sessions in a browser, on a phone, or in an emulator.` },
   { value: `${stats.medianHoursToMerge} h`, label: 'median time to merge', note: 'From the pull request opening to its merge.' },
   { value: `+${formatCount(stats.linesAdded)}`, label: 'lines added', note: `And ${formatCount(stats.linesDeleted)} deleted, across ${formatCount(stats.fileChanges)} file changes in merged pull requests.` },
   { value: `${verification.longestMinutes} min`, label: 'longest verification', note: `The median session takes ${verification.medianMinutes} minutes.` },
@@ -53,7 +53,7 @@ const more = [
           Supermog
         </h1>
         <p class="text-xl text-white/80">
-          Our private software factory. Label a GitHub issue and a fleet of agents writes the code, reviews it with a second model, proves it works in a real browser or on a real phone, and merges it.
+          Our private software factory. Label a GitHub issue and a fleet of agents writes the code, reviews it with a second model, proves it works in a browser, on a phone, or in an emulator, and merges it.
         </p>
       </div>
       <dl class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
@@ -110,8 +110,8 @@ const more = [
           <p>A second agent reviews the pull request. We get the best results when the reviewer is not the model that wrote the code: it does not share the author's blind spots. The author then answers every review thread and pushes fixes.</p>
         </li>
         <li class="p-6 bg-white rounded-xl shadow-sm">
-          <h3 class="font-heading font-bold text-primary mb-1">4. Verify it on the real thing</h3>
-          <p>A QA session starts the app from the pull request's code and uses it the way a person would, in a real browser, on a real Android phone, or in an iOS simulator. Screenshots and a screen recording are posted on the pull request.</p>
+          <h3 class="font-heading font-bold text-primary mb-1">4. Verify it in the running app</h3>
+          <p>A QA session starts the app from the pull request's code and uses it the way a person would, in a browser, on a phone, or in an emulator. Screenshots and a screen recording are posted on the pull request.</p>
         </li>
         <li class="p-6 bg-white rounded-xl shadow-sm">
           <h3 class="font-heading font-bold text-primary mb-1">5. Merge it, or wait for a person</h3>
@@ -134,7 +134,7 @@ const more = [
             <li>Bun and TypeScript</li>
             <li>Cloudflare Workers and a Durable Object</li>
             <li>Docker on every agent box</li>
-            <li>Playwright, adb and the iOS simulator</li>
+            <li>Playwright, adb, the Android emulator and the iOS simulator</li>
             <li>A GitHub App for all of its access</li>
           </ul>
         </div>
