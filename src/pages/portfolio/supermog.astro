@@ -1,0 +1,290 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Lightbox from '@components/ui/Lightbox.astro';
+import { formatCount, formatLarge, mergedTotal, pullRequestTotal, share, supermogStats as stats } from '@/data/supermog-stats';
+
+const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const usd = (value: number) => `$${formatCount(value)}`;
+const { outcomes, spend, hours, verification, largestPullRequest: largest } = stats;
+
+const headline = [
+  { value: formatCount(mergedTotal()), label: 'pull requests merged' },
+  { value: `${share(outcomes.mergedClean)}%`, label: 'merged with no human edits' },
+  { value: formatCount(stats.repositories), label: 'projects worked on' },
+  { value: usd(spend.totalUsd), label: 'model spend reported' },
+];
+
+const fates = [
+  { count: outcomes.mergedClean, label: 'Merged as written', note: 'No person pushed a commit to the branch.', bar: 'bg-emerald-500' },
+  { count: outcomes.mergedAfterEdits, label: 'Merged after a human edit', note: 'A person pushed at least one commit before merging.', bar: 'bg-amber-500' },
+  { count: outcomes.closedUnmerged, label: 'Closed without merging', note: 'The work was not wanted, or was redone another way.', bar: 'bg-rose-500' },
+  { count: outcomes.reverted, label: 'Merged, then reverted', note: 'A later commit undid the merge.', bar: 'bg-gray-500' },
+];
+
+const more = [
+  { value: formatCount(stats.runs), label: 'runs', note: `Develop rounds, QA rounds and rebases, across ${stats.activeDays} active days.` },
+  { value: `${formatCount(hours.developing)} h`, label: 'spent developing', note: 'Writing code, reviewing it, addressing the review and resolving conflicts.' },
+  { value: `${formatCount(hours.verifying)} h`, label: 'spent verifying', note: `${formatCount(verification.sessions)} QA sessions in a real browser or on a phone.` },
+  { value: `${stats.medianHoursToMerge} h`, label: 'median time to merge', note: 'From the pull request opening to its merge.' },
+  { value: `+${formatCount(stats.linesAdded)}`, label: 'lines added', note: `And ${formatCount(stats.linesDeleted)} deleted, across ${formatCount(stats.fileChanges)} file changes in merged pull requests.` },
+  { value: `${verification.longestMinutes} min`, label: 'longest verification', note: `The median session takes ${verification.medianMinutes} minutes.` },
+  { value: `${stats.longestCodingStepMinutes} min`, label: 'longest coding step', note: 'One uninterrupted run of the agent writing a pull request.' },
+  { value: usd(spend.medianUsdPerMergedPullRequest), label: 'median cost per merged pull request', note: 'Every round on it added up: code, review, fixes and verification.' },
+  { value: formatCount(stats.busiestDay.runs), label: 'runs on the busiest day', note: day(stats.busiestDay.date) },
+];
+---
+
+<BaseLayout
+  title="Supermog - Case Study"
+  description="Supermog is our internal software factory: a fleet of agents that turns GitHub issues into reviewed, verified pull requests. The numbers from its first three months."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-slate-900 via-indigo-900 to-fuchsia-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Internal Tool</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Software Factory</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">AI Agents</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Private</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Supermog
+        </h1>
+        <p class="text-xl text-white/80">
+          Our private software factory. Label a GitHub issue and a fleet of agents writes the code, reviews it with a second model, proves it works in a real browser or on a real phone, and merges it.
+        </p>
+      </div>
+      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+        {headline.map((item) => (
+          <div class="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+            <dd class="text-3xl md:text-4xl font-heading font-bold">{item.value}</dd>
+            <dt class="mt-1 text-sm text-white/70">{item.label}</dt>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-sm text-white/60">
+        {day(stats.since)} to {day(stats.asOf)}, from the fleet's own records.
+      </p>
+    </div>
+  </section>
+
+  <!-- Fleet video + overview -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <video autoplay loop muted playsinline preload="metadata" src="/videos/pironman-fleet.mp4" class="w-full rounded-2xl shadow-lg"></video>
+      <p class="mt-3 text-sm text-gray-500 text-center">
+        The fleet at work. The pixel mascot on each screen swings its hammer while that box has a job.
+      </p>
+
+      <div class="mt-12">
+        <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+        <div class="prose prose-lg max-w-none text-gray-600">
+          <p>
+            Supermog is the system we use to build our own products. It is internal: it runs in our lab, on our hardware, against our repositories, and it is not something you can sign up for. Its one goal is to produce high-quality pull requests that are easy to verify.
+          </p>
+          <p>
+            We file an issue the way we would for a colleague. A while later there is a pull request with the code, a review, the replies to that review, and a recording of the change working. Most of the time nobody edits it before it merges. Much of Supermog was built this way, by Supermog.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">How a Pull Request Gets Made</h2>
+      <ol class="space-y-4 text-gray-600">
+        <li class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-1">1. Write the code</h3>
+          <p>An agent reads the issue, works in a clean checkout, runs the project's tests and opens a pull request.</p>
+        </li>
+        <li class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-1">2. Review it with a different model</h3>
+          <p>A second agent reviews the pull request. We get the best results when the reviewer is not the model that wrote the code: it does not share the author's blind spots. The author then answers every review thread and pushes fixes.</p>
+        </li>
+        <li class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-1">3. Verify it on the real thing</h3>
+          <p>A QA session starts the app from the pull request's code and uses it the way a person would, in a real browser, on a real Android phone, or in an iOS simulator. Screenshots and a screen recording are posted on the pull request.</p>
+        </li>
+        <li class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-1">4. Merge it, or wait for a person</h3>
+          <p>Each repository chooses. A verified pull request either merges itself or waits for a human to read it. When a merge leaves other open pull requests in conflict, the fleet rebases them and verifies them again.</p>
+        </li>
+      </ol>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">The Models and Their Roles</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li><strong>Claude</strong> (Sonnet and Opus) writes the code, addresses the review and resolves merge conflicts.</li>
+            <li><strong>Grok</strong> reviews the code and runs verification.</li>
+            <li>Either role can be given to either model from a settings page.</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Technology Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Bun and TypeScript</li>
+            <li>Cloudflare Workers and a Durable Object</li>
+            <li>Docker on every agent box</li>
+            <li>Playwright, adb and the iOS simulator</li>
+            <li>A GitHub App for all of its access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">What Happened to Every Pull Request</h2>
+      <p class="text-gray-600 mb-6">
+        Supermog records the fate of each pull request it opens. Of {formatCount(pullRequestTotal())} so far:
+      </p>
+      <div class="space-y-4">
+        {fates.map((fate) => (
+          <div>
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="font-heading font-bold text-primary">{fate.label}</h3>
+              <p class="text-gray-600 whitespace-nowrap">{formatCount(fate.count)} · {share(fate.count)}%</p>
+            </div>
+            <div class="mt-1 h-3 rounded-full bg-gray-100 overflow-hidden" role="img" aria-label={`${share(fate.count)} percent`}>
+              <div class={`h-full ${fate.bar}`} style={`width:${Math.max(share(fate.count), 0.5)}%`}></div>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">{fate.note}</p>
+          </div>
+        ))}
+      </div>
+
+      <h2 class="text-3xl font-heading font-bold text-primary mt-16 mb-6">More Numbers</h2>
+      <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {more.map((item) => (
+          <div class="p-6 bg-gray-50 rounded-xl">
+            <dd class="text-2xl font-heading font-bold text-primary">{item.value}</dd>
+            <dt class="font-semibold text-gray-700">{item.label}</dt>
+            <p class="mt-1 text-sm text-gray-500">{item.note}</p>
+          </div>
+        ))}
+      </dl>
+
+      <div class="mt-8 p-6 bg-primary-50 rounded-xl">
+        <h3 class="font-heading font-bold text-primary mb-2">The Largest Pull Request</h3>
+        <p class="text-gray-600">
+          "{largest.title}" for <a href="/portfolio/olympia-fitness" class="underline">{largest.project}</a>: {formatCount(largest.linesAdded)} lines added and {formatCount(largest.linesDeleted)} deleted across {formatCount(largest.files)} files, a framework migration delivered as one pull request.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spend -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">What It Costs</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          The agents report what each step costs, and Supermog keeps the total: {usd(spend.totalUsd)} across {formatCount(spend.runsWithCost)} runs. That log began partway through, so earlier runs are missing from it and the true figure is higher. The typical merged pull request cost {usd(spend.medianUsdPerMergedPullRequest)}, counting every round on it.
+        </p>
+      </div>
+      <table class="w-full mt-6 text-left text-gray-600">
+        <thead>
+          <tr class="border-b border-gray-300">
+            <th class="py-2 font-heading text-primary">Step</th>
+            <th class="py-2 font-heading text-primary text-right">Spend</th>
+            <th class="py-2 font-heading text-primary text-right">Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          {spend.byStep.map((row) => (
+            <tr class="border-b border-gray-200">
+              <td class="py-2">{row.step}</td>
+              <td class="py-2 text-right">{usd(row.usd)}</td>
+              <td class="py-2 text-right">{Math.round((row.usd / spend.totalUsd) * 100)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="mt-4 text-sm text-gray-500">
+        Tokens behind that: {formatLarge(spend.inputTokens)} in, {formatLarge(spend.outputTokens)} out, and {formatLarge(spend.cacheReadTokens)} read back from cache.
+      </p>
+    </div>
+  </section>
+
+  <!-- Hardware -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Fleet</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Supermog started on hardware we already had and grew as the queue did. Two Raspberry Pi 5s do most of the work. Two old Android phones, retired from daily use, are plugged into them over USB and serve as the test devices. A MacBook joins the fleet when a change needs an iOS simulator.
+        </p>
+        <p>
+          Some things a Raspberry Pi cannot do. Android's build tools and its emulator need an x86-64 machine, so we bought a Minisforum MS-A2 mini PC for that work and for running CI. Each box reports what it is able to do, and the queue gives every job to a box that can do it.
+        </p>
+      </div>
+
+      <table class="w-full mt-6 text-left text-gray-600">
+        <thead>
+          <tr class="border-b border-gray-300">
+            <th class="py-2 font-heading text-primary">Box</th>
+            <th class="py-2 font-heading text-primary">Hardware</th>
+            <th class="py-2 font-heading text-primary text-right">Runs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stats.runsByBox.map((row) => (
+            <tr class="border-b border-gray-200">
+              <td class="py-2 font-mono text-sm">{row.box}</td>
+              <td class="py-2">{row.hardware}</td>
+              <td class="py-2 text-right">{formatCount(row.runs)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 class="text-2xl font-heading font-bold text-primary mt-12 mb-4">Building the Pi Towers</h3>
+      <video controls playsinline preload="metadata" poster="/images/blog/pironman-build.jpg" src="/videos/pironman-build-timelapse.mp4" class="w-full rounded-2xl shadow-lg"></video>
+      <p class="mt-3 text-sm text-gray-500 text-center">
+        Ninety minutes of assembly in sixty seconds. The Pis moved into Pironman 5 cases for NVMe storage and cooling. <a href="/blog/pironman-build-timelapse" class="underline">How the timelapse was made</a>.
+      </p>
+
+      <h3 class="text-2xl font-heading font-bold text-primary mt-12 mb-4">The Dashboard</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <img src="/images/blog/supermog-dash/activity.webp" alt="Supermog's activity page, with jobs moving through the develop, QA and release lanes" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/blog/supermog-dash/box-hardware.webp" alt="One agent box's hardware page: power, temperature and memory" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/blog/supermog-dash/lessons.webp" alt="The lessons Supermog has stored about a repository from past reviews" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 mt-10">
+        <a href="/blog/supermog-builds-itself" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800 transition-colors font-semibold">
+          Read the full story
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Want Software Built This Way?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        The products in our portfolio are built and verified by this fleet. Tell us what you need.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="primary" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>
