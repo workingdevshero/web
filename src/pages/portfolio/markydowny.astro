@@ -6,7 +6,7 @@ import Lightbox from '@components/ui/Lightbox.astro';
 
 <BaseLayout
   title="Markydowny - Case Study"
-  description="A markdown viewer and editor for the web and macOS: live reload as Claude edits your docs, native tabs, and an editor that only changes what you change."
+  description="A markdown viewer and editor for the web and macOS: live reload as Claude edits your docs, an editor that only changes what you change, and native tabs in the macOS app."
 >
   <!-- Hero Section -->
   <section class="section bg-gradient-to-br from-purple-500 to-purple-700 text-white">
@@ -21,7 +21,7 @@ import Lightbox from '@components/ui/Lightbox.astro';
           Markydowny
         </h1>
         <p class="text-xl text-white/80">
-          A markdown viewer and editor for the web and macOS. Leave a doc open and watch Claude edit it live, open a whole folder as tabs, and edit formatted or as raw markdown.
+          A markdown viewer and editor for the web and macOS. Leave a doc open and watch Claude edit it live, and edit formatted or as raw markdown. On macOS, documents open as native window tabs.
         </p>
       </div>
     </div>
@@ -85,16 +85,16 @@ import Lightbox from '@components/ui/Lightbox.astro';
           Markydowny is a zero-installation markdown viewer that works entirely in the browser, and a native macOS app for when you want <code>.md</code> files to open with a double-click. Drag and drop a markdown file or an entire folder to instantly see beautifully rendered content with syntax highlighting.
         </p>
         <p>
-          What sets Markydowny apart is its intelligent handling of folders and images. When you drop a folder containing markdown files, the app automatically finds all markdown files and lets you select which one to view. Relative image paths are automatically resolved from the folder structure, so embedded images display correctly.
+          What sets Markydowny apart is its intelligent handling of folders and images. When you drop a folder containing markdown files, the app automatically finds all markdown files and lets you select which one to view. In the macOS app, that list can also open them all as tabs or watch the folder. Relative image paths are automatically resolved from the folder structure, so embedded images display correctly.
         </p>
         <p>
-          <strong>Watch Claude edit your docs.</strong> An open document re-renders the moment the file changes on disk. Follow mode highlights the blocks that changed and scrolls them into view. Point a window at a folder and it switches to whichever markdown file changed most recently. A documented Claude Code hook opens every markdown file Claude edits, without pulling focus from your terminal. In Chrome and Edge, the website does live reload too.
+          <strong>Watch Claude edit your docs.</strong> An open document re-renders the moment the file changes on disk. Follow mode highlights the blocks that changed and scrolls them into view. In the macOS app, watch a folder and one window follows whichever markdown file changed most recently. A documented Claude Code hook opens every markdown file Claude edits, without pulling focus from your terminal. In Chrome and Edge, the website live-reloads a file you open with the file picker; Safari and Firefox read files once and don't watch them.
         </p>
         <p>
-          <strong>Tabs, the macOS way.</strong> Documents open as native window tabs. Open a folder of docs as one window with a tab per file, drag a tab out to its own window or into another one, and merge windows from the Window menu.
+          <strong>Tabs, the macOS way.</strong> Documents open as native window tabs in the macOS app. Open several files at once and you get one window with a tab per file, or open all of a dropped folder's files as tabs. Drag a tab out to its own window or into another one, and merge windows from the Window menu.
         </p>
         <p>
-          <strong>An editor that only changes what you change.</strong> A pencil button switches any document into an editor built on CodeMirror 6, with markdown as the only document model. Rich mode shows formatting in place and reveals the markdown syntax on the line you're editing. Markdown mode shows the raw source. A toolbar and keyboard shortcuts handle formatting in both, and saving writes back only the bytes you edited. The app and Chrome save in place; Safari and Firefox download the file.
+          <strong>An editor that only changes what you change.</strong> A pencil button switches any document into an editor built on CodeMirror 6, with markdown as the only document model. Rich mode shows formatting in place and reveals the markdown syntax on the line you're editing. Markdown mode shows the raw source. A toolbar and keyboard shortcuts handle formatting in both, and saving writes back only the bytes you edited. The macOS app saves in place, and so do Chrome and Edge for a file opened with the file picker; Safari and Firefox download the file.
         </p>
         <p>
           The website is still pure HTML, CSS and JavaScript with no build step, and works offline after the first load. The macOS app wraps the same code with Tauri and adds crash reporting with BugSplat.
@@ -109,7 +109,8 @@ import Lightbox from '@components/ui/Lightbox.astro';
             <li>marked.js for parsing</li>
             <li>CodeMirror 6 for editing</li>
             <li>Tauri 2 and Rust for the macOS app</li>
-            <li>File System Access API on the web</li>
+            <li>File API for drag-and-drop</li>
+            <li>File System Access API in Chromium browsers</li>
             <li>BugSplat crash reporting</li>
             <li>Static hosting (no server)</li>
           </ul>
