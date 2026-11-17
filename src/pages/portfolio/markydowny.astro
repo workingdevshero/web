@@ -6,22 +6,22 @@ import Lightbox from '@components/ui/Lightbox.astro';
 
 <BaseLayout
   title="Markydowny - Case Study"
-  description="A simple, beautiful browser-based markdown renderer with folder support and embedded images."
+  description="A markdown viewer and editor for the web and macOS: live reload as Claude edits your docs, native tabs, and an editor that only changes what you change."
 >
   <!-- Hero Section -->
   <section class="section bg-gradient-to-br from-purple-500 to-purple-700 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl">
         <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">macOS App</span>
           <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Web App</span>
-          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Static Site</span>
           <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Open Source</span>
         </div>
         <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
           Markydowny
         </h1>
         <p class="text-xl text-white/80">
-          A simple, beautiful browser-based markdown renderer that supports folders and embedded images.
+          A markdown viewer and editor for the web and macOS. Leave a doc open and watch Claude edit it live, open a whole folder as tabs, and edit formatted or as raw markdown.
         </p>
       </div>
     </div>
@@ -51,7 +51,7 @@ import Lightbox from '@components/ui/Lightbox.astro';
         <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
         <div class="prose prose-lg max-w-none">
           <p class="text-gray-600">
-            Markydowny is a static web application that enables users to view markdown files through an intuitive drag-and-drop interface. It's designed for developers and writers who want to preview their markdown files instantly, without complex setup or installation.
+            Markydowny started as a drag-and-drop markdown viewer in the browser. It's now also a native macOS app that opens <code>.md</code> files from Finder, reloads them live as they change on disk, opens them as native window tabs, and edits them in place. The website and the app run the same code, and your files never leave your device.
           </p>
         </div>
       </div>
@@ -69,6 +69,9 @@ import Lightbox from '@components/ui/Lightbox.astro';
         <p>
           Most existing solutions either require installation, lack support for embedded images with relative paths, or can't handle entire folders of markdown files. Developers needed a simpler way to quickly preview markdown content without any setup friction.
         </p>
+        <p>
+          Then coding agents changed how docs get written. When Claude Code is rewriting a README or a design doc, you want to see the rendered result as it changes, not reopen the file after every edit. And when you want to fix something yourself, most rich-text editors rewrite the whole file on save: lists change bullet style, tables get re-padded and lines get re-wrapped. That's a messy diff in a git repo.
+        </p>
       </div>
     </div>
   </section>
@@ -79,13 +82,22 @@ import Lightbox from '@components/ui/Lightbox.astro';
       <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
       <div class="prose prose-lg max-w-none text-gray-600">
         <p>
-          Markydowny is a zero-installation markdown viewer that works entirely in the browser. Simply drag and drop a markdown file or an entire folder onto the page to instantly see beautifully rendered content with syntax highlighting.
+          Markydowny is a zero-installation markdown viewer that works entirely in the browser, and a native macOS app for when you want <code>.md</code> files to open with a double-click. Drag and drop a markdown file or an entire folder to instantly see beautifully rendered content with syntax highlighting.
         </p>
         <p>
           What sets Markydowny apart is its intelligent handling of folders and images. When you drop a folder containing markdown files, the app automatically finds all markdown files and lets you select which one to view. Relative image paths are automatically resolved from the folder structure, so embedded images display correctly.
         </p>
         <p>
-          The entire application is pure HTML, CSS, and JavaScript with no build process or server required. It works offline after the initial load and can be hosted on any static hosting platform.
+          <strong>Watch Claude edit your docs.</strong> An open document re-renders the moment the file changes on disk. Follow mode highlights the blocks that changed and scrolls them into view. Point a window at a folder and it switches to whichever markdown file changed most recently. A documented Claude Code hook opens every markdown file Claude edits, without pulling focus from your terminal. In Chrome and Edge, the website does live reload too.
+        </p>
+        <p>
+          <strong>Tabs, the macOS way.</strong> Documents open as native window tabs. Open a folder of docs as one window with a tab per file, drag a tab out to its own window or into another one, and merge windows from the Window menu.
+        </p>
+        <p>
+          <strong>An editor that only changes what you change.</strong> A pencil button switches any document into an editor built on CodeMirror 6, with markdown as the only document model. Rich mode shows formatting in place and reveals the markdown syntax on the line you're editing. Markdown mode shows the raw source. A toolbar and keyboard shortcuts handle formatting in both, and saving writes back only the bytes you edited. The app and Chrome save in place; Safari and Firefox download the file.
+        </p>
+        <p>
+          The website is still pure HTML, CSS and JavaScript with no build step, and works offline after the first load. The macOS app wraps the same code with Tauri and adds crash reporting with BugSplat.
         </p>
       </div>
 
@@ -95,7 +107,10 @@ import Lightbox from '@components/ui/Lightbox.astro';
           <ul class="text-gray-600 space-y-1">
             <li>HTML / CSS / JavaScript</li>
             <li>marked.js for parsing</li>
-            <li>File API for drag-and-drop</li>
+            <li>CodeMirror 6 for editing</li>
+            <li>Tauri 2 and Rust for the macOS app</li>
+            <li>File System Access API on the web</li>
+            <li>BugSplat crash reporting</li>
             <li>Static hosting (no server)</li>
           </ul>
         </div>
@@ -103,9 +118,12 @@ import Lightbox from '@components/ui/Lightbox.astro';
           <h3 class="font-heading font-bold text-primary mb-2">Key Features</h3>
           <ul class="text-gray-600 space-y-1">
             <li>Drag-and-drop files & folders</li>
+            <li>Live reload with change highlighting</li>
+            <li>Watch Claude Code edit in real time</li>
+            <li>Native macOS window tabs</li>
+            <li>Rich and Markdown editing modes</li>
+            <li>Formatting toolbar, split view, find & replace</li>
             <li>Relative image path resolution</li>
-            <li>Syntax highlighting</li>
-            <li>Fullscreen reading mode</li>
             <li>Works offline</li>
           </ul>
         </div>
@@ -117,10 +135,10 @@ import Lightbox from '@components/ui/Lightbox.astro';
   <section class="section bg-dark text-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
-        Need a Web-Based Tool Built?
+        Need a Developer Tool Built?
       </h2>
       <p class="text-lg text-gray-300 mb-8">
-        Let's discuss how we can create simple, effective solutions for your workflow.
+        Web, desktop or agent-powered, let's talk about a tool that fits your workflow.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <Button href="/contact" variant="primary" size="lg">
