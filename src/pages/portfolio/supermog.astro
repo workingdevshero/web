@@ -98,19 +98,23 @@ const more = [
       <h2 class="text-3xl font-heading font-bold text-primary mb-6">How a Pull Request Gets Made</h2>
       <ol class="space-y-4 text-gray-600">
         <li class="p-6 bg-white rounded-xl shadow-sm">
-          <h3 class="font-heading font-bold text-primary mb-1">1. Write the code</h3>
+          <h3 class="font-heading font-bold text-primary mb-1">1. Start with an issue</h3>
+          <p>Every pull request starts as a GitHub issue. Some come from a person testing an app and reporting a bug. Others come out of a design discussion with a coding assistant. If the work is worth delegating, we hand the issue to the fleet. Sometimes we build the feature ourselves alongside an assistant and use Supermog only for the review and verification steps.</p>
+        </li>
+        <li class="p-6 bg-white rounded-xl shadow-sm">
+          <h3 class="font-heading font-bold text-primary mb-1">2. Write the code</h3>
           <p>An agent reads the issue, works in a clean checkout, runs the project's tests and opens a pull request.</p>
         </li>
         <li class="p-6 bg-white rounded-xl shadow-sm">
-          <h3 class="font-heading font-bold text-primary mb-1">2. Review it with a different model</h3>
+          <h3 class="font-heading font-bold text-primary mb-1">3. Review it with a different model</h3>
           <p>A second agent reviews the pull request. We get the best results when the reviewer is not the model that wrote the code: it does not share the author's blind spots. The author then answers every review thread and pushes fixes.</p>
         </li>
         <li class="p-6 bg-white rounded-xl shadow-sm">
-          <h3 class="font-heading font-bold text-primary mb-1">3. Verify it on the real thing</h3>
+          <h3 class="font-heading font-bold text-primary mb-1">4. Verify it on the real thing</h3>
           <p>A QA session starts the app from the pull request's code and uses it the way a person would, in a real browser, on a real Android phone, or in an iOS simulator. Screenshots and a screen recording are posted on the pull request.</p>
         </li>
         <li class="p-6 bg-white rounded-xl shadow-sm">
-          <h3 class="font-heading font-bold text-primary mb-1">4. Merge it, or wait for a person</h3>
+          <h3 class="font-heading font-bold text-primary mb-1">5. Merge it, or wait for a person</h3>
           <p>Each repository chooses. A verified pull request either merges itself or waits for a human to read it. When a merge leaves other open pull requests in conflict, the fleet rebases them and verifies them again.</p>
         </li>
       </ol>
