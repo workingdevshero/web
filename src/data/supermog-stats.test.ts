@@ -1,24 +1,28 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { formatCount, formatLarge, mergedTotal, pullRequestTotal, share, supermogStats } from './supermog-stats';
+import { formatCount, formatLarge, mergedTotal, outcomeShares, pullRequestTotal, supermogStats } from './supermog-stats';
 
 const repoFile = (path: string) => fileURLToPath(new URL(`../../${path}`, import.meta.url));
 
 describe('supermog stats', () => {
   it('adds the outcomes up, and the shares to a whole', () => {
-    const { outcomes } = supermogStats;
     expect(pullRequestTotal()).toBe(665);
     expect(mergedTotal()).toBe(644);
-    const shares = [outcomes.mergedClean, outcomes.mergedAfterEdits, outcomes.closedUnmerged, outcomes.reverted].map((n) => share(n));
-    expect(shares).toEqual([88.9, 7.8, 3.2, 0.2]);
-    expect(shares.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 0);
+    const shares = outcomeShares();
+    expect(shares).toEqual({ mergedClean: 88.9, mergedAfterEdits: 7.8, closedUnmerged: 3.2, reverted: 0.1 });
+    expect(Math.round(Object.values(shares).reduce((a, b) => a + b, 0) * 10) / 10).toBe(100);
+  });
+
+  it('rounds shares that would otherwise miss 100', () => {
+    const shares = outcomeShares({ mergedClean: 1, mergedAfterEdits: 1, closedUnmerged: 1, reverted: 0 });
+    expect(shares).toEqual({ mergedClean: 33.4, mergedAfterEdits: 33.3, closedUnmerged: 33.3, reverted: 0 });
   });
 
   it('keeps the parts within their totals', () => {
     const { spend, hours, runs, runsByBox } = supermogStats;
     const byStep = spend.byStep.reduce((sum, row) => sum + row.usd, 0);
-    // The steps listed are the large ones; a few small ones are left out of the table.
+    // The steps listed are the large ones; the page puts the small ones left over in an "Other steps" row.
     expect(byStep).toBeLessThanOrEqual(spend.totalUsd);
     expect(byStep).toBeGreaterThan(spend.totalUsd * 0.99);
     expect(spend.runsWithCost).toBeLessThan(runs);
@@ -52,7 +56,7 @@ describe('the supermog case study', () => {
   });
 
   it('only points at media and posts that exist', () => {
-    const media = [...page.matchAll(/(?:src|poster)="(\/(?:videos|images)\/[^"]+)"/g)].map((m) => m[1]);
+    const media = [...page.matchAll(/(?:src|poster|video|image)="(\/(?:videos|images)\/[^"]+)"/g)].map((m) => m[1]);
     expect(media.length).toBeGreaterThan(3);
     for (const path of media) expect(existsSync(repoFile(`public${path}`)), path).toBe(true);
     const posts = [...page.matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map((m) => m[1]);

@@ -88,9 +88,21 @@ export function mergedTotal(outcomes: Outcomes = supermogStats.outcomes): number
   return outcomes.mergedClean + outcomes.mergedAfterEdits + outcomes.reverted;
 }
 
-/** A share of all pull requests, to one decimal place. */
-export function share(count: number, outcomes: Outcomes = supermogStats.outcomes): number {
-  return Math.round((count / pullRequestTotal(outcomes)) * 1000) / 10;
+/**
+ * Each outcome's share of all pull requests, to one decimal place. Rounded by largest remainder,
+ * so the four always add up to exactly 100.0.
+ */
+export function outcomeShares(outcomes: Outcomes = supermogStats.outcomes): Record<keyof Outcomes, number> {
+  const total = pullRequestTotal(outcomes);
+  const keys = Object.keys(outcomes) as (keyof Outcomes)[];
+  const exact = keys.map((key) => (outcomes[key] / total) * 1000);
+  const tenths = exact.map(Math.floor);
+  let left = 1000 - tenths.reduce((a, b) => a + b, 0);
+  for (const i of keys.map((_, i) => i).sort((a, b) => exact[b] - tenths[b] - (exact[a] - tenths[a]))) {
+    if (left-- <= 0) break;
+    tenths[i] += 1;
+  }
+  return Object.fromEntries(keys.map((key, i) => [key, tenths[i] / 10])) as Record<keyof Outcomes, number>;
 }
 
 /** 284770 → "284,770". Fixed to en-US so the built page does not depend on the build machine. */

@@ -2,24 +2,26 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
 import Lightbox from '@components/ui/Lightbox.astro';
-import { formatCount, formatLarge, mergedTotal, pullRequestTotal, share, supermogStats as stats } from '@/data/supermog-stats';
+import PostMedia from '@components/blog/PostMedia.astro';
+import { formatCount, formatLarge, mergedTotal, outcomeShares, pullRequestTotal, supermogStats as stats } from '@/data/supermog-stats';
 
 const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const usd = (value: number) => `$${formatCount(value)}`;
 const { outcomes, spend, hours, verification, largestPullRequest: largest } = stats;
+const shares = outcomeShares();
 
 const headline = [
   { value: formatCount(mergedTotal()), label: 'pull requests merged' },
-  { value: `${share(outcomes.mergedClean)}%`, label: 'merged with no human edits' },
+  { value: `${shares.mergedClean}%`, label: 'of pull requests opened, merged with no human edits' },
   { value: formatCount(stats.repositories), label: 'projects worked on' },
   { value: usd(spend.totalUsd), label: 'model spend reported' },
 ];
 
 const fates = [
-  { count: outcomes.mergedClean, label: 'Merged as written', note: 'No person pushed a commit to the branch.', bar: 'bg-emerald-500' },
-  { count: outcomes.mergedAfterEdits, label: 'Merged after a human edit', note: 'A person pushed at least one commit before merging.', bar: 'bg-amber-500' },
-  { count: outcomes.closedUnmerged, label: 'Closed without merging', note: 'The work was not wanted, or was redone another way.', bar: 'bg-rose-500' },
-  { count: outcomes.reverted, label: 'Merged, then reverted', note: 'A later commit undid the merge.', bar: 'bg-gray-500' },
+  { count: outcomes.mergedClean, share: shares.mergedClean, label: 'Merged as written', note: 'No person pushed a commit to the branch.', bar: 'bg-emerald-500' },
+  { count: outcomes.mergedAfterEdits, share: shares.mergedAfterEdits, label: 'Merged after a human edit', note: 'A person pushed at least one commit before merging.', bar: 'bg-amber-500' },
+  { count: outcomes.closedUnmerged, share: shares.closedUnmerged, label: 'Closed without merging', note: 'The work was not wanted, or was redone another way.', bar: 'bg-rose-500' },
+  { count: outcomes.reverted, share: shares.reverted, label: 'Merged, then reverted', note: 'A later commit undid the merge.', bar: 'bg-gray-500' },
 ];
 
 const more = [
@@ -33,6 +35,14 @@ const more = [
   { value: usd(spend.medianUsdPerMergedPullRequest), label: 'median cost per merged pull request', note: 'Every round on it added up: code, review, fixes and verification.' },
   { value: formatCount(stats.busiestDay.runs), label: 'runs on the busiest day', note: day(stats.busiestDay.date) },
 ];
+
+// The table lists the large steps; whatever the small ones cost goes in one row so the column adds up to the total.
+const otherStepsUsd = spend.totalUsd - spend.byStep.reduce((sum, row) => sum + row.usd, 0);
+const spendRows = otherStepsUsd > 0 ? [...spend.byStep, { step: 'Other steps', usd: otherStepsUsd }] : spend.byStep;
+const spendShare = (value: number) => {
+  const percent = Math.round((value / spend.totalUsd) * 100);
+  return percent === 0 ? '<1%' : `${percent}%`;
+};
 ---
 
 <BaseLayout
@@ -58,9 +68,9 @@ const more = [
       </div>
       <dl class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
         {headline.map((item) => (
-          <div class="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-            <dd class="text-3xl md:text-4xl font-heading font-bold">{item.value}</dd>
+          <div class="flex flex-col rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
             <dt class="mt-1 text-sm text-white/70">{item.label}</dt>
+            <dd class="order-first text-3xl md:text-4xl font-heading font-bold">{item.value}</dd>
           </div>
         ))}
       </dl>
@@ -73,7 +83,12 @@ const more = [
   <!-- Fleet video + overview -->
   <section class="section bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <video autoplay loop muted playsinline preload="metadata" src="/videos/pironman-fleet.mp4" class="w-full rounded-2xl shadow-lg"></video>
+      <PostMedia
+        video="/videos/pironman-fleet.mp4"
+        image="/images/blog/pironman-fleet.jpg"
+        alt="The fleet at work: a Raspberry Pi in its Pironman case beside a test phone, the mascot on its screen swinging a hammer"
+        class="w-full rounded-2xl shadow-lg"
+      />
       <p class="mt-3 text-sm text-gray-500 text-center">
         The fleet at work. The pixel mascot on each screen swings its hammer while that box has a job.
       </p>
@@ -157,10 +172,10 @@ const more = [
           <div>
             <div class="flex items-baseline justify-between gap-4">
               <h3 class="font-heading font-bold text-primary">{fate.label}</h3>
-              <p class="text-gray-600 whitespace-nowrap">{formatCount(fate.count)} · {share(fate.count)}%</p>
+              <p class="text-gray-600 whitespace-nowrap">{formatCount(fate.count)} · {fate.share}%</p>
             </div>
-            <div class="mt-1 h-3 rounded-full bg-gray-100 overflow-hidden" role="img" aria-label={`${share(fate.count)} percent`}>
-              <div class={`h-full ${fate.bar}`} style={`width:${Math.max(share(fate.count), 0.5)}%`}></div>
+            <div class="mt-1 h-3 rounded-full bg-gray-100 overflow-hidden" role="img" aria-label={`${fate.share} percent`}>
+              <div class={`h-full ${fate.bar}`} style={`width:${Math.max(fate.share, 0.5)}%`}></div>
             </div>
             <p class="mt-1 text-sm text-gray-500">{fate.note}</p>
           </div>
@@ -170,10 +185,10 @@ const more = [
       <h2 class="text-3xl font-heading font-bold text-primary mt-16 mb-6">More Numbers</h2>
       <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {more.map((item) => (
-          <div class="p-6 bg-gray-50 rounded-xl">
-            <dd class="text-2xl font-heading font-bold text-primary">{item.value}</dd>
+          <div class="flex flex-col p-6 bg-gray-50 rounded-xl">
             <dt class="font-semibold text-gray-700">{item.label}</dt>
-            <p class="mt-1 text-sm text-gray-500">{item.note}</p>
+            <dd class="order-first text-2xl font-heading font-bold text-primary">{item.value}</dd>
+            <dd class="mt-1 text-sm text-gray-500">{item.note}</dd>
           </div>
         ))}
       </dl>
@@ -205,11 +220,11 @@ const more = [
           </tr>
         </thead>
         <tbody>
-          {spend.byStep.map((row) => (
+          {spendRows.map((row) => (
             <tr class="border-b border-gray-200">
               <td class="py-2">{row.step}</td>
               <td class="py-2 text-right">{usd(row.usd)}</td>
-              <td class="py-2 text-right">{Math.round((row.usd / spend.totalUsd) * 100)}%</td>
+              <td class="py-2 text-right">{spendShare(row.usd)}</td>
             </tr>
           ))}
         </tbody>
