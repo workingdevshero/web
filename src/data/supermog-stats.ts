@@ -73,7 +73,7 @@ export const supermogStats = {
   runsByBox: [
     { box: 'pi-1', hardware: 'Raspberry Pi 5, 8 GB', runs: 2543 },
     { box: 'pi-2', hardware: 'Raspberry Pi 5, 8 GB', runs: 2352 },
-    { box: 'mac', hardware: 'MacBook Pro', runs: 327 },
+    { box: 'mac', hardware: 'M6 MacBook Pro', runs: 327 },
     { box: 'sidekick', hardware: 'Minisforum MS-A2', runs: 135 },
   ],
 } as const;
