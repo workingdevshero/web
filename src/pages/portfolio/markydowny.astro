@@ -32,9 +32,11 @@ import Lightbox from '@components/ui/Lightbox.astro';
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-3xl font-heading font-bold text-primary mb-8 text-center">Screenshots</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <img src="/images/portfolio/markydowny/markydowny-no-file.png" alt="Markydowny drop zone" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
-        <img src="/images/portfolio/markydowny/markydowny-preview.png" alt="Markydowny markdown preview" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
-        <img src="/images/portfolio/markydowny/markydowny-preview-expanded.png" alt="Markydowny expanded view" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-web.png" alt="The Markydowny website: drop a markdown file or folder anywhere on the page" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-live-reload.png" alt="The macOS app live-reloading a roadmap, with the changed checklist highlighted" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-tabs.png" alt="Three markdown documents open as native tabs in one macOS window" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-rich-mode.png" alt="Editing a README in Rich mode, with the formatting toolbar and the Rich, Markdown and Split switch" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
+        <img src="/images/portfolio/markydowny/markydowny-markychecky.png" alt="A markychecky board in Markydowny: what each Claude Code session is working on, updating live" class="rounded-2xl shadow-lg cursor-pointer hover:opacity-90 transition-opacity lightbox-img" />
       </div>
       <div class="flex flex-wrap justify-center gap-4 mt-8">
         <a href="https://markydowny.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
@@ -91,6 +93,9 @@ import Lightbox from '@components/ui/Lightbox.astro';
           <strong>Watch Claude edit your docs.</strong> An open document re-renders the moment the file changes on disk. Follow mode highlights the blocks that changed and scrolls them into view. In the macOS app, watch a folder and one window follows whichever markdown file changed most recently. A documented Claude Code hook opens every markdown file Claude edits, without pulling focus from your terminal. In Chrome and Edge, the website live-reloads a file you open with the file picker; Safari and Firefox read files once and don't watch them.
         </p>
         <p>
+          <strong>A live board of every Claude Code session.</strong> <a href="https://markydowny.com/docs/markychecky/" target="_blank" rel="noopener">markychecky</a> is a Claude Code plugin from the same repository. It keeps one markdown file with a section for each session: what it's working on now, and its checklist, ticked off as it goes. Open the board in Markydowny and watch your agents work, with a "Waiting on you" section at the top for the questions that need you. It installs with one command.
+        </p>
+        <p>
           <strong>Tabs, the macOS way.</strong> Documents open as native window tabs in the macOS app. Open several files at once and you get one window with a tab per file, or open all of a dropped folder's files as tabs. Drag a tab out to its own window or into another one, and merge windows from the Window menu.
         </p>
         <p>
@@ -121,6 +126,7 @@ import Lightbox from '@components/ui/Lightbox.astro';
             <li>Drag-and-drop files & folders</li>
             <li>Live reload with change highlighting</li>
             <li>Watch Claude Code edit in real time</li>
+            <li>A live board of every Claude Code session (markychecky)</li>
             <li>Native macOS window tabs</li>
             <li>Rich and Markdown editing modes</li>
             <li>Formatting toolbar, split view, find & replace</li>
