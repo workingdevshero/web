@@ -68,13 +68,7 @@ Everything comes from the running app, recorded on the iOS Simulator with `xcrun
 
 The file is 28 seconds and has to end on the frame it starts with. The phone and the wall loop separately:
 
-- **The phone.** The raw take runs about 24 seconds, pauses included. We cut it into five pieces (approve, open comments, wait for the sheet, type and send, redo), drop the dead time between them, and play the wait for the empty comment sheet at 3× speed. That leaves a 14-second loop that holds on the "Redo requested" toast before it starts over. To close it, we keep 0.8 seconds more than the loop needs and crossfade them into the opening 0.8 seconds. The loop then plays twice:
-
-  ```text
-  take = approve + comments + wait (3×) + type + redo     # 14.8 s
-  loop = take[0.8 : 14.0] + xfade(take[14.0 : 14.8] → take[0 : 0.8])
-  file = loop + loop                                       # 28 s
-  ```
+- **The phone.** The raw take runs about 24 seconds, pauses included. We cut it into five pieces (approve, open comments, wait for the sheet, type and send, redo), drop the dead time between them, and play the wait for the empty comment sheet at 3× speed. That leaves a 14-second loop that holds on the "Redo requested" toast before it starts over. To close it, we keep 0.8 seconds more than the loop needs and crossfade them into the opening 0.8 seconds. The loop then plays twice to fill the 28 seconds.
 
 - **The wall.** Eight columns of 580-pixel cards are laid out upright on a 4400×2400 canvas, big enough to still cover the frame after an 8-degree turn. Each column is a strip of four cards drawn three times in a row. Every frame, ffmpeg crops each strip at `y0 - t * speed`, lays the columns on the canvas, rotates it and crops it to 3840×1646. The speed is one strip's height divided by 28 seconds, so every column moves one strip per loop and the last frame meets the first: 3,428 pixels in 28 seconds, about 122 pixels a second.
 
