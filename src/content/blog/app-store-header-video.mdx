@@ -47,7 +47,7 @@ Unlike a preview, a header doesn't have to be a screen recording. Apple's [asset
 
 ## The Safe Area Is Small 🎯
 
-The best practices say to keep key art "within the safe area defined in each template". The creative asset specifications list each safe area: for the header it's a centred 1646×661 box from x 1097 to 2743 and y 493 to 1154. The "Art Safe Area" layer in Apple's [Photoshop header template](https://developer.apple.com/go/?id=photoshop-product-page-header-template), which we read with [psd-tools](https://github.com/psd-tools/psd-tools), has the same box.
+The best practices say to keep key art "within the safe area defined in each template". The creative asset specifications list each safe area: for the header it's a centered 1646×661 box from x 1097 to 2743 and y 493 to 1154. The "Art Safe Area" layer in Apple's [Photoshop header template](https://developer.apple.com/go/?id=photoshop-product-page-header-template), which we read with [psd-tools](https://github.com/psd-tools/psd-tools), has the same box.
 
 The box covers 43% of the width and 40% of the height. Anything that has to read, like a line of text, goes inside that box. The rest of the 3840×1646 frame can be cropped away on narrower screens, so treat it as background, or as something that still works with its top and bottom trimmed.
 
@@ -74,13 +74,13 @@ The file is 28 seconds and has to end on the frame it starts with. The phone and
 
   The wall sets the file's length. In 14 seconds the same strip would have to scroll twice as fast, and Apple asks you to "avoid quick cuts and fast-moving visuals."
 
-A strip of four cards needs posts for slots nobody sees in the first frame. We fill each one with the least-used post whose scene isn't already in the three nearest columns on either side, which keeps the same picture out of neighbouring columns.
+A strip of four cards needs posts for slots nobody sees in the first frame. We fill each one with the least-used post whose scene isn't already in the three nearest columns on either side, which keeps the same picture out of neighboring columns.
 
 The cards, plate, line and shade are HTML pages screenshotted in headless Chrome with transparent backgrounds. One Python script renders the wall as its own background loop, and a second lays the phone and tagline over it and exports 3840×1646 H.264 at 30 fps. Headless Chrome drew the phone's rounded-screen mask, a white rounded rectangle 1,480 pixels tall, with a second rounded edge near the bottom, so we draw that mask with ffmpeg's `geq` filter.
 
 ## The Search Results Video 🔎
 
-The search results asset shows much smaller than a header, next to other apps in a list, so ours is the same scene made bigger. The same two scripts render it at 3840×2560: the wall gets a 4400×3200 canvas and five cards per strip, the phone grows to 1,640 pixels tall, and the tagline to 190 pixels. The safe area in Apple's search results template is 2168×1030 from x 836 and y 765, and we centre the tagline and phone in the frame as a pair.
+The search results asset shows much smaller than a header, next to other apps in a list, so ours is the same scene made bigger. The same two scripts render it at 3840×2560: the wall gets a 4400×3200 canvas and five cards per strip, the phone grows to 1,640 pixels tall, and the tagline to 190 pixels. The safe area in Apple's search results template is 2168×1030 from x 836 and y 765, and we center the tagline and phone in the frame as a pair.
 
 <video controls muted loop playsinline preload="metadata" poster="/images/blog/app-store-search-video.jpg" src="/videos/app-store-search-video-loop.mp4" style="width:100%;border-radius:12px;margin:0.5rem 0"></video>
 
