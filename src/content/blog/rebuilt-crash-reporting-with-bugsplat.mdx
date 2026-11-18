@@ -1,0 +1,122 @@
+---
+title: "We Had an Outage, So We Rebuilt Our Crash Reporting with BugSplat"
+description: "A production crash loop in Automate It showed us what our crash reports were missing. Working with BugSplat, we added error cause chains, searchable attributes and readable attachments in ten days."
+pubDate: 2026-10-20T12:00:00-04:00
+author: "bobbyg603"
+categories: ["Software"]
+tags: ["bugsplat", "crash-reporting", "error-handling", "javascript", "automate-it"]
+---
+
+On the morning of October 8, the [Automate It](https://automate.it.com) backend started posting the same crash to [BugSplat](https://www.bugsplat.com) every minute. Automate It is the content automation service we build at Working Dev's Hero, and it reports its crashes to BugSplat. We opened the report, and this is all it had:
+
+```
+Frame 1: <anonymous>(41:19)  /app/node_modules/drizzle-orm/pg-core/session.js
+Frame 2: processTicksAndRejections(7:39)  native
+
+Failed query: insert into "tasks" ("id", "workspace_id", "title", ...
+```
+
+Two frames, both inside our ORM, and half an `INSERT`. No database error, no constraint name, and nothing showing which part of our code made the call. The real error was in the Railway logs: `duplicate key value violates unique constraint "idx_tasks_unique_scheduled_publish"`.
+
+We fixed the outage that afternoon. Then we spent the next two weeks working with BugSplat to fix our crash reporting.
+
+BugSplat has spent years building tools that help teams diagnose stubborn production problems. Working Dev's Hero builds B2B services with cutting-edge tools, fast and at scale, which means we hit gaps quickly. We found the problems in production; BugSplat fixed them for every customer.
+
+## What broke
+
+**The trigger.** We had just shipped a feature that let users reschedule a task while it waited in review. An automation's tasks used `publish_at` for two jobs: when to post, and which cron slot the task belonged to. Someone moved an old task onto exactly the automation's next slot. When that slot's 48-hour window opened, the scheduler checked for tasks created inside the window, found none, and tried to insert a new one. The unique index on `(automation_id, publish_at)` refused, every minute, for two automations. The fix gave tasks an explicit `slot_at` that only the scheduler sets, so `publish_at` means only "when".
+
+**The duplicate-key check had stopped matching.** The scheduler was written to catch duplicate-key errors and skip them, by checking `err.code === "23505"`. That check had never matched since August 9, when a drizzle-orm upgrade (0.29 to 0.45) started wrapping every query error in a `DrizzleQueryError`. The Postgres code moved to `err.cause.code`. The same dead check sat in four other places, which turned duplicate folder and skill names into 500 errors.
+
+Our code missed the error because it never looked at `cause`, and BugSplat missed it for the same reason. The stack group we were reading had collected unrelated database failures since August 10, the day after that upgrade: 461 of them under one ORM frame.
+
+## What BugSplat couldn't tell us
+
+After the outage, we sat down with BugSplat and listed everything that had sent us to another tool, ranked by how much time it cost. The first two items alone would have turned a 20-minute hunt across tools into reading one crash page.
+
+| Priority | Gap | What it cost us | What we did |
+| --- | --- | --- | --- |
+| 1 | The SDK posted `error.stack` and never read `error.cause`. | The Postgres message, error code and constraint name only existed in the server logs. | Built cause-chain support end to end |
+| 2 | Grouping keyed on an ORM frame inside `node_modules`. | 461 unrelated database failures in one group, so "when did this start?" had no answer. | Logged a feature request for custom grouping rules |
+| 3 | The version was always `1.0.0`. | No way to tie a crash group to a deploy. | Report the deployed git SHA |
+| 3 | Attributes and attachments were hard to reach from BugSplat's MCP server. | `workspaceId` was posted but not returned, and the log attachment came back as a 122 KB base64 blob. | Made attributes and attachments readable through the MCP tools |
+| 4 | Structured log fields stayed in the log text. | `automationId` was only searchable inside `logs.txt`. | Post log fields as report attributes |
+| 5 | User content rode along in reports. | Nothing. | Kept on purpose: the query parameters make debugging easier |
+
+Working Dev's Hero took the fixes on the Automate It side, and BugSplat took the ones in its SDKs and servers. Everything except the grouping rules shipped within ten days.
+
+## What we built
+
+**Attributes.** Our logger already attached the request ID, user and workspace. It now also posts every structured field on the log call (`taskId`, `automationId`, `platform`) as a searchable attribute. Request context wins on a name clash, values are capped at 500 characters, and a report carries at most 20 extra fields.
+
+**Attachments.** Each report already carried a `logs.txt` with that request's log lines, but reading it back through the MCP server meant decoding a base64 blob too big to use. Attributes and attachments are now first-class in the MCP tools, so an agent debugging a crash sees them without a second request.
+
+**The cause chain.** BugSplat's team started by looking at how other crash reporters handle `cause`. Sentry, for one, follows it by default, up to five links, root cause first. Then they made the calls that fit how BugSplat already works:
+
+- **Capture everything on the client, interpret it on the server.** The SDK sends the raw chain as JSON and the server decides how to display it, so the display can change without re-shipping every SDK.
+- **Flatten instead of nesting.** BugSplat's call stack view and its grouping both assume a single stack. Each cause becomes a `Caused by: PostgresError: duplicate key value…` row in the function column, the same way BugSplat's .NET reports show frames they couldn't unwind.
+- **The innermost cause names the crash.** A report's exception code and message come from the deepest entry in the chain.
+- **Error properties become locals.** Fields like `code`, `constraint` and `detail` appear in the locals pane under each `Caused by:` row.
+- **Leave grouping alone.** BugSplat's stack keys use function names and line numbers, never exception types. That rule stayed, to be revisited if a customer asks.
+- **Skip features without a user.** A `beforePost` hook was built and parked, and a new header field on the crash page was dropped.
+
+On the client, nothing changes except one habit:
+
+```ts
+try {
+  await db.insert(tasks).values(newTask);
+} catch (error) {
+  throw new Error("Failed to schedule the automation's next task", { cause: error });
+}
+```
+
+BugSplat's JavaScript SDK now walks `cause`, and the `errors` array of an `AggregateError`, and posts the whole chain.
+
+## Shipping it
+
+A cause chain only helps if every layer passes it along, so one feature became five pull requests:
+
+1. **SDK** (`bugsplat-js`): walk `cause` and `AggregateError.errors`, and post the chain as an `exceptions` JSON field beside the usual call stack.
+2. **Intake**: accept the field and store it as `exceptions.json` in the crash zip, under a name attachments can't overwrite.
+3. **Processor**: turn the chain into `Caused by:` rows with error properties as locals. Review caught that an error message containing `]]>` could break the XML report, so the processor now escapes CDATA and drops characters XML can't hold.
+4. **Web app**: show arguments and locals for JavaScript crashes, as it already did for native crashes.
+5. **Docs**: an "Error chains" section for each JavaScript SDK.
+
+BugSplat tested it end to end before anything merged, on a local stack that pinned all four server-side branches together. Automate It's crash from October 8 was the test case.
+
+| Date | Release | What it brought |
+| --- | --- | --- |
+| Oct 20 | `bugsplat` 9.3.0 and 9.3.1 | The Node SDK folded into `bugsplat-js` as `bugsplat/node`; Automate It switched over |
+| Oct 17 | `bugsplat-node` deprecated, Deno support retired | Two packages collapsed into one |
+| Oct 17 | Wrapper and sample updates | `@bugsplat/react` and `bugsplat-ng` bumped; every sample app gained a "crash with cause" button |
+| Oct 17 | `bugsplat` 9.2.0 | Cause chains for every JavaScript SDK; Automate It upgraded the same day |
+| Oct 13 | Automate It | Log fields posted as attributes |
+
+## The next failure
+
+Two days after 9.2.0 shipped, a customer's Instagram carousel failed to publish. Meta rejected the first image with `The aspect ratio is not supported`. We went to BugSplat expecting to see the new cause chain and found no report at all. The failure was only in the Railway logs.
+
+Our logger forwards `error` and above to BugSplat, and every publish failure logged at `warn`. That line dated back to the day we replaced `console.log` with a structured logger. So we wrote down what each level means:
+
+| What happened | Example | Level | Reaches BugSplat |
+| --- | --- | --- | --- |
+| Failed, and we recovered | An expired token refreshed before posting | none | no |
+| Failed, and we handle it | A revoked grant: the account is marked expired and the user sees a reconnect prompt | `warn` | no |
+| Failed, and nothing caught it | Meta rejects the image; a 5xx; a malformed payload | `error` | yes |
+
+Applying that rule turned up two more fixes:
+
+- **Report once, at the boundary.** Each integration logged a warning and then rethrew, so one failure produced several log lines. Now only the publish boundary logs, at `error`, with task, workspace and platform attached.
+- **Keep the cause when you rewrap.** A scan of every `catch` block found 27 places that threw a new error without `{ cause }`, discarding the history BugSplat had just learned to show. The 17 that reach BugSplat are being fixed. The other 10 are user-facing validation errors and stay as they are.
+
+## Checklist
+
+For anyone wiring crash reporting into a service:
+
+- **Send the whole error.** Make sure your reporter follows `cause`. Libraries like drizzle, pg and fetch put the real failure there.
+- **Never rewrap without `{ cause }`.** `throw new Error("Failed to post", { cause: error })` keeps the history.
+- **Test error handling against the real wrapped error.** After an ORM or HTTP client upgrade, a hand-built `{ code }` object in a test proves nothing.
+- **Decide what each log level means.** Unrecovered is an error, handled is a warning, recovered is silent. Then check your `catch` blocks against it.
+- **Report once, where the failure stops.** Log at the boundary that gives up, with the IDs you'll search by.
+- **Version reports with the deployed commit.** A package.json version that never changes ties a crash to nothing.
+- **Read your reports the way you'll debug.** Through the dashboard, the API, or an agent. A field you can't get back doesn't help.
