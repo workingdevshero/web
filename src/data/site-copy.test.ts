@@ -31,7 +31,7 @@ describe('navigation', () => {
 describe('contact form', () => {
   it('offers every service listed on the site', () => {
     const contact = repoFile('src/pages/contact.astro');
-    for (const value of ['full-stack', 'operations-ai', 'custom-automations', 'consulting']) {
+    for (const value of ['full-stack', 'operations-ai', 'custom-automations', 'consulting', 'software-factory']) {
       expect(contact).toContain(`<option value="${value}">`);
     }
   });
