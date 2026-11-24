@@ -1,0 +1,87 @@
+---
+title: "Our CI Box Was Writing 1.6 TB a Day to Its SSD"
+description: "Every open Supermog pull request went red on test timeouts in one night. The cause turned out to be a self-hosted CI box that rebuilt each job's whole world on disk and threw it away: 1.6 TB of writes a day on a 1 TB consumer NVMe. Here is how we found it, where the writes came from, and what we changed."
+pubDate: 2026-11-24
+author: "bobbyg603"
+categories: ["Software", "AI"]
+tags: ["ci", "github-actions", "self-hosted-runners", "docker", "sqlite", "bun", "supermog", "nvme"]
+draft: true
+---
+
+On the morning of November 23, all 23 open pull requests in [Supermog](/blog/supermog-builds-itself) were stuck. Every one had failed the same `test` check, and the fleet had parked every one as "needs a human". The code in those PRs was fine. The machine running their CI had been writing **1.6 TB a day** to a 1 TB consumer SSD, and the tests were timing out while they waited for the disk.
+
+Our self-hosted CI runs on one box we call sidekick: a 16-core Ryzen 9 9955HX with 60 GB of RAM and a single 1 TB NVMe drive. The night before, an audit had opened about 20 pull requests at once, and all of their CI landed on sidekick together.
+
+This post covers how we tracked the slow tests down to the disk, where the writes were coming from, and what we changed so the box stops wearing out its own drive.
+
+## Every Test Failed the Same Way 🔴
+
+The failures were strange in a useful way. A different set of tests failed on every run, and none of them had anything to do with the PR being tested. Every failure was a test that normally finishes in milliseconds hitting Bun's 5-second timeout. Database tests and webhook tests were taking 6 to 20 seconds.
+
+We pulled the history of every Supermog test job that ran on sidekick between November 19 and 23 and matched each one against how many other test jobs were running at the same moment:
+
+| Test jobs running at once | Jobs | Failed on timeouts |
+|---|---|---|
+| 1 | 123 | 15% |
+| 2 | 53 | 30% |
+| 3 | 44 | 59% |
+| 4 | 27 | 67% |
+| 5 or more | 36 | 100% |
+
+Sidekick ran 16 runner slots. We had settled on 16 on November 13, while tuning the box for [Automate It](https://automate.it.com)'s CI, whose jobs mostly download packages. Since then the same box had picked up a Windows VM, Android emulators, the fleet's own develop and QA lanes, and Supermog's own CI.
+
+## It Wasn't the CPU 🧮
+
+The box keeps its own performance history with `sar`, so we could look at the evening the failures started. The CPU sat 50 to 60% idle the whole time. Memory looked guilty for twenty minutes, when swap hit 100%, and then recovered on its own.
+
+The disk told a steadier story. NVMe utilization climbed about 6 points for every extra concurrent job and reached 75 to 88%, with iowait near 20%. The tests that timed out all write SQLite files and fsync every commit, so each one waited behind every other job's writes.
+
+We cut sidekick to 4 runner slots to stop the bleeding. Then the more useful question came up: why was a CI box writing that much at all?
+
+## The Drive Had Already Lost 9% of Its Life 💾
+
+Sidekick's `sar` history showed the NVMe writing an average of **1.6 TB a day** since November 15, with a peak of 3.3 TB on November 22. The drive's SMART log said 9% of its rated endurance was already used. CI had been running on the box for about two weeks, and we don't know how much of that 9% came before it.
+
+A 1 TB consumer drive is typically rated for a few hundred terabytes of writes over its life. At 1.6 TB a day, that runs out in months. The slow tests were the symptom we noticed first; the drive was the real cost.
+
+## Every Job Rebuilt Its World on Disk 🔁
+
+Our runner slots are built for isolation. Each job gets a brand-new runner container and a brand-new Docker daemon, and both are deleted when the job ends. Fresh containers keep one job's leftovers away from the next. They also mean a job's tools, dependencies and Docker images are written to the SSD from scratch every time, then deleted.
+
+Linux tracks how much each container writes, so we could measure each source:
+
+| Source | Written | Why |
+|---|---|---|
+| Docker image builds | Up to 10.5 GB per build | Each job's Docker daemon started empty, so every build pulled and unpacked every layer again. Our arm64 images also build under QEMU emulation on this x86 box. |
+| The runner's debug log | About 29,000 lines every 2 minutes | The GitHub Actions runner image prints its internal debug log to stdout. The system journal and Docker's log file each kept a copy, and the runner wrote a third copy itself. The journal had grown to 4 GB. |
+| Test databases | About 950 MB per test run | Around 300 tests each create a fresh SQLite database, run the full migration (32 tables, 44 indexes) and fsync every commit. The finished database is only 324 KB, but creating it writes about 1.3 MB. |
+| Runner tool bundle | 601 MB per job | The runner's bundled Node.js runtimes were copied into a fresh volume before every job, though they only change when the runner image does. |
+| `bun install` | About 325 MB per job | Dependencies installed into an empty workspace for every job. |
+
+The Supermog service itself was barely a blip: its containers wrote 7 MB in four hours.
+
+## What We Changed 🔧
+
+The rule behind every fix: anything a job writes and then throws away should live in RAM, and anything that is the same for every job should be written once.
+
+- **Image builds go to two Docker slots that keep their images.** Those slots carry an extra `docker` label, keep their daemon's images and build cache between jobs, and start every job with no containers, volumes or networks left over. Our workflows send image builds there with one repository variable. ([ci#7](https://github.com/workingdevshero/ci/pull/7), [supermog#1591](https://github.com/workingdevshero/supermog/pull/1591))
+- **Each job's `/tmp` is a RAM disk**, and Supermog's test job points its scratch files at it. A full test run peaks at about 205 MB there.
+- **The runner's debug log stays off the disk.** One environment variable stops the runner printing it, Docker keeps no log of the runner container, and the runner's own diagnostic files go to RAM. Journal lines from the runner slots dropped from about 29,000 to 68 per 2 minutes. ([ci#9](https://github.com/workingdevshero/ci/pull/9))
+- **The tool bundle is copied once per slot** and mounted read-only, so no job can change it for the next one. *(In progress.)*
+- **The job's workspace lives in RAM.** The checkout, `node_modules` and build output exist only while the job runs. *(In progress.)*
+- **Tests migrate the schema once and clone it in memory**, with fsync off for the few tests that need a real file. That change also helps every developer machine that runs the tests. *(In progress, [supermog#1592](https://github.com/workingdevshero/supermog/issues/1592).)*
+
+We also moved four repositories to [Bun](https://bun.sh) 1.4.5, the current release line built on Bun's Rust port. That wasn't a disk fix, but it turned up two behavior changes worth knowing about: a recursive `rm` that can't delete something now reports `ENOTEMPTY` where it used to report `EACCES`, and `spawnSync` now waits for the child's stdout to close, the way Node does. The second one exposed a stray `sleep 30` our Android emulator script left behind every time it built a snapshot.
+
+## Results 📉
+
+*To fill in once a full day of writes has been measured with every fix deployed.*
+
+What we can already say: at 6 runner slots, the last batch of Supermog test jobs all passed in 3 to 4 minutes with no timeouts. On the night this started, the same job took 15 to 21 minutes with 7 or 8 running at once, and nearly every run timed out.
+
+## What We'd Do Differently 🧭
+
+*To finish once the results are in.*
+
+- Measure a box's writes before deciding how many jobs it can run. CPU and network were the numbers we tuned on, and neither was the limit.
+- Treat "every job starts from nothing" as a cost to budget for, and decide per directory whether a job's files belong on disk, in RAM, or in a cache that outlives the job.
