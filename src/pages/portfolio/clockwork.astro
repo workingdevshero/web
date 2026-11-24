@@ -1,0 +1,206 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import PostMedia from '@components/blog/PostMedia.astro';
+
+// From the Clockwork repository's history on GitHub, read on November 24, 2026.
+const build = {
+  firstCommit: 'September 12, 2026',
+  live: 'November 18, 2026',
+  pullRequestsMerged: 157,
+  pullRequestsBySupermog: 106,
+  releases: 9,
+  asOf: 'November 24, 2026',
+};
+
+const headline = [
+  { value: `${build.pullRequestsMerged}`, label: 'pull requests merged' },
+  { value: `${build.pullRequestsBySupermog}`, label: 'of them written by Supermog' },
+  { value: '10 weeks', label: 'from first commit to launch' },
+  { value: `${build.releases}`, label: 'desktop releases so far' },
+];
+
+const surfaces = [
+  { title: 'Web app', body: 'The timeline, entries, projects and clients, and reports. On a phone it installs as an app that opens on today.' },
+  { title: 'Desktop app', body: 'For macOS and Windows. It notes which app is in front, its window title, and when you were idle, keeps that on your computer first, then syncs it.' },
+  { title: 'Command line tool', body: 'One command signs you in and hooks Claude Code up, so every session lands on your timeline with its tokens and cost.' },
+  { title: 'MCP server', body: 'Ask your assistant what you worked on last week, or have it fix an entry, add a client or bill a project.' },
+];
+---
+
+<BaseLayout
+  title="Clockwork - Case Study"
+  description="Clockwork tracks your hours and your AI agents' runs in one place, with no timer to start. Our own product, built in ten weeks, mostly by our agent fleet."
+>
+  <!-- Hero Section -->
+  <section class="section bg-gradient-to-br from-zinc-900 via-stone-900 to-amber-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Our Product</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Time Tracking</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">macOS &amp; Windows</span>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-sm">AI Agents</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+          Clockwork
+        </h1>
+        <p class="text-xl text-white/80">
+          See where the time goes: yours and your agents'. Clockwork puts the hours you bill and the runs your AI agents make on one timeline, and nobody has to remember to start a timer.
+        </p>
+      </div>
+      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+        {headline.map((item) => (
+          <div class="flex flex-col rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+            <dt class="mt-1 text-sm text-white/70">{item.label}</dt>
+            <dd class="order-first text-3xl md:text-4xl font-heading font-bold">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-sm text-white/60">
+        First commit {build.firstCommit}, public launch {build.live}. Counts from the project's GitHub history as of {build.asOf}.
+      </p>
+    </div>
+  </section>
+
+  <!-- Timeline + overview -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <PostMedia
+        video="/videos/clockwork-timeline-loop.mp4"
+        image="/images/portfolio/clockwork/timeline.png"
+        alt="Clockwork's timeline for one morning: a person's billed hours, their laptop's activity, and a Claude Code run with its cost"
+        class="w-full rounded-2xl shadow-lg"
+      />
+      <p class="mt-3 text-sm text-gray-500 text-center">
+        One morning on the timeline: a lane for the person, one for their laptop, and one for each agent.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="https://clockwork.am" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Visit clockwork.am
+        </a>
+      </div>
+
+      <div class="mt-12">
+        <h2 class="text-3xl font-heading font-bold text-primary mb-6">Overview</h2>
+        <div class="prose prose-lg max-w-none text-gray-600">
+          <p>
+            We bill by the hour, and a growing share of our work is done by agents: Claude Code sessions on a laptop and the <a href="/portfolio/supermog" class="underline">Supermog</a> fleet in our lab. Toggl could tell us how long we sat at a desk. It could not tell us what an agent did for a client, or what that cost.
+          </p>
+          <p>
+            So we built Clockwork to replace it. Every row on its timeline has an actor: a person, a device, or an agent. A person's work is measured in hours at a rate, and an agent's in tokens and dollars. Both are attributed to a client, a project and a task, and both show up in the same reports.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Section -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">The Challenge</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Timers are where time tracking goes wrong. You forget to start one, you forget to stop one, and at the end of the week you rebuild the days from memory and your commit history.
+        </p>
+        <p>
+          Agents make it harder. When three Claude Code sessions run for an hour, did you work three hours or one? What do you bill for a fleet run that fixed a client's bug overnight while nobody watched? A useful answer has to count a person's hour once, keep the agent work beside it, and let each client be billed under its own terms.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Our Solution</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Clockwork has no timer. A small desktop app records which app is in front, its window title, and whether you are idle. Hooks record each Claude Code session, and the fleet posts each of its runs. From all of that the server writes your hours for you, a block at a time, each assigned to a project by rules you set, such as a repository name or an app with a window title.
+        </p>
+        <p>
+          An hour on the clock counts once, however many sessions ran in it. Session time is kept as a second measure beside it, so you can see how much agent work an hour carried. Anything you type by hand wins, and the automatic entries go around it.
+        </p>
+        <p>
+          Reports group hours and dollars by client, project, task, actor or day. Rates cascade from client to project to entry, each client gets its own rounding and its own policy for agent work (pass the cost through, bill it at a rate, or absorb it), and a period is locked once it is invoiced.
+        </p>
+        <p>
+          You decide what the desktop app sees. It never records a page's address. There are allow and deny lists for apps and titles, a pause, and a private mode that records app names only.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mt-8">
+        {surfaces.map((surface) => (
+          <div class="p-6 bg-gray-50 rounded-xl">
+            <h3 class="font-heading font-bold text-primary mb-1">{surface.title}</h3>
+            <p class="text-gray-600">{surface.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Technology Stack</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Cloudflare Workers, Hono, D1 and R2</li>
+            <li>React, Vite and TanStack Query</li>
+            <li>Tauri 2 with a Rust core for the desktop app</li>
+            <li>Bun for the command line tool</li>
+            <li>Clerk for sign-in and OAuth 2.1</li>
+            <li>A remote MCP server on the same Worker</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-primary-50 rounded-xl">
+          <h3 class="font-heading font-bold text-primary mb-2">Key Features</h3>
+          <ul class="text-gray-600 space-y-1">
+            <li>Hours written from activity, with no timer</li>
+            <li>Agent runs with their tokens and cost</li>
+            <li>One timeline, a lane per actor</li>
+            <li>Per-client rates, rounding and agent billing</li>
+            <li>Export to CSV or a printable page</li>
+            <li>Privacy controls for what gets recorded</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it was built -->
+  <section class="section bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-heading font-bold text-primary mb-6">Built by the Fleet It Tracks</h2>
+      <div class="prose prose-lg max-w-none text-gray-600">
+        <p>
+          Clockwork went from its first commit to a public launch in ten weeks. Of the {build.pullRequestsMerged} pull requests merged so far, Supermog wrote {build.pullRequestsBySupermog}. We filed the issues, the fleet wrote the code, a second model reviewed it, and a QA session signed in to the real web app and desktop app to check each change before it merged. We wrote the rest alongside Claude Code, and the fleet verified those the same way.
+        </p>
+        <p>
+          It is also the first customer of its own data. Each fleet run that worked on Clockwork shows up on Clockwork's timeline, with what it cost.
+        </p>
+        <p>
+          Shipping a desktop app takes more than the code. Every release is built for macOS and Windows on a version tag, the macOS app is signed and notarized by Apple, crash and hang reports go to BugSplat, and installed apps update themselves.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-dark text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+        Building a Product of Your Own?
+      </h2>
+      <p class="text-lg text-gray-300 mb-8">
+        We take products from an idea to a signed release on the web, desktop and mobile, with an agent fleet doing much of the work and people reviewing every change.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button href="/contact" variant="primary" size="lg">
+          Start Your Project
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg">
+          View More Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
