@@ -64,24 +64,50 @@ The Supermog service itself was barely a blip: its containers wrote 7 MB in four
 
 The rule behind every fix: anything a job writes and then throws away should live in RAM, and anything that is the same for every job should be written once.
 
-- **Image builds go to two Docker slots that keep their images.** Those slots carry an extra `docker` label, keep their daemon's images and build cache between jobs, and start every job with no containers, volumes or networks left over. Our workflows send image builds there with one repository variable. ([ci#7](https://github.com/workingdevshero/ci/pull/7), [supermog#1591](https://github.com/workingdevshero/supermog/pull/1591))
+- **Image builds go to Docker slots that keep their images.** Those slots carry an extra `docker` label, keep their daemon's images and BuildKit cache between jobs, and start every job with no containers, volumes or networks left over. Our workflows send image builds there with one repository variable. We started with two of these slots and now run four. ([ci#7](https://github.com/workingdevshero/ci/pull/7), [ci#14](https://github.com/workingdevshero/ci/pull/14), [supermog#1591](https://github.com/workingdevshero/supermog/pull/1591))
 - **Each job's `/tmp` is a RAM disk**, and Supermog's test job points its scratch files at it. A full test run peaks at about 205 MB there.
 - **The runner's debug log stays off the disk.** One environment variable stops the runner printing it, Docker keeps no log of the runner container, and the runner's own diagnostic files go to RAM. Journal lines from the runner slots dropped from about 29,000 to 68 per 2 minutes. ([ci#9](https://github.com/workingdevshero/ci/pull/9))
-- **The tool bundle is copied once per slot** and mounted read-only, so no job can change it for the next one. *(In progress.)*
-- **The job's workspace lives in RAM.** The checkout, `node_modules` and build output exist only while the job runs. *(In progress.)*
-- **Tests migrate the schema once and clone it in memory**, with fsync off for the few tests that need a real file. That change also helps every developer machine that runs the tests. *(In progress, [supermog#1592](https://github.com/workingdevshero/supermog/issues/1592).)*
+- **The tool bundle is copied once per slot** and mounted read-only, so no job can change it for the next one. ([ci#10](https://github.com/workingdevshero/ci/pull/10))
+- **The job's workspace, tool cache and `~/.bun` live in RAM.** The checkout, `node_modules` and build output exist only while the job runs. ([ci#10](https://github.com/workingdevshero/ci/pull/10), [ci#11](https://github.com/workingdevshero/ci/pull/11))
+- **Tests migrate the schema once and clone it in memory**, with fsync off under `bun test`. That change also speeds up every developer machine that runs the tests. ([supermog#1594](https://github.com/workingdevshero/supermog/pull/1594))
+- **Image jobs stopped doing work nobody used.** Check builds no longer export the image they built, publish jobs keep their BuildKit cache between runs, and a merge that doesn't change what runs on our boxes no longer rolls them out. ([supermog#1617](https://github.com/workingdevshero/supermog/issues/1617), [supermog#1616](https://github.com/workingdevshero/supermog/issues/1616), [supermog#1613](https://github.com/workingdevshero/supermog/issues/1613))
 
 We also moved four repositories to [Bun](https://bun.sh) 1.4.5, the current release line built on Bun's Rust port. That wasn't a disk fix, but it turned up two behavior changes worth knowing about: a recursive `rm` that can't delete something now reports `ENOTEMPTY` where it used to report `EACCES`, and `spawnSync` now waits for the child's stdout to close, the way Node does. The second one exposed a stray `sleep 30` our Android emulator script left behind every time it built a snapshot.
 
+## Then We Ran Out of RAM 🧠
+
+Moving files to RAM has a catch we found the hard way. A RAM disk inside a container counts against that container's memory limit. Each runner slot was capped at 8 GB, and a job now carried its `/tmp`, its workspace, its tool cache and its own processes inside that cap. Over one day the kernel killed 38 processes for hitting it.
+
+We raised the cap to 12 GB and cut the box from 16 slots to 12. That held until we asked the fleet to rebase 10 [Automate It](https://automate.it.com) pull requests at once. Each push starts 8 CI jobs, so about 80 jobs landed together. Load reached 260 on a 16-core box, swap filled, and the kernel killed 15 processes in half an hour. The pull requests failed on test timeouts that had nothing to do with their code. Stopping 4 slots brought memory pressure from 88% to 2% within a minute.
+
+One job type was eating most of it. [Jest](https://jestjs.io) sizes its worker pool from the CPU cores it can see, and a container limited to 8 CPUs still sees all 32 of the host's threads. So a single frontend test job could start around 31 workers at about half a gigabyte each. Capping Jest at 4 workers under CI fixed that ([automate-it#1622](https://github.com/workingdevshero/automate-it/pull/1622)). We now nudge pull requests 3 or 4 at a time, and the box runs 10 slots while we watch whether it can take 12 again.
+
 ## Results 📉
 
-*To fill in once a full day of writes has been measured with every fix deployed.*
+*The full-day numbers below are from the first day with most fixes deployed. A clean full day with every fix in place is still to be measured.*
 
-What we can already say: at 6 runner slots, the last batch of Supermog test jobs all passed in 3 to 4 minutes with no timeouts. On the night this started, the same job took 15 to 21 minutes with 7 or 8 running at once, and nearly every run timed out.
+The number we track is disk writes per merged pull request, across every repository whose CI runs on sidekick, so a slow day and a busy day compare fairly.
+
+| | Writes per day | Writes per merged PR |
+|---|---|---|
+| Before (November 15 to 23) | 1.6 TB on average, 3.3 TB peak | 43 to 84 GB |
+| November 24 | 651 GB | about 22 GB |
+
+The biggest single jobs shrank the most:
+
+| Job | Before | After |
+|---|---|---|
+| amd64 check image build | 8.5 GB | 0.08 GB |
+| arm64 check image build | 5.2 GB | 2.2 GB |
+| Publish image build | about 8 GB | 3 to 4 GB |
+| CI runs per merged Supermog PR | about 6 | 2.4 |
+
+On November 25, idle hours wrote about half a gigabyte, and the busiest hour so far, with about 12 fleet jobs running, wrote 13 GB with the disk 9% busy. At 6 runner slots, the last batch of Supermog test jobs all passed in 3 to 4 minutes with no timeouts. On the night this started, the same job took 15 to 21 minutes with 7 or 8 running at once, and nearly every run timed out.
 
 ## What We'd Do Differently 🧭
 
-*To finish once the results are in.*
-
-- Measure a box's writes before deciding how many jobs it can run. CPU and network were the numbers we tuned on, and neither was the limit.
-- Treat "every job starts from nothing" as a cost to budget for, and decide per directory whether a job's files belong on disk, in RAM, or in a cache that outlives the job.
+- **Measure a box's writes before deciding how many jobs it can run.** CPU and network were the numbers we tuned on, and neither was the limit.
+- **Treat "every job starts from nothing" as a cost to budget for.** Decide per directory whether a job's files belong on disk, in RAM, or in a cache that outlives the job.
+- **Count RAM disks as memory.** Moving writes to RAM is cheap until every slot does it at once. Size the slot's memory cap for its RAM disks plus its processes, and size the slot count for the box's total.
+- **Check what each tool thinks the machine is.** Jest, Playwright and most build tools size themselves by the cores they can see, and a container's CPU limit doesn't change that number.
+- **Track one number per unit of work.** Writes per merged PR told us whether a fix worked; raw daily totals mostly told us how busy the day was.
