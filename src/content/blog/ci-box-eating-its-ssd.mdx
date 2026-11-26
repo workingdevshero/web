@@ -104,6 +104,16 @@ The biggest single jobs shrank the most:
 
 On November 25, idle hours wrote about half a gigabyte, and the busiest hour so far, with about 12 fleet jobs running, wrote 13 GB with the disk 9% busy. At 6 runner slots, the last batch of Supermog test jobs all passed in 3 to 4 minutes with no timeouts. On the night this started, the same job took 15 to 21 minutes with 7 or 8 running at once, and nearly every run timed out.
 
+## Our Boxes Stopped Taking New Builds for Eight Hours 🔄
+
+The machines that run Supermog's jobs update themselves. After each merge, the control plane rolls them onto the new build one at a time: it waits until a box is idle, sends it the new image, and checks that the box comes back on the new build. On November 25, no box updated between 14:58 and 23:16 UTC. Eleven builds merged and reached the control plane in that window, and every box stayed where it was. Nothing alerted us. We found it while checking that an unrelated CI change had taken effect.
+
+The rollout picked our MacBook first every time. The MacBook pulled the image, recreated its containers and came back on the old build. After two tries the rollout stopped for the whole fleet, including the three boxes it had never reached. The next merge started a new rollout, which picked the MacBook first again.
+
+The cause was a merge from that afternoon that folded our two container images into one. On each box, a service called the broker pulls a new image and recreates the containers, and the broker that performs an update comes from the build being replaced. The old broker started a helper from the new image and expected it to run as root. The merged image ran as an unprivileged user, so the helper couldn't read the box's configuration file, and the broker fell back to recreating its own container from the inside. We caught it on a Raspberry Pi: the broker stopped itself halfway through, its replacement was created but never started, and the Pi was left with no broker and could run no jobs.
+
+We pointed the new broker tag back at the previous broker image to get the boxes moving, then fixed both problems. The rollout now skips a box that won't update and carries on with the rest ([supermog#1699](https://github.com/workingdevshero/supermog/pull/1699)). The broker image is a real broker image again, and a broker that can't hand off its own update refuses it and keeps serving ([supermog#1701](https://github.com/workingdevshero/supermog/pull/1701)).
+
 ## What We'd Do Differently 🧭
 
 - **Measure a box's writes before deciding how many jobs it can run.** CPU and network were the numbers we tuned on, and neither was the limit.
@@ -111,3 +121,5 @@ On November 25, idle hours wrote about half a gigabyte, and the busiest hour so 
 - **Count RAM disks as memory.** Moving writes to RAM is cheap until every slot does it at once. Size the slot's memory cap for its RAM disks plus its processes, and size the slot count for the box's total.
 - **Check what each tool thinks the machine is.** Jest, Playwright and most build tools size themselves by the cores they can see, and a container's CPU limit doesn't change that number.
 - **Track one number per unit of work.** Writes per merged PR told us whether a fix worked; raw daily totals mostly told us how busy the day was.
+- **Watch the build each box runs.** Every deploy in those eight hours passed its checks. The number that showed the problem was the build each box reported, and nothing was watching it.
+- **The old version performs the upgrade.** A service that updates itself has to stay compatible with the previous version's updater for one release, down to which user the new image runs as.
