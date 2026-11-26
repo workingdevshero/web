@@ -16,3 +16,7 @@ verify:
   # The site is public, so there's no login. Record the session even if the agent takes no
   # screenshots.
   evidence: both
+learn:
+  file: CLAUDE.md
+report:
+  friction: true
